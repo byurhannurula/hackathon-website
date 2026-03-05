@@ -1,26 +1,182 @@
 @import "tailwindcss";
 
+/* @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Instrument+Serif:ital@1&family=Syne:wght@400;600;700;800&display=swap"); */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  background: #050505;
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  overflow-x: hidden;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --acid: #c8ff00;
+  --pink: #ff3355;
+  --bg: #050505;
+  --card: #0d0d0d;
+  --border: rgba(255, 255, 255, 0.07);
+  --mono: "Space Mono", monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+::selection {
+  background: var(--acid);
+  color: #000;
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--acid);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.4);
+  }
+}
+@keyframes ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes glitch {
+  0%,
+  89%,
+  100% {
+    text-shadow: none;
+    transform: none;
+    clip-path: none;
+  }
+  90% {
+    text-shadow:
+      -4px 0 var(--pink),
+      4px 0 rgba(0, 255, 136, 0.6);
+    transform: skewX(-1deg) translateX(2px);
+  }
+  91% {
+    text-shadow:
+      4px 0 var(--pink),
+      -4px 0 rgba(0, 255, 136, 0.6);
+    transform: skewX(1deg) translateX(-2px);
+  }
+  92% {
+    text-shadow: -2px 0 var(--acid);
+    transform: none;
+  }
+  92.5% {
+    text-shadow: none;
+    transform: none;
+  }
+}
+@keyframes glitch2 {
+  0%,
+  94%,
+  100% {
+    text-shadow: none;
+    transform: none;
+  }
+  95% {
+    text-shadow: -3px 0 var(--pink);
+    transform: translateX(2px);
+  }
+  97% {
+    text-shadow: 3px 0 var(--acid);
+    transform: translateX(-2px);
+  }
+  98% {
+    text-shadow: none;
+  }
+}
+@keyframes ctaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(40px) skewY(3deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) skewY(0);
+  }
+}
+
+.no-select,
+.no-select * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+.glitch-1 {
+  animation: glitch 8s 1.5s ease infinite;
+}
+.glitch-2 {
+  animation: glitch2 11s 4s ease infinite;
 }
