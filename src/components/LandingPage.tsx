@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Nav } from "./Nav";
 import { DitheringBg } from "./DitheringBg";
+import { FallingPattern } from "./ui/falling-pattern";
+import { DottedSurface } from "./ui/dotted-surface";
+import { PaperDithering } from "./ui/PaperDithering";
+import { FloatingIconsShader } from "./ui/floating-icons-shader";
 import { DecryptText } from "./ui/DecryptText";
 import { Ticker } from "./Ticker";
 import { SectionHeader as SH } from "./SectionHeader";
@@ -17,6 +21,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onRegister }: LandingPageProps) {
   const [heroHover, setHeroHover] = useState(false);
+  const [bgType, setBgType] = useState<"original" | "falling" | "dotted" | "paper" | "icons">("icons");
 
   const agenda = [
     {
@@ -125,7 +130,11 @@ export function LandingPage({ onRegister }: LandingPageProps) {
           padding: "120px 48px 80px",
         }}
       >
-        <DitheringBg hovered={heroHover} />
+        {bgType === "original" && <DitheringBg hovered={heroHover} />}
+        {bgType === "falling" && <FallingPattern className="absolute inset-0 z-0" />}
+        {bgType === "dotted" && <DottedSurface className="absolute inset-0 z-0" />}
+        {bgType === "paper" && <PaperDithering isHovered={heroHover} />}
+        {bgType === "icons" && <FloatingIconsShader />}
 
         {/* Subtle dot grid overlay underneath shader */}
         <div
@@ -153,7 +162,14 @@ export function LandingPage({ onRegister }: LandingPageProps) {
         />
 
         {/* CONTENT */}
-        <div style={{ position: "relative", zIndex: 2, maxWidth: "1000px" }}>
+        <div style={{
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "1000px",
+          // Subtle readability glaze
+          background: "radial-gradient(circle, rgba(5,5,5,0.5) 0%, transparent 80%)",
+          padding: "20px",
+        }}>
           <div style={{ animation: "fadeIn 0.5s 0.2s both" }}>
             <DecryptText
               text="26 APRIL 2026  ·  RUSE, BULGARIA  ·  48H HACKATHON"
@@ -200,7 +216,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               fontFamily: "var(--font-serif)",
               fontStyle: "italic",
               fontSize: "clamp(16px, 2vw, 20px)",
-              color: "rgba(255,255,255,0.45)",
+              color: "rgba(255,255,255,0.85)", // Boosted from 0.45 for readability
               marginTop: "14px",
               animation: "fadeUp 0.6s 0.95s both ease",
             }}
@@ -213,7 +229,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               fontFamily: "var(--font-mono-google)",
               fontSize: "clamp(11px, 1.1vw, 13px)",
               lineHeight: 1.95,
-              color: "rgba(255,255,255,0.42)",
+              color: "rgba(255,255,255,0.85)", // Boosted from 0.42 for readability
               maxWidth: "560px",
               margin: "24px auto 0",
               animation: "fadeUp 0.6s 1.1s both ease",
@@ -350,6 +366,61 @@ export function LandingPage({ onRegister }: LandingPageProps) {
             }}
           />
         </div>
+
+        {/* Background Switcher UI */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: "80px",
+            right: "48px",
+            zIndex: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: "10px",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "var(--font-mono-google)",
+              fontSize: "10px",
+              letterSpacing: "0.1em",
+              color: "rgba(255,255,255,0.3)",
+              textTransform: "uppercase",
+            }}
+          >
+            Switch Shader
+          </div>
+          <div style={{ display: "flex", gap: "8px" }}>
+            {[
+              { id: "original", label: "OG" },
+              { id: "falling", label: "RAIN" },
+              { id: "dotted", label: "SURFACE" },
+              { id: "paper", label: "WARP" },
+              { id: "icons", label: "ICONS" },
+            ].map((bt) => (
+              <button
+                key={bt.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBgType(bt.id as any);
+                }}
+                style={{
+                  padding: "6px 12px",
+                  fontSize: "10px",
+                  fontFamily: "var(--font-mono-google)",
+                  backgroundColor: bgType === bt.id ? "var(--acid)" : "rgba(255,255,255,0.05)",
+                  color: bgType === bt.id ? "#000" : "rgba(255,255,255,0.5)",
+                  border: `1px solid ${bgType === bt.id ? "var(--acid)" : "rgba(255,255,255,0.1)"}`,
+                  cursor: "pointer",
+                  transition: "all 0.2s",
+                }}
+              >
+                {bt.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── ORGANIZER + PARTNERS ─────────────────────────────────────────── */}
@@ -473,11 +544,11 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                   background: "var(--bg)",
                   padding: "32px 24px",
                   borderTop: `3px solid ${[
-                      "var(--acid)",
-                      "rgba(255,255,255,0.45)",
-                      "rgba(255,255,255,0.25)",
-                      "rgba(255,255,255,0.12)",
-                    ][i]
+                    "var(--acid)",
+                    "rgba(255,255,255,0.45)",
+                    "rgba(255,255,255,0.25)",
+                    "rgba(255,255,255,0.12)",
+                  ][i]
                     }`,
                 }}
               >
