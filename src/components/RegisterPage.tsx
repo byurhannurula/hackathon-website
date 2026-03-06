@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AvatarCircle } from "./ui/AvatarCircle";
 import { encryptTicket, TicketData, getGithubAvatarUrl } from "../lib/utils";
 
@@ -76,7 +77,8 @@ export function RegisterPage({
         position: "relative",
       }}
     >
-      <div
+      <Link
+        href="/"
         style={{
           position: "absolute",
           top: "40px",
@@ -85,17 +87,17 @@ export function RegisterPage({
           fontFamily: "var(--font-mono-google)",
           fontSize: "12px",
           color: "rgba(255,255,255,0.5)",
+          textDecoration: "none",
           letterSpacing: "0.1em",
           transition: "color 0.2s",
         }}
-        onClick={onBack}
         onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
         onMouseLeave={(e) =>
           (e.currentTarget.style.color = "rgba(255,255,255,0.5)")
         }
       >
         ← Back to Home
-      </div>
+      </Link>
 
       <div
         style={{

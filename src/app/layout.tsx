@@ -32,6 +32,8 @@ export const metadata: Metadata = {
   description: "A 48-hour hackathon for builders in Ruse, Bulgaria.",
 };
 
+import { Providers } from "@/components/Providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -40,7 +42,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${bebas.variable} ${spaceMono.variable} ${instrumentSerif.variable} ${syne.variable}`}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

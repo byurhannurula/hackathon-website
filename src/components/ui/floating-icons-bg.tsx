@@ -83,7 +83,7 @@ const Icon = ({
     >
       {/* Inner wrapper for the continuous floating animation */}
       <motion.div
-        className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 p-4 rounded-[2rem] shadow-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10"
+        className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 p-4 rounded-4xl shadow-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10"
         style={{
           boxShadow: '0 10px 40px -10px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02)',
         }}

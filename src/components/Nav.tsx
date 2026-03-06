@@ -1,12 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { HACKATHON_INFO } from "../lib/constants";
+import { useTranslation } from "@/lib/i18n";
+import Link from "next/link";
+import { encryptTicket, TicketData, getGithubAvatarUrl } from "../lib/utils";
 
 interface NavProps {
   onRegister: () => void;
 }
 
 export function Nav({ onRegister }: NavProps) {
+  const { lang, setLang, t } = useTranslation();
   const [sc, setSc] = useState(false);
 
   useEffect(() => {
@@ -34,7 +39,7 @@ export function Nav({ onRegister }: NavProps) {
         transition: "all 0.4s ease",
       }}
     >
-      <div style={{ display: "flex", alignItems: "baseline", gap: "6px" }}>
+      <Link href="/" style={{ textDecoration: "none", display: "flex", alignItems: "baseline", gap: "6px" }}>
         <span
           style={{
             fontFamily: "var(--font-bebas)",
@@ -63,11 +68,16 @@ export function Nav({ onRegister }: NavProps) {
         >
           &apos;26
         </span>
-      </div>
+      </Link>
       <div style={{ display: "flex", gap: "28px", alignItems: "center" }}>
-        {["Agenda", "Prizes", "Sponsors", "FAQ"].map((l) => (
+        {[
+          { key: "agenda", label: t.nav.agenda },
+          { key: "prizes", label: t.nav.prizes },
+          { key: "sponsors", label: t.nav.sponsors },
+          { key: "faq", label: t.nav.faq },
+        ].map((item) => (
           <span
-            key={l}
+            key={item.key}
             style={{
               fontFamily: "var(--font-mono-google)",
               fontSize: "10px",
@@ -84,17 +94,43 @@ export function Nav({ onRegister }: NavProps) {
               (e.currentTarget.style.color = "rgba(255,255,255,0.35)")
             }
           >
-            {l}
+            {item.label}
           </span>
         ))}
         <button
-          onClick={onRegister}
+          onClick={() => setLang(lang === "en" ? "bg" : "en")}
+          style={{
+            fontFamily: "var(--font-mono-google)",
+            fontSize: "10px",
+            letterSpacing: "0.14em",
+            background: "transparent",
+            color: "rgba(255,255,255,0.5)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            padding: "9px 12px",
+            cursor: "pointer",
+            transition: "all 0.2s",
+            textTransform: "uppercase",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--acid)";
+            e.currentTarget.style.color = "var(--acid)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
+            e.currentTarget.style.color = "rgba(255,255,255,0.5)";
+          }}
+        >
+          {lang === "en" ? "EN" : "BG"}
+        </button>
+        <Link
+          href="/register"
           style={{
             fontFamily: "var(--font-mono-google)",
             fontSize: "10px",
             fontWeight: 700,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
+            textDecoration: "none",
             background: "var(--acid)",
             color: "#000",
             border: "none",
@@ -109,8 +145,8 @@ export function Nav({ onRegister }: NavProps) {
             (e.currentTarget.style.background = "var(--acid)")
           }
         >
-          Register →
-        </button>
+          {t.nav.register} →
+        </Link>
       </div>
     </nav>
   );

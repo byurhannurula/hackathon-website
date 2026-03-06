@@ -14,101 +14,24 @@ import { AgendaItem } from "./AgendaItem";
 import { FaqItem } from "./FaqItem";
 import { CTASection } from "./CTASection";
 import { Footer } from "./Footer";
+import {
+  HACKATHON_INFO,
+  AGENDA,
+  PRIZES,
+  FAQS,
+  SPONSORS
+} from "../lib/constants";
+import { useTranslation } from "@/lib/i18n";
 
 interface LandingPageProps {
   onRegister: () => void;
 }
 
 export function LandingPage({ onRegister }: LandingPageProps) {
+  const { t } = useTranslation();
   const [heroHover, setHeroHover] = useState(false);
   const [bgType, setBgType] = useState<"original" | "falling" | "dotted" | "paper" | "icons">("icons");
 
-  const agenda = [
-    {
-      time: "10:00",
-      label: "Opening Ceremony",
-      desc: "Kick-off with StartupFactory + sponsor intros.",
-    },
-    {
-      time: "10:30",
-      label: "Hack Begins",
-      desc: "48h clock starts. Ship anything — rules: it must work.",
-    },
-    {
-      time: "11:00",
-      label: "Workshop: AI Stack 2026",
-      desc: "v0 + Cursor + Bolt + Vercel live demo.",
-    },
-    {
-      time: "14:00",
-      label: "Midpoint Check-in",
-      desc: "Progress demos, feedback rounds, vibes check.",
-    },
-    {
-      time: "DAY 2",
-      label: "Showcase Sprint",
-      desc: "90-second demos — running code only, no slides.",
-    },
-    {
-      time: "16:00",
-      label: "Jury & Awards",
-      desc: "Community vote + expert panel. Cash + credits prizes.",
-    },
-  ];
-  const prizes = [
-    {
-      place: "1ST",
-      amount: "€3,000",
-      desc: "Cash + €2K cloud credits + StartupFactory feature",
-    },
-    { place: "2ND", amount: "€1,500", desc: "Cash + €1K cloud credits" },
-    { place: "3RD", amount: "€750", desc: "Cash + swag bundle" },
-    {
-      place: "BEST SOLO",
-      amount: "€500",
-      desc: "For solo builders shipping end-to-end",
-    },
-  ];
-  const faqs = [
-    {
-      q: "Who can join?",
-      a: "Anyone who can write code. Solo or teams up to 4. Students especially welcome.",
-    },
-    {
-      q: "Remote or in-person?",
-      a: "In-person in Ruse, Bulgaria. Remote hacking track for international builders.",
-    },
-    {
-      q: "What stack can I use?",
-      a: "Anything goes. We love v0, Cursor, Supabase, Vercel — but not required.",
-    },
-    {
-      q: "Do I need a team?",
-      a: "No. Team matching 30 mins before kickoff. Solo builders always welcome.",
-    },
-    {
-      q: "Is it really free?",
-      a: "Yes. Free ticket. Food and caffeine covered by StartupFactory.",
-    },
-    {
-      q: "What is vibe coding?",
-      a: "Describe → AI generates → you ship. Speed over perfection. If it vibes, it lives.",
-    },
-  ];
-  const sponsors = [
-    "Vercel",
-    "Supabase",
-    "GitHub",
-    "Resend",
-    "Clerk",
-    "Stripe",
-    "Neon",
-    "Tailwind CSS",
-    "Prisma",
-    "PlanetScale",
-    "Cloudflare",
-    "Railway",
-  ];
 
   return (
     <div style={{ background: "var(--bg)" }}>
@@ -172,7 +95,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
         }}>
           <div style={{ animation: "fadeIn 0.5s 0.2s both" }}>
             <DecryptText
-              text="26 APRIL 2026  ·  RUSE, BULGARIA  ·  48H HACKATHON"
+              text={t.hero.dateLocation}
               speed={30}
               delay={300}
             />
@@ -196,7 +119,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                   "fadeUp 0.7s 0.5s both ease, glitch 8s 1.5s ease infinite",
               }}
             >
-              VIBE TO
+              {t.hero.titleTop}
             </span>
             <span
               className="glitch-2"
@@ -207,7 +130,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                   "fadeUp 0.7s 0.65s both ease, glitch2 11s 4s ease infinite",
               }}
             >
-              PRODUCTION
+              {t.hero.titleBottom}
             </span>
           </h1>
 
@@ -221,7 +144,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               animation: "fadeUp 0.6s 0.95s both ease",
             }}
           >
-            — a hackathon by StartupFactory
+            — {t.hero.organizer}
           </div>
 
           <p
@@ -235,8 +158,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               animation: "fadeUp 0.6s 1.1s both ease",
             }}
           >
-            48 hours. Real products. AI-assisted everything. The world&apos;s
-            first hackathon where your AI stack is the feature, not a cheat code.
+            {t.hero.description}
           </p>
 
           <div
@@ -271,7 +193,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 e.currentTarget.style.transform = "";
               }}
             >
-              GET YOUR TICKET
+              {t.hero.ctaTicket}
             </button>
             <button
               style={{
@@ -294,7 +216,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 e.currentTarget.style.color = "rgba(255,255,255,0.5)";
               }}
             >
-              SEE AGENDA
+              {t.hero.ctaAgenda}
             </button>
           </div>
 
@@ -310,10 +232,10 @@ export function LandingPage({ onRegister }: LandingPageProps) {
             }}
           >
             {[
-              ["600+", "BUILDERS"],
-              ["48H", "NON-STOP"],
-              ["€6K+", "IN PRIZES"],
-              ["FREE", "ENTRY"],
+              [HACKATHON_INFO.buildersCount, t.hero.statsBuilders],
+              ["48H", t.hero.statsNonstop],
+              [HACKATHON_INFO.prizesPool, t.hero.statsPrizes],
+              ["FREE", t.hero.statsEntry],
             ].map(([v, l]) => (
               <div key={l} style={{ textAlign: "center" }}>
                 <div
@@ -448,7 +370,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 textTransform: "uppercase",
               }}
             >
-              Organized by
+              {t.footer.organizedBy}
             </div>
             <div
               style={{
@@ -458,7 +380,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 color: "var(--acid)",
               }}
             >
-              STARTUPFACTORY
+              {HACKATHON_INFO.organizer.toUpperCase()}
             </div>
             <div
               style={{
@@ -490,7 +412,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 textTransform: "uppercase",
               }}
             >
-              Technology partners
+              {t.footer.techPartners}
             </div>
             <Ticker />
           </div>
@@ -500,7 +422,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
       {/* ── AGENDA ───────────────────────────────────────────────────────── */}
       <section id="agenda" style={{ padding: "100px 48px" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <SH label="26 APRIL 2026 · RUSE, BG" title="AGENDA" />
+          <SH label={t.hero.dateLocation.split("  ·  ")[0]} title={t.sections.agenda} />
           <div
             style={{
               display: "grid",
@@ -508,7 +430,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               marginTop: "48px",
             }}
           >
-            {agenda.map((a, i) => (
+            {AGENDA.map((a, i) => (
               <AgendaItem key={i} {...a} />
             ))}
           </div>
@@ -521,12 +443,8 @@ export function LandingPage({ onRegister }: LandingPageProps) {
       <section style={{ padding: "100px 48px", background: "var(--card)" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <SH
-            label="TOTAL POOL €5,750"
-            title={
-              <>
-                PRIZES <span style={{ color: "var(--acid)" }}>&amp;</span> REWARDS
-              </>
-            }
+            label={`TOTAL POOL ${HACKATHON_INFO.prizesPool}`}
+            title={t.sections.prizes}
           />
           <div
             style={{
@@ -537,7 +455,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               marginTop: "48px",
             }}
           >
-            {prizes.map((p, i) => (
+            {PRIZES.map((p, i) => (
               <div
                 key={i}
                 style={{
@@ -599,7 +517,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
         }}
       >
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <SH label="MAKING THIS POSSIBLE" title="SPONSORS" />
+          <SH label="MAKING THIS POSSIBLE" title={t.sections.sponsors} />
           <div
             style={{
               display: "flex",
@@ -608,7 +526,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
               marginTop: "52px",
             }}
           >
-            {sponsors.map((name) => (
+            {SPONSORS.map((name) => (
               <div
                 key={name}
                 style={{
@@ -659,7 +577,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                   fontSize: "15px",
                 }}
               >
-                Interested in sponsoring?
+                {t.footer.sponsoring}
               </div>
               <div
                 style={{
@@ -669,7 +587,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                   marginTop: "4px",
                 }}
               >
-                Get in front of 600+ builders. Limited spots available.
+                {t.footer.sponsoringDesc}
               </div>
             </div>
             <button
@@ -692,7 +610,7 @@ export function LandingPage({ onRegister }: LandingPageProps) {
                 (e.currentTarget.style.background = "transparent")
               }
             >
-              BECOME A SPONSOR →
+              {t.footer.becomeSponsor} →
             </button>
           </div>
         </div>
@@ -708,9 +626,9 @@ export function LandingPage({ onRegister }: LandingPageProps) {
         }}
       >
         <div style={{ maxWidth: "800px", margin: "0 auto" }}>
-          <SH title="FAQ" />
+          <SH title={t.sections.faq} />
           <div style={{ marginTop: "48px" }}>
-            {faqs.map((f, i) => (
+            {FAQS.map((f, i) => (
               <FaqItem key={i} {...f} />
             ))}
           </div>

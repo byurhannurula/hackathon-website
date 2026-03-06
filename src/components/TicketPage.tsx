@@ -5,20 +5,21 @@ import { TicketVisual } from "./ticket/TicketVisual";
 import { XIcon, LIIcon, FBIcon, DLIcon } from "./ui/icons";
 import { TicketData, encryptTicket } from "../lib/utils";
 
+import Link from "next/link";
+
 interface TicketPageProps {
   data: TicketData | null;
-  onBack: () => void;
 }
 
-export function TicketPage({ data, onBack }: TicketPageProps) {
+export function TicketPage({ data }: TicketPageProps) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const shareUrl = data
-    ? `${typeof window !== 'undefined' ? window.location.origin : ''}/?t=${encryptTicket(data)}`
+  const shareUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/tickets?t=${encryptTicket(data!)}`
     : "";
 
   const doCopy = () => {
@@ -56,7 +57,8 @@ export function TicketPage({ data, onBack }: TicketPageProps) {
         }}
       />
 
-      <div
+      <Link
+        href="/"
         style={{
           position: "absolute",
           top: "40px",
@@ -65,16 +67,18 @@ export function TicketPage({ data, onBack }: TicketPageProps) {
           fontFamily: "var(--font-mono-google)",
           fontSize: "12px",
           color: "rgba(255,255,255,0.5)",
+          textDecoration: "none",
           letterSpacing: "0.1em",
           transition: "color 0.2s",
           zIndex: 10,
         }}
-        onClick={onBack}
         onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-        onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.5)")}
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.color = "rgba(255,255,255,0.5)")
+        }
       >
         ← Back to Home
-      </div>
+      </Link>
 
       <div style={{ position: "relative", zIndex: 1, animation: "revealUp 0.6s ease-out" }}>
         <TicketVisual data={data} interactive={true} />

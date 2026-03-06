@@ -30,3 +30,22 @@ export function encryptTicket(d: TicketData): string {
     return String(d.ticketNum);
   }
 }
+
+export function decryptTicket(token: string): TicketData | null {
+  if (!token) return null;
+  try {
+    const bin = atob(token.replace(/-/g, "+").replace(/_/g, "/"));
+    const parts = bin.split(":");
+    if (parts[0] === "vr2026") {
+      return {
+        handle: "@" + parts[1],
+        ticketNum: parseInt(parts[2]),
+        name: parts[1].charAt(0).toUpperCase() + parts[1].slice(1),
+        avatarUrl: `https://github.com/${parts[1]}.png`,
+      };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}

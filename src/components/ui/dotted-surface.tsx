@@ -113,7 +113,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
       positionAttribute.needsUpdate = true;
 
       renderer.render(scene, camera);
-      count += 0.08; // Keep it smooth but noticeable
+      count += 0.03; // Slower, more elegant wave
     };
 
     // Handle window resize

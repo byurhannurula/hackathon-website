@@ -1,10 +1,12 @@
-"use client";
+import { HACKATHON_INFO } from "../lib/constants";
+import { useTranslation } from "@/lib/i18n";
 
 interface FooterProps {
   onRegister: () => void;
 }
 
 export function Footer({ onRegister }: FooterProps) {
+  const { t } = useTranslation();
   return (
     <footer
       style={{
@@ -19,7 +21,7 @@ export function Footer({ onRegister }: FooterProps) {
           margin: "0 auto",
           padding: "56px 48px 40px",
           display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr 1fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
           gap: "48px",
         }}
       >
@@ -40,16 +42,7 @@ export function Footer({ onRegister }: FooterProps) {
                 color: "var(--acid)",
               }}
             >
-              VIBE
-            </span>
-            <span
-              style={{
-                fontFamily: "var(--font-bebas)",
-                fontSize: "28px",
-                color: "#fff",
-              }}
-            >
-              RUSE
+              VIBE RUSE
             </span>
             <span
               style={{
@@ -71,10 +64,10 @@ export function Footer({ onRegister }: FooterProps) {
               lineHeight: 2,
             }}
           >
-            <div>26 April 2026 — Ruse, Bulgaria</div>
-            <div>A 48-hour hackathon for builders</div>
+            <div>{HACKATHON_INFO.date} — {HACKATHON_INFO.location}</div>
+            <div>A {HACKATHON_INFO.duration.toLowerCase()} for builders</div>
             <div style={{ marginTop: "8px", color: "rgba(255,255,255,0.35)" }}>
-              Organized by StartupFactory
+              Organized by {HACKATHON_INFO.organizer}
             </div>
           </div>
           <button
@@ -114,10 +107,10 @@ export function Footer({ onRegister }: FooterProps) {
               marginBottom: "16px",
             }}
           >
-            Event
+            {t.nav.agenda}
           </div>
           {[
-            ["Date", "26 April 2026"],
+            ["Date", HACKATHON_INFO.date],
             ["Duration", "48 hours"],
             ["Location", "Ruse, BG"],
             ["Format", "In-person"],
@@ -167,7 +160,7 @@ export function Footer({ onRegister }: FooterProps) {
               marginBottom: "16px",
             }}
           >
-            Navigate
+            {t.footer.navigate}
           </div>
           {["Agenda", "Prizes", "Sponsors", "FAQ", "Register"].map((l) => (
             <div
@@ -188,7 +181,7 @@ export function Footer({ onRegister }: FooterProps) {
                 (e.currentTarget.style.color = "rgba(255,255,255,0.5)")
               }
             >
-              {l}
+              {t.nav[l.toLowerCase() as keyof typeof t.nav] || l}
             </div>
           ))}
         </div>
@@ -205,7 +198,7 @@ export function Footer({ onRegister }: FooterProps) {
               marginBottom: "16px",
             }}
           >
-            Contact
+            {t.footer.contact}
           </div>
           {[
             ["Web", "startupfactory.bg"],
@@ -270,7 +263,7 @@ export function Footer({ onRegister }: FooterProps) {
             letterSpacing: "0.1em",
           }}
         >
-          © 2026 StartupFactory · Vibe Ruse Hackathon
+          © 2026 {HACKATHON_INFO.organizer} · {HACKATHON_INFO.name} Hackathon
         </span>
         <span
           style={{

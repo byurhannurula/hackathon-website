@@ -11,14 +11,7 @@ interface DecryptTextProps {
 }
 
 export function DecryptText({ text, speed = 38, delay = 0 }: DecryptTextProps) {
-  const [out, setOut] = useState(() =>
-    text
-      .split("")
-      .map((c) =>
-        c === " " ? " " : CHARS[Math.floor(Math.random() * CHARS.length)]
-      )
-      .join("")
-  );
+  const [out, setOut] = useState(text);
 
   useEffect(() => {
     let idx = 0;
