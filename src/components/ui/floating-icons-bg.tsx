@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/purity */
 "use client";
-import * as React from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { cn } from '@/lib/utils';
+
+import * as React from "react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 // Interface for the props of each individual icon.
 export interface FloatingIconProps {
@@ -39,7 +41,7 @@ const Icon = ({
         const rect = ref.current.getBoundingClientRect();
         const distance = Math.sqrt(
           Math.pow(mouseX.current - (rect.left + rect.width / 2), 2) +
-          Math.pow(mouseY.current - (rect.top + rect.height / 2), 2)
+            Math.pow(mouseY.current - (rect.top + rect.height / 2), 2)
         );
 
         // If the cursor is close enough, repel the icon
@@ -60,8 +62,8 @@ const Icon = ({
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [x, y, mouseX, mouseY]);
 
   return (
@@ -79,13 +81,13 @@ const Icon = ({
         duration: 0.6,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className={cn('absolute', iconData.className)}
+      className={cn("absolute", iconData.className)}
     >
       {/* Inner wrapper for the continuous floating animation */}
       <motion.div
         className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 p-4 rounded-4xl shadow-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10"
         style={{
-          boxShadow: '0 10px 40px -10px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02)',
+          boxShadow: "0 10px 40px -10px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02)",
         }}
         animate={{
           y: [0, -10, 0, 10, 0],
@@ -94,11 +96,14 @@ const Icon = ({
         transition={{
           duration: 6 + Math.random() * 4,
           repeat: Infinity,
-          repeatType: 'mirror',
-          ease: 'easeInOut',
+          repeatType: "mirror",
+          ease: "easeInOut",
         }}
       >
-        <iconData.icon className="w-8 h-8 md:w-10 md:h-10 opacity-90" style={{ color: 'var(--acid)', filter: 'drop-shadow(0 0 8px rgba(200,255,0,0.3))' }} />
+        <iconData.icon
+          className="w-8 h-8 md:w-10 md:h-10 opacity-90"
+          style={{ color: "var(--acid)", filter: "drop-shadow(0 0 8px rgba(200,255,0,0.3))" }}
+        />
       </motion.div>
     </motion.div>
   );
@@ -123,17 +128,11 @@ export const FloatingIconsBg = ({ icons, className }: FloatingIconsBgProps) => {
           backgroundImage: `
             radial-gradient(circle at 1px 1px, rgba(200,255,0,0.05) 1px, transparent 0)
           `,
-          backgroundSize: '40px 40px'
+          backgroundSize: "40px 40px",
         }}
       />
       {icons.map((iconData, index) => (
-        <Icon
-          key={iconData.id}
-          mouseX={mouseX}
-          mouseY={mouseY}
-          iconData={iconData}
-          index={index}
-        />
+        <Icon key={iconData.id} mouseX={mouseX} mouseY={mouseY} iconData={iconData} index={index} />
       ))}
     </div>
   );

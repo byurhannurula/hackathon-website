@@ -1,26 +1,21 @@
 "use client";
 
-import { RegisterPage } from "@/components/RegisterPage";
 import { useRouter } from "next/navigation";
-import { encryptTicket, type TicketData } from "@/lib/utils";
+
+import { RegisterPage } from "@/components/register-page";
+import { useAnalytics } from "@/components/analytics";
+import { encryptTicket, type TicketData } from "@/lib";
 
 export default function Register() {
   const router = useRouter();
-
-  const handleBack = () => {
-    router.push("/");
-  };
+  const { trackEvent } = useAnalytics();
 
   const handleComplete = (data: TicketData) => {
+    trackEvent("registration_complete", { handle: data.handle, ticketNum: data.ticketNum });
+    sessionStorage.setItem("myTicketNum", String(data.ticketNum));
     const token = encryptTicket(data);
     router.push(`/tickets?t=${token}`);
   };
 
-  return (
-    <RegisterPage
-      onBack={handleBack}
-      onComplete={handleComplete}
-      currentTicket={null}
-    />
-  );
+  return <RegisterPage onRegister={handleComplete} />;
 }

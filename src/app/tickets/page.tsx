@@ -1,7 +1,8 @@
-import { TicketPage } from "@/components/TicketPage";
-import { decryptTicket } from "@/lib/utils";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+import { decryptTicket } from "@/lib";
+import { TicketPage } from "@/components/ticket-page";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,13 +14,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
   if (!data) {
     return {
-      title: "VIBERUSE '26 Ticket",
+      title: "RUSE AI HACK '26 Ticket",
       description: "Claim your spot at the world's first AI-assisted hackathon in Ruse, Bulgaria.",
     };
   }
 
   return {
-    title: `${data.name}'s VIBERUSE '26 Ticket`,
+    title: `${data.name}'s RUSE AI HACK '26 Ticket`,
     description: `Claim your spot at the world's first AI-assisted hackathon in Ruse, Bulgaria.`,
     openGraph: {
       images: [
@@ -33,7 +34,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     },
     twitter: {
       card: "summary_large_image",
-      title: `${data.name}'s VIBERUSE '26 Ticket`,
+      title: `${data.name}'s RUSE AI HACK '26 Ticket`,
       description: `Claim your spot at the world's first AI-assisted hackathon in Ruse, Bulgaria.`,
       images: [`/api/og?t=${t}`],
     },
@@ -48,7 +49,7 @@ export default async function Tickets({ searchParams }: Props) {
     redirect("/register");
   }
 
-  // We still need a client component for some logic in TicketPage 
+  // We still need a client component for some logic in TicketPage
   // but we can pass data directly.
   return <TicketPage data={data} />;
 }

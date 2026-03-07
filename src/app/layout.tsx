@@ -1,38 +1,87 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Space_Mono, Instrument_Serif, Syne } from "next/font/google";
+import { Oswald, JetBrains_Mono, Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 
-const bebas = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
+import { AnalyticsScript } from "@/components/analytics";
+import { cn } from "@/lib";
+
+const oswald = Oswald({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin", "cyrillic"],
   variable: "--font-bebas",
 });
 
-const spaceMono = Space_Mono({
+const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "700"],
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   variable: "--font-mono-google",
 });
 
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  style: "italic",
-  subsets: ["latin"],
-  variable: "--font-serif",
+const playfairDisplay = Playfair_Display({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-serif-google",
 });
 
-const syne = Syne({
-  weight: ["400", "600", "700", "800"],
-  subsets: ["latin"],
+const manrope = Manrope({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin", "cyrillic"],
   variable: "--font-syne",
 });
 
 export const metadata: Metadata = {
-  title: "Vibe Ruse Hackathon '26",
-  description: "A 48-hour hackathon for builders in Ruse, Bulgaria.",
+  title: {
+    default: "RUSE AI HACK '26 — 48-часов AI Хакатон в Русе",
+    template: "%s | RUSE AI HACK '26",
+  },
+  description:
+    "RUSE AI HACK '26 е 48-часов AI хакатон в Русе, България. Създай работещо AI приложение, спечели награди на стойност €5,750 и се свържи с най-добрите разработчици. 26 април 2026.",
+  keywords: [
+    "хакатон",
+    "hackathon",
+    "AI",
+    "Русе",
+    "Ruse",
+    "Bulgaria",
+    "vibe coding",
+    "StartupFactory",
+    "изкуствен интелект",
+    "програмиране",
+    "2026",
+  ],
+  authors: [{ name: "StartupFactory" }],
+  creator: "StartupFactory",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL!),
+  openGraph: {
+    type: "website",
+    locale: "bg_BG",
+    alternateLocale: "en_US",
+    siteName: "RUSE AI HACK '26",
+    title: "RUSE AI HACK '26 — 48-часов AI Хакатон в Русе",
+    description:
+      "48-часов AI хакатон в Русе, България. Реални продукти. AI-assisted всичко. 26 април 2026.",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "RUSE AI HACK '26 Hackathon",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RUSE AI HACK '26 — 48-часов AI Хакатон",
+    description:
+      "48-часов AI хакатон в Русе, България. Реални продукти, реални награди. 26 април 2026.",
+    images: ["/api/og"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
-
-import { Providers } from "@/components/Providers";
 
 export default function RootLayout({
   children,
@@ -40,11 +89,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${bebas.variable} ${spaceMono.variable} ${instrumentSerif.variable} ${syne.variable}`}>
-        <Providers>
-          {children}
-        </Providers>
+    <html lang="bg" suppressHydrationWarning>
+      <body
+        className={cn(
+          oswald.variable,
+          jetbrainsMono.variable,
+          playfairDisplay.variable,
+          manrope.variable
+        )}
+      >
+        {children}
+        <AnalyticsScript />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import type React from "react";
 import { motion } from "framer-motion";
+
 import { cn } from "@/lib/utils";
 
 type FallingPatternProps = React.ComponentProps<"div"> & {

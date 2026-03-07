@@ -19,9 +19,34 @@ export function getGithubAvatarUrl(handle: string): string {
   return `https://github.com/${handle.replace(/^@/, "")}.png`;
 }
 
+/**
+ * Fetch an image URL and return it as a base64 data URL.
+ * Used to avoid CORS issues when html-to-image captures the ticket.
+ */
+export async function fetchAvatarAsBase64(url: string): Promise<string> {
+  if (!url) return "";
+  try {
+    // Proxy through our API route to avoid CORS/redirect issues
+    // (GitHub avatar URLs 302-redirect to avatars.githubusercontent.com)
+    const proxyUrl = `/api/avatar?url=${encodeURIComponent(url)}`;
+    const res = await fetch(proxyUrl);
+    if (!res.ok) return "";
+    const blob = await res.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => resolve("");
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return "";
+  }
+}
+
 export function encryptTicket(d: TicketData): string {
   try {
-    const payload = `vr2026:${d.handle.replace("@", "")}:${d.ticketNum}`;
+    const handle = d.handle.replace("@", "");
+    const payload = `vr2026:${handle}:${d.ticketNum}:${d.name}`;
     const bytes = new TextEncoder().encode(payload);
     let bin = "";
     bytes.forEach((b) => (bin += String.fromCharCode(b)));
@@ -35,13 +60,20 @@ export function decryptTicket(token: string): TicketData | null {
   if (!token) return null;
   try {
     const bin = atob(token.replace(/-/g, "+").replace(/_/g, "/"));
-    const parts = bin.split(":");
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const decoded = new TextDecoder().decode(bytes);
+    const parts = decoded.split(":");
     if (parts[0] === "vr2026") {
+      const handle = parts[1];
+      const ticketNum = parseInt(parts[2]);
+      // Name is everything after the third colon (supports names with colons)
+      const name = parts.slice(3).join(":") || handle.charAt(0).toUpperCase() + handle.slice(1);
       return {
-        handle: "@" + parts[1],
-        ticketNum: parseInt(parts[2]),
-        name: parts[1].charAt(0).toUpperCase() + parts[1].slice(1),
-        avatarUrl: `https://github.com/${parts[1]}.png`,
+        handle: "@" + handle,
+        ticketNum,
+        name,
+        avatarUrl: `https://github.com/${handle}.png`,
       };
     }
     return null;

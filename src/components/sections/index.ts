@@ -1,0 +1,9 @@
+export { HeroSection } from "./hero-section";
+export { OrganizerSection } from "./organizer-section";
+export { AgendaSection } from "./agenda-section";
+export { PrizesSection } from "./prizes-section";
+export { SponsorsSection } from "./sponsors-section";
+export { FaqSection } from "./faq-section";
+export { AboutSection } from "./about-section";
+export { JurySection } from "./jury-section";
+export { CTASection } from "./cta-section";

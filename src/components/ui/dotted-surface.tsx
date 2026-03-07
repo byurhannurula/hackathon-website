@@ -1,10 +1,11 @@
 "use client";
-import { cn } from "@/lib/utils";
+
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 
-type DottedSurfaceProps = Omit<React.ComponentProps<"div">, "ref"> & {
-};
+import { cn } from "@/lib/utils";
+
+type DottedSurfaceProps = Omit<React.ComponentProps<"div">, "ref"> & {};
 
 export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,7 +19,8 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
   } | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     const SEPARATION = 150;
     const AMOUNTX = 40;
@@ -32,7 +34,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
       60,
       window.innerWidth / window.innerHeight,
       1,
-      10000,
+      10000
     );
     camera.position.set(0, 355, 1220);
 
@@ -44,7 +46,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(scene.fog.color, 0);
 
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     // Create particles
     const positions: number[] = [];
@@ -66,10 +68,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
       }
     }
 
-    geometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(positions, 3),
-    );
+    geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
 
     // Create material
@@ -86,11 +85,11 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     scene.add(points);
 
     let count = 0;
-    let animationId: number = 0;
+    const animIdRef = { current: 0 };
 
     // Animation function
     const animate = () => {
-      animationId = requestAnimationFrame(animate);
+      animIdRef.current = requestAnimationFrame(animate);
 
       const positionAttribute = geometry.attributes.position;
       const positionsArr = positionAttribute.array as Float32Array;
@@ -103,8 +102,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
           // Animate Y position with sine waves
           // Fix: separate ix/iy from count to avoid 'static' look
           positionsArr[index + 1] =
-            Math.sin((ix + count) * 0.3) * 50 +
-            Math.sin((iy + count) * 0.5) * 50;
+            Math.sin((ix + count) * 0.3) * 50 + Math.sin((iy + count) * 0.5) * 50;
 
           i++;
         }
@@ -134,17 +132,16 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
       camera,
       renderer,
       particles: [points],
-      animationId,
+      animationId: animIdRef.current,
       count,
     };
 
     // Cleanup function
     return () => {
       window.removeEventListener("resize", handleResize);
+      cancelAnimationFrame(animIdRef.current);
 
       if (sceneRef.current) {
-        cancelAnimationFrame(sceneRef.current.animationId);
-
         // Clean up Three.js objects
         sceneRef.current.scene.traverse((object) => {
           if (object instanceof THREE.Points) {
@@ -159,10 +156,8 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
         sceneRef.current.renderer.dispose();
 
-        if (containerRef.current && sceneRef.current.renderer.domElement) {
-          containerRef.current.removeChild(
-            sceneRef.current.renderer.domElement,
-          );
+        if (container && sceneRef.current.renderer.domElement) {
+          container.removeChild(sceneRef.current.renderer.domElement);
         }
       }
     };

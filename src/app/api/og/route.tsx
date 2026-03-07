@@ -1,16 +1,13 @@
 import { ImageResponse } from "next/og";
 import { decryptTicket } from "@/lib/utils";
+import { siteConfig } from "@/lib/site";
 
 export const runtime = "edge";
 
 async function loadGoogleFont(font: string, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(
-    text
-  )}`;
+  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
-  const resource = css.match(
-    /src: url\((.+)\) format\('(opentype|truetype)'\)/
-  );
+  const resource = css.match(/src: url\((.+)\) format\('(opentype|truetype)'\)/);
 
   if (resource) {
     const response = await fetch(resource[1]);
@@ -23,24 +20,35 @@ async function loadGoogleFont(font: string, text: string) {
   throw new Error("failed to load font data");
 }
 
+async function fetchImageAsDataUri(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+    const ct = res.headers.get("content-type") || "image/png";
+    return `data:${ct};base64,${base64}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const token = searchParams.get("t");
     const data = token ? decryptTicket(token) : null;
 
-    const name = data?.name || "Attendee";
-    const handle = data?.handle || "@handle";
-    const ticketNum = data?.ticketNum || 0;
-    const numStr = String(ticketNum).padStart(6, "0");
+    const ev = siteConfig.event;
 
-    // Load fonts
-    const syneData = await loadGoogleFont("Syne", name + "0123456789");
-    const bebasData = await loadGoogleFont("Bebas+Neue", "VIBE RUSE");
-    const monoData = await loadGoogleFont("Space+Mono", handle + numStr + "NºHACKATHON '2626 APRIL 2026RUSE, BULGARIAby StartupFactory");
+    // ── GENERIC OG (no ticket token) ──
+    if (!data) {
+      const genericText = `${ev.name}HACKATHON${ev.year}${ev.date}${ev.location}${ev.duration}by ${ev.organizer}${ev.prizesPool}${ev.buildersCount}BUILDERS IN PRIZESGET YOUR TICKET`;
+      const bebasData = await loadGoogleFont("Bebas+Neue", genericText);
+      const monoData = await loadGoogleFont("Space+Mono", genericText);
+      const syneData = await loadGoogleFont("Syne", genericText);
 
-    return new ImageResponse(
-      (
+      return new ImageResponse(
         <div
           style={{
             height: "100%",
@@ -49,146 +57,464 @@ export async function GET(request: Request) {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#000",
+            backgroundColor: "#050505",
             position: "relative",
           }}
         >
-          {/* Ticket Shape replicated with SVG */}
-          <svg
-            width="720"
-            height="320"
-            viewBox="0 0 720 320"
+          {/* Radial glow */}
+          <div
             style={{
               position: "absolute",
-              top: "155px",
-              left: "240px",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "900px",
+              height: "600px",
+              background:
+                "radial-gradient(ellipse at center, rgba(200,255,0,0.08) 0%, transparent 70%)",
+            }}
+          />
+          {/* Dot grid */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: "radial-gradient(circle, rgba(200,255,0,0.06) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          />
+          {/* Content */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "8px",
+              zIndex: 1,
             }}
           >
+            <span
+              style={{
+                fontFamily: "Space Mono",
+                fontSize: "14px",
+                color: "rgba(255,255,255,0.5)",
+                letterSpacing: "4px",
+                textTransform: "uppercase",
+              }}
+            >
+              {ev.date} · {ev.location} · {ev.duration}
+            </span>
+            <div style={{ display: "flex", gap: "16px", marginTop: "8px" }}>
+              <span
+                style={{
+                  fontFamily: "Bebas Neue",
+                  fontSize: "140px",
+                  color: "#C8FF00",
+                  lineHeight: "0.95",
+                }}
+              >
+                RUSE
+              </span>
+              <span
+                style={{
+                  fontFamily: "Bebas Neue",
+                  fontSize: "140px",
+                  color: "#fff",
+                  lineHeight: "0.95",
+                }}
+              >
+                AI HACK
+              </span>
+            </div>
+            <span
+              style={{
+                fontFamily: "Space Mono",
+                fontSize: "14px",
+                color: "rgba(255,255,255,0.35)",
+                letterSpacing: "6px",
+                textTransform: "uppercase",
+              }}
+            >
+              HACKATHON {ev.year}
+            </span>
+            <span
+              style={{
+                fontFamily: "Syne",
+                fontSize: "16px",
+                color: "rgba(255,255,255,0.55)",
+                marginTop: "16px",
+                fontStyle: "italic",
+              }}
+            >
+              by {ev.organizer}
+            </span>
+            {/* Stats row */}
+            <div
+              style={{
+                display: "flex",
+                gap: "48px",
+                marginTop: "32px",
+              }}
+            >
+              {[
+                [ev.buildersCount, "BUILDERS"],
+                [ev.duration, "NON-STOP"],
+                [ev.prizesPool, "IN PRIZES"],
+              ].map(([value, label]) => (
+                <div
+                  key={label}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "Bebas Neue",
+                      fontSize: "36px",
+                      color: "#C8FF00",
+                    }}
+                  >
+                    {value}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: "Space Mono",
+                      fontSize: "10px",
+                      color: "rgba(255,255,255,0.4)",
+                      letterSpacing: "2px",
+                    }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>,
+        {
+          width: 1200,
+          height: 630,
+          fonts: [
+            { name: "Syne", data: syneData, style: "normal" as const, weight: 700 as const },
+            { name: "Bebas Neue", data: bebasData, style: "normal" as const },
+            { name: "Space Mono", data: monoData, style: "normal" as const },
+          ],
+        }
+      );
+    }
+
+    // ── TICKET OG (with token) ──
+    const name = data.name;
+    const handle = data.handle;
+    const ticketNum = data.ticketNum;
+    const numStr = String(ticketNum).padStart(6, "0");
+
+    // Pre-fetch avatar as data URI to avoid CORS issues in Edge runtime
+    const avatarDataUri = data.avatarUrl ? await fetchImageAsDataUri(data.avatarUrl) : null;
+
+    const allText =
+      name +
+      handle +
+      numStr +
+      `#HACKATHON${ev.year}${ev.date}${ev.location}by ${ev.organizer}0123456789`;
+    const syneData = await loadGoogleFont("Syne", allText);
+    const bebasData = await loadGoogleFont(
+      "Bebas+Neue",
+      `${ev.name.slice(0, 4)} ${ev.name.slice(4)}` + allText
+    );
+    const monoData = await loadGoogleFont("Space+Mono", allText);
+
+    // Scale ticket to fill more of the 1200x630 canvas
+    const tW = 900;
+    const tH = 400;
+    const tX = (1200 - tW) / 2;
+    const tY = (630 - tH) / 2;
+    const scale = tW / 720;
+
+    return new ImageResponse(
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#050505",
+          position: "relative",
+        }}
+      >
+        {/* Subtle radial glow behind ticket */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "800px",
+            height: "500px",
+            background:
+              "radial-gradient(ellipse at center, rgba(200,255,0,0.06) 0%, transparent 70%)",
+          }}
+        />
+
+        {/* Ticket container — SVG + content aligned together */}
+        <div
+          style={{
+            position: "absolute",
+            top: `${tY}px`,
+            left: `${tX}px`,
+            width: `${tW}px`,
+            height: `${tH}px`,
+            display: "flex",
+          }}
+        >
+          {/* Ticket SVG shape */}
+          <svg
+            width={tW}
+            height={tH}
+            viewBox="0 0 720 320"
+            style={{ position: "absolute", inset: 0 }}
+          >
+            <defs>
+              <linearGradient
+                id="bg"
+                x1="0"
+                y1="0"
+                x2="720"
+                y2="320"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0%" stopColor="#C8FF00" />
+                <stop offset="30%" stopColor="#00FFB2" />
+                <stop offset="60%" stopColor="#7B61FF" />
+                <stop offset="85%" stopColor="#FF3355" />
+                <stop offset="100%" stopColor="#C8FF00" />
+              </linearGradient>
+            </defs>
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="M22 0C9.85 0 0 9.85 0 22V144C16.57 144 30 157.43 30 174C30 190.57 16.57 204 0 204V298C0 310.15 9.85 320 22 320H698C710.15 320 720 310.15 720 298V204C703.43 204 690 190.57 690 174C690 157.43 703.43 144 720 144V22C720 9.85 710.15 0 698 0H22Z"
-              fill="#C8FF00"
+              d="M22 0C9.85 0 0 9.85 0 22V130C16.57 130 30 143.43 30 160C30 176.57 16.57 190 0 190V298C0 310.15 9.85 320 22 320H698C710.15 320 720 310.15 720 298V190C703.43 190 690 176.57 690 160C690 143.43 703.43 130 720 130V22C720 9.85 710.15 0 698 0H22Z"
+              fill="url(#bg)"
             />
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="M23 7C13.61 7 6 14.61 6 24V139.8C22.76 142.35 35.5 157.6 35.5 174C35.5 190.4 22.76 205.65 6 208.2V296C6 305.39 13.61 313 23 313H697C706.39 313 714 305.39 714 296V208.2C697.24 205.65 684.5 190.4 684.5 174C684.5 157.6 697.24 142.35 714 139.8V24C714 14.61 706.39 7 697 7H23Z"
+              d="M23 7C13.61 7 6 14.61 6 24V125.8C22.76 128.35 35.5 143.6 35.5 160C35.5 176.4 22.76 191.65 6 194.2V296C6 305.39 13.61 313 23 313H697C706.39 313 714 305.39 714 296V194.2C697.24 191.65 684.5 176.4 684.5 160C684.5 143.6 697.24 128.35 714 125.8V24C714 14.61 706.39 7 697 7H23Z"
               fill="#080808"
             />
             <line
-              x1="548"
+              x1="580"
               y1="10"
-              x2="548"
+              x2="580"
               y2="310"
               stroke="#333"
-              strokeWidth="2"
-              strokeDasharray="10 5"
+              strokeWidth="1.5"
+              strokeDasharray="7 5"
             />
           </svg>
 
-          {/* Ticket Content Container */}
-          <div style={{
-            width: "720px",
-            height: "320px",
-            display: "flex",
-            position: "relative",
-          }}>
-            {/* Left Content */}
-            <div style={{
+          {/* Left content area */}
+          <div
+            style={{
               position: "absolute",
-              top: "25px",
-              left: "35px",
+              top: `${48 * scale}px`,
+              left: `${56 * scale}px`,
+              bottom: `${48 * scale}px`,
               display: "flex",
               flexDirection: "column",
-              height: "270px",
               justifyContent: "space-between",
-              width: "500px",
-            }}>
-              {/* Top: Name + Handle */}
-              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                <div style={{
-                  width: "64px",
-                  height: "64px",
-                  borderRadius: "32px",
-                  backgroundColor: "#333",
+              width: `${520 * scale}px`,
+            }}
+          >
+            {/* Top: Avatar + Name + Handle */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: `${20 * scale}px`,
+              }}
+            >
+              <div
+                style={{
+                  width: `${72 * scale}px`,
+                  height: `${72 * scale}px`,
+                  borderRadius: `${36 * scale}px`,
+                  backgroundColor: "#222",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  border: "2px solid #C8FF00",
-                  overflow: "hidden"
-                }}>
-                  {data?.avatarUrl ? (
-                    <img src={data.avatarUrl} style={{ width: "64px", height: "64px" }} />
-                  ) : (
-                    <span style={{ color: "#fff", fontSize: "24px", fontFamily: "Syne" }}>{name[0]}</span>
-                  )}
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{
+                  border: `${2 * scale}px solid #C8FF00`,
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                {avatarDataUri ? (
+                  /* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */
+                  <img
+                    src={avatarDataUri}
+                    width={72 * scale}
+                    height={72 * scale}
+                    style={{ objectFit: "cover" }}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      color: "#C8FF00",
+                      fontSize: `${30 * scale}px`,
+                      fontFamily: "Syne",
+                      fontWeight: 700,
+                    }}
+                  >
+                    {name[0]?.toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span
+                  style={{
                     color: "#fff",
-                    fontSize: "24px",
+                    fontSize: `${name.length > 20 ? 18 : 26}px`,
                     fontFamily: "Syne",
                     fontWeight: 800,
-                  }}>
-                    {name.toUpperCase()}
-                  </span>
-                  <span style={{
+                  }}
+                >
+                  {name}
+                </span>
+                <span
+                  style={{
                     color: "rgba(255,255,255,0.5)",
-                    fontSize: "14px",
+                    fontSize: `${14 * scale}px`,
                     fontFamily: "Space Mono",
-                  }}>
-                    {handle}
-                  </span>
-                </div>
-              </div>
-
-              {/* Bottom: Brand + Info */}
-              <div style={{ display: "flex", alignItems: "flex-end", gap: "25px" }}>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <div style={{ display: "flex", fontFamily: "Bebas Neue", fontSize: "40px" }}>
-                    <span style={{ color: "#C8FF00" }}>VIBE</span>
-                    <span style={{ color: "#fff", marginLeft: "10px" }}>RUSE</span>
-                  </div>
-                  <span style={{ color: "rgba(255,255,255,0.4)", fontFamily: "Space Mono", fontSize: "10px", marginTop: "5px", letterSpacing: "2px" }}>
-                    HACKATHON '26
-                  </span>
-                </div>
-                <div style={{ width: "1px", height: "40px", backgroundColor: "rgba(255,255,255,0.2)" }} />
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <span style={{ color: "#fff", fontFamily: "Syne", fontSize: "16px", fontWeight: 700 }}>
-                    26 APRIL 2026
-                  </span>
-                  <span style={{ color: "rgba(255,255,255,0.5)", fontFamily: "Space Mono", fontSize: "12px" }}>
-                    RUSE, BULGARIA
-                  </span>
-                </div>
+                    marginTop: `${4 * scale}px`,
+                  }}
+                >
+                  {handle}
+                </span>
               </div>
             </div>
 
-            {/* Right Stub (Ticket Number) */}
-            <div style={{
-              position: "absolute",
-              right: "45px",
-              top: "0",
-              height: "320px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}>
-              <div style={{
-                transform: "rotate(-90deg)",
+            {/* Bottom: Brand + Date */}
+            <div
+              style={{
                 display: "flex",
-                alignItems: "baseline",
-                gap: "10px",
-              }}>
-                <span style={{ color: "#C8FF00", fontFamily: "Space Mono", fontSize: "12px", fontWeight: 700 }}>Nº</span>
-                <span style={{ color: "#fff", fontFamily: "Space Mono", fontSize: "28px", fontWeight: 700 }}>{numStr}</span>
+                alignItems: "center",
+                gap: `${25 * scale}px`,
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    fontFamily: "Bebas Neue",
+                    fontSize: `${44 * scale}px`,
+                  }}
+                >
+                  <span style={{ color: "#C8FF00" }}>RUSE</span>
+                  <span style={{ color: "#fff", marginLeft: `${10 * scale}px` }}>AI HACK</span>
+                </div>
+                <span
+                  style={{
+                    color: "rgba(255,255,255,0.4)",
+                    fontFamily: "Space Mono",
+                    fontSize: `${10 * scale}px`,
+                    letterSpacing: "2px",
+                  }}
+                >
+                  HACKATHON &apos;26
+                </span>
+              </div>
+              <div
+                style={{
+                  width: "1px",
+                  height: `${42 * scale}px`,
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                }}
+              />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <span
+                  style={{
+                    color: "#fff",
+                    fontFamily: "Syne",
+                    fontSize: `${17 * scale}px`,
+                    fontWeight: 700,
+                  }}
+                >
+                  {ev.date}
+                </span>
+                <span
+                  style={{
+                    color: "rgba(255,255,255,0.5)",
+                    fontFamily: "Space Mono",
+                    fontSize: `${12 * scale}px`,
+                    marginTop: `${2 * scale}px`,
+                  }}
+                >
+                  {ev.location.toUpperCase()}
+                </span>
+                <span
+                  style={{
+                    color: "rgba(255,255,255,0.3)",
+                    fontFamily: "Space Mono",
+                    fontSize: `${9 * scale}px`,
+                    marginTop: `${6 * scale}px`,
+                    letterSpacing: "1px",
+                  }}
+                >
+                  by <span style={{ color: "rgba(200,255,0,0.7)" }}>{ev.organizer}</span>
+                </span>
               </div>
             </div>
           </div>
+
+          {/* Right stub — ticket number */}
+          <div
+            style={{
+              position: "absolute",
+              right: `${10 * scale}px`,
+              top: "0",
+
+              height: `${tH}px`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                transform: "rotate(-90deg)",
+                display: "flex",
+                alignItems: "baseline",
+                gap: `${10 * scale}px`,
+              }}
+            >
+              <span
+                style={{
+                  color: "#C8FF00",
+                  fontFamily: "Space Mono",
+                  fontSize: `${28 * scale}px`,
+                  fontWeight: 700,
+                }}
+              >
+                #
+              </span>
+              <span
+                style={{
+                  color: "#fff",
+                  fontFamily: "Space Mono",
+                  fontSize: `${30 * scale}px`,
+                  fontWeight: 700,
+                  letterSpacing: "3px",
+                }}
+              >
+                {numStr}
+              </span>
+            </div>
+          </div>
         </div>
-      ),
+      </div>,
       {
         width: 1200,
         height: 630,
@@ -213,7 +539,7 @@ export async function GET(request: Request) {
       }
     );
   } catch (e) {
-    console.log(`OG Image Generation Error: ${e}`);
+    console.error(`OG Image Generation Error: ${e}`);
     return new Response(`Failed to generate the image`, {
       status: 500,
     });

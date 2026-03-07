@@ -1,79 +1,34 @@
-export const PARTNERS = [
-  "Vercel",
-  "GitHub",
-  "Supabase",
-  "Resend",
-  "Tailwind CSS",
-  "Prisma",
-  "Neon",
-  "Clerk",
-  "Stripe",
-  "PlanetScale",
-  "Cloudflare",
-  "Railway",
-];
+import { SPONSORS, cn } from "@/lib";
 
 interface TickerProps {
   dir?: number;
 }
 
 export const Ticker = ({ dir = 1 }: TickerProps) => (
-  <div
-    style={{
-      overflow: "hidden",
-      borderTop: "1px solid rgba(255,255,255,0.1)",
-      borderBottom: "1px solid rgba(255,255,255,0.1)",
-      padding: "13px 0",
-      position: "relative",
-    }}
-  >
+  <div className="overflow-hidden border-y border-white/10 py-3 relative">
     <div
-      style={{
-        position: "absolute",
-        left: 0,
-        top: 0,
-        bottom: 0,
-        width: "60px",
-        background: "linear-gradient(to right, var(--bg), transparent)",
-        zIndex: 1,
-        pointerEvents: "none",
-      }}
+      className="absolute left-0 top-0 bottom-0 w-15 z-1 pointer-events-none"
+      style={{ background: "linear-gradient(to right, var(--bg), transparent)" }}
     />
     <div
-      style={{
-        position: "absolute",
-        right: 0,
-        top: 0,
-        bottom: 0,
-        width: "60px",
-        background: "linear-gradient(to left, var(--bg), transparent)",
-        zIndex: 1,
-        pointerEvents: "none",
-      }}
+      className="absolute right-0 top-0 bottom-0 w-15 z-1 pointer-events-none"
+      style={{ background: "linear-gradient(to left, var(--bg), transparent)" }}
     />
     <div
+      className="flex gap-15 w-max"
       style={{
-        display: "flex",
-        gap: "60px",
-        width: "max-content",
-        animation: `ticker ${dir > 0 ? 28 : 22}s linear infinite ${dir < 0 ? "reverse" : ""
-          }`,
+        animation: `ticker ${dir > 0 ? 28 : 22}s linear infinite ${dir < 0 ? "reverse" : ""}`,
       }}
     >
-      {[...PARTNERS, ...PARTNERS].map((p, i) => (
+      {[...SPONSORS, ...SPONSORS, ...SPONSORS].map((p, i) => (
         <span
           key={i}
-          style={{
-            fontFamily: "var(--font-mono-google)",
-            fontSize: "11px",
-            letterSpacing: "0.14em",
-            color:
-              i % 4 === 0 ? "rgba(200,255,0,0.75)" : "rgba(255,255,255,0.45)",
-            textTransform: "uppercase",
-            whiteSpace: "nowrap",
-          }}
+          className={cn(
+            "font-mono text-[11px] tracking-[0.14em] uppercase whitespace-nowrap",
+            i % 4 === 0 ? "text-acid/75" : "text-white/45"
+          )}
         >
-          {i % 4 === 0 ? "◆" : "·"} {p}
+          {i % 4 === 0 ? "\u25C6" : "\u00B7"} {p}
         </span>
       ))}
     </div>
