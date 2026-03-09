@@ -36,4 +36,5 @@ export interface InfoCriterion {
 export interface Sponsor {
   name: string;
   logo?: string;
+  href?: string;
 }

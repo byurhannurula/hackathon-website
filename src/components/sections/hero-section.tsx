@@ -1,7 +1,6 @@
 "use client";
 
 import { siteConfig } from "@/constants";
-import { useRegistrationCount } from "@/hooks";
 import { DottedSurface, DecryptText, CountUp } from "@/components/ui";
 
 interface HeroSectionProps {
@@ -9,8 +8,6 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onRegister }: HeroSectionProps) {
-  const liveCount = useRegistrationCount();
-
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6 pt-[120px] pb-20 md:px-12">
       <DottedSurface className="absolute inset-0 z-0" />
@@ -93,7 +90,6 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         {/* Stats */}
         <div className="flex gap-6 md:gap-15 mt-12 md:mt-18 justify-center flex-wrap">
           {[
-            [liveCount != null ? `${liveCount}` : "—", "СТРОИТЕЛИ"],
             ["48Ч", "БЕЗ ПРЕКЪСВАНЕ"],
             [siteConfig.event.prizesPool, "В НАГРАДИ"],
             ["БЕЗПЛАТНО", "ВХОД"],

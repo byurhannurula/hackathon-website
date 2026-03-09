@@ -11,33 +11,29 @@ export function SponsorsSection() {
         <SectionHeader label="ПРАВЯТ ТОВА ВЪЗМОЖНО" title="СПОНСОРИ" />
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-13">
           {SPONSORS.map((sponsor) => (
-            <div
-              key={sponsor.name}
-              className="flex items-center justify-center p-8 border border-border-hover bg-white/3 transition-all duration-200 group hover:border-acid/50 hover:bg-acid/5 min-h-[120px]"
-            >
-              {sponsor.logo ? (
-                <Image
-                  src={sponsor.logo}
-                  alt={sponsor.name}
-                  width={150}
-                  height={60}
-                  className="object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
-                />
-              ) : (
-                <span className="font-display text-lg tracking-[0.06em] text-white/70">
-                  {sponsor.name}
-                </span>
-              )}
-            </div>
+            <a href={sponsor.href} key={sponsor.name} target="_blank" rel="noopener noreferrer">
+              <div className="flex items-center justify-center p-8 border border-border-hover hover:cursor-pointer bg-white/3 transition-all duration-200 group hover:border-acid/50 hover:bg-acid/5 min-h-[120px]">
+                {sponsor.logo ? (
+                  <Image
+                    src={sponsor.logo}
+                    alt={sponsor.name}
+                    width={150}
+                    height={60}
+                    className="object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
+                  />
+                ) : (
+                  <span className="font-display text-lg tracking-[0.06em] text-white/70">
+                    {sponsor.name}
+                  </span>
+                )}
+              </div>
+            </a>
           ))}
         </div>
         {/* Sponsor CTA */}
         <div className="mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5">
           <div>
             <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>
-            <div className="font-mono text-[11px] text-muted mt-1">
-              Застанете пред 600+ строители. Ограничени места.
-            </div>
           </div>
           <a
             href={`mailto:${siteConfig.contact.sponsorEmail}`}
