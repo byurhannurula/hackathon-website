@@ -82,7 +82,12 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           >
             ВЗЕМИ БИЛЕТ
           </button>
-          <button className="font-display text-lg tracking-[0.07em] bg-transparent text-muted border border-border-hover py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid">
+          <button
+            className="font-display text-lg tracking-[0.07em] bg-transparent text-muted border border-border-hover py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
+            onClick={() =>
+              document.getElementById("agenda")?.scrollIntoView({ behavior: "smooth" })
+            }
+          >
             ВИЖ ПРОГРАМАТА
           </button>
         </div>
