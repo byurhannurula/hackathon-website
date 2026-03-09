@@ -1,6 +1,6 @@
 "use client";
 
-import { FAQ_ITEMS } from "@/lib";
+import { FAQ_ITEMS } from "@/constants";
 import { FaqItem } from "@/components/faq-item";
 import { SectionHeader } from "@/components/section-header";
 

@@ -1,20 +1,33 @@
 "use client";
 
-import { SPONSORS, siteConfig } from "@/lib";
+import Image from "next/image";
+import { SPONSORS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 
 export function SponsorsSection() {
   return (
-    <section id="sponsors" className="px-6 py-25 md:px-12">
+    <section id="sponsors" className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div className="max-w-[1100px] mx-auto">
         <SectionHeader label="ПРАВЯТ ТОВА ВЪЗМОЖНО" title="СПОНСОРИ" />
-        <div className="flex flex-wrap gap-2.5 mt-13">
-          {SPONSORS.map((name) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-13">
+          {SPONSORS.map((sponsor) => (
             <div
-              key={name}
-              className="font-display text-lg tracking-[0.06em] py-3.5 px-7 border border-border-hover bg-white/3 text-white/70 cursor-pointer transition-all duration-200 hover:border-acid/50 hover:text-acid hover:bg-acid/5"
+              key={sponsor.name}
+              className="flex items-center justify-center p-8 border border-border-hover bg-white/3 transition-all duration-200 group hover:border-acid/50 hover:bg-acid/5 min-h-[120px]"
             >
-              {name}
+              {sponsor.logo ? (
+                <Image
+                  src={sponsor.logo}
+                  alt={sponsor.name}
+                  width={150}
+                  height={60}
+                  className="object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
+                />
+              ) : (
+                <span className="font-display text-lg tracking-[0.06em] text-white/70">
+                  {sponsor.name}
+                </span>
+              )}
             </div>
           ))}
         </div>

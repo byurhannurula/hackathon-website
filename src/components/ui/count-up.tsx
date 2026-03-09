@@ -10,7 +10,13 @@ interface CountUpProps {
 export function CountUp({ value, className }: CountUpProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [displayed, setDisplayed] = useState(value);
+  const [visible, setVisible] = useState(false);
   const hasAnimated = useRef(false);
+  const isMobile = useRef(false);
+
+  useEffect(() => {
+    isMobile.current = window.innerWidth < 768;
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -20,7 +26,12 @@ export function CountUp({ value, className }: CountUpProps) {
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
-          animateValue(value, setDisplayed);
+          if (isMobile.current) {
+            setVisible(true);
+          } else {
+            setVisible(true);
+            animateValue(value, setDisplayed);
+          }
         }
       },
       { threshold: 0.5 }
@@ -31,7 +42,15 @@ export function CountUp({ value, className }: CountUpProps) {
   }, [value]);
 
   return (
-    <div ref={ref} className={className}>
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
+        transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
+      }}
+    >
       {displayed}
     </div>
   );

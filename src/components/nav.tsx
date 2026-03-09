@@ -1,30 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 
-import { siteConfig, cn } from "@/lib";
+import { cn } from "@/lib";
+import { siteConfig } from "@/constants";
 
 interface NavProps {
   onRegister?: () => void;
 }
 
 export function Nav({}: NavProps) {
-  const [scroll, setScroll] = useState(false);
-
-  useEffect(() => {
-    const fn = () => setScroll(window.scrollY > 50);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-200 h-[60px] flex items-center justify-between px-6 md:px-12 transition-all duration-400",
-        scroll
-          ? "bg-bg/94 backdrop-blur-xl border-b border-border"
-          : "bg-transparent border-b border-transparent"
+        "bg-bg/94 backdrop-blur-xl border-b border-border"
+        // scroll
+        //   ? "bg-bg/94 backdrop-blur-xl border-b border-border"
+        //   : "bg-transparent border-b border-transparent"
       )}
     >
       <Link href="/" className="no-underline flex items-baseline gap-1.5">
@@ -35,10 +28,10 @@ export function Nav({}: NavProps) {
       <div className="flex gap-7 items-center">
         {[
           { key: "about", label: "За нас" },
+          { key: "sponsors", label: "Спонсори" },
           { key: "agenda", label: "Програма" },
           { key: "jury", label: "Жури" },
           { key: "prizes", label: "Награди" },
-          { key: "sponsors", label: "Спонсори" },
           { key: "faq", label: "Въпроси" },
         ].map((item) => (
           <Link

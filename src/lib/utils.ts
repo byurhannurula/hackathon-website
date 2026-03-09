@@ -12,6 +12,7 @@ export interface TicketData {
   handle: string;
   avatarUrl: string;
   ticketNum: number;
+  ticketId?: string;
 }
 
 export function getGithubAvatarUrl(handle: string): string {
@@ -43,41 +44,25 @@ export async function fetchAvatarAsBase64(url: string): Promise<string> {
   }
 }
 
-export function encryptTicket(d: TicketData): string {
-  try {
-    const handle = d.handle.replace("@", "");
-    const payload = `vr2026:${handle}:${d.ticketNum}:${d.name}`;
-    const bytes = new TextEncoder().encode(payload);
-    let bin = "";
-    bytes.forEach((b) => (bin += String.fromCharCode(b)));
-    return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-  } catch {
-    return String(d.ticketNum);
-  }
+/**
+ * Build the full share URL for a ticket.
+ */
+export function buildShareUrl(ticketId: string): string {
+  if (typeof window === "undefined") return "";
+  return `${window.location.origin}/tickets/${ticketId}`;
 }
 
-export function decryptTicket(token: string): TicketData | null {
-  if (!token) return null;
-  try {
-    const bin = atob(token.replace(/-/g, "+").replace(/_/g, "/"));
-    const bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    const decoded = new TextDecoder().decode(bytes);
-    const parts = decoded.split(":");
-    if (parts[0] === "vr2026") {
-      const handle = parts[1];
-      const ticketNum = parseInt(parts[2]);
-      // Name is everything after the third colon (supports names with colons)
-      const name = parts.slice(3).join(":") || handle.charAt(0).toUpperCase() + handle.slice(1);
-      return {
-        handle: "@" + handle,
-        ticketNum,
-        name,
-        avatarUrl: `https://github.com/${handle}.png`,
-      };
-    }
-    return null;
-  } catch {
-    return null;
-  }
+/**
+ * Build social share URLs for a ticket.
+ */
+export function buildSocialShareUrls(shareUrl: string) {
+  return {
+    // Twitter/X is the only platform that supports custom text via URL params
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      `Участвам в Ruse AI Hack '26! Присъедини се ✦`
+    )}&url=${encodeURIComponent(shareUrl)}`,
+    // LinkedIn & Facebook read og:title, og:description, og:image from the page — no text params supported
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+  };
 }

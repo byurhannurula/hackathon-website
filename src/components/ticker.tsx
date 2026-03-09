@@ -1,4 +1,5 @@
-import { SPONSORS, cn } from "@/lib";
+import { SPONSOR_NAMES } from "@/constants";
+import { cn } from "@/lib";
 
 interface TickerProps {
   dir?: number;
@@ -20,7 +21,7 @@ export const Ticker = ({ dir = 1 }: TickerProps) => (
         animation: `ticker ${dir > 0 ? 28 : 22}s linear infinite ${dir < 0 ? "reverse" : ""}`,
       }}
     >
-      {[...SPONSORS, ...SPONSORS, ...SPONSORS].map((p, i) => (
+      {[...SPONSOR_NAMES, ...SPONSOR_NAMES, ...SPONSOR_NAMES].map((p, i) => (
         <span
           key={i}
           className={cn(

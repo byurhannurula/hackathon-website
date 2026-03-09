@@ -27,6 +27,7 @@ export const step3Schema = z.object({
   wantChallenge: z.string().min(1, "Изберете опция"),
   volunteerHelp: z.string().min(1, "Изберете опция"),
   agreeRandomTeams: z.literal(true, { message: "Трябва да приемете правилата за отборите" }),
+  gdprConsent: z.literal(true, { message: "Трябва да дадете съгласие за обработка на данните" }),
   additionalQuestions: z.string().optional(),
 });
 

@@ -1,16 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
-import { HACKATHON_INFO, useRegistrationCount, cn } from "@/lib";
-import {
-  FallingPattern,
-  DottedSurface,
-  PaperDithering,
-  FloatingIconsShader,
-  DecryptText,
-  CountUp,
-} from "@/components/ui";
+import { siteConfig } from "@/constants";
+import { useRegistrationCount } from "@/hooks";
+import { DottedSurface, DecryptText, CountUp } from "@/components/ui";
 
 interface HeroSectionProps {
   onRegister: () => void;
@@ -19,19 +11,9 @@ interface HeroSectionProps {
 export function HeroSection({ onRegister }: HeroSectionProps) {
   const liveCount = useRegistrationCount();
 
-  const [heroHover, setHeroHover] = useState(false);
-  const [bgType, setBgType] = useState<"falling" | "dotted" | "paper" | "icons">("dotted");
-
   return (
-    <section
-      onMouseEnter={() => setHeroHover(true)}
-      onMouseLeave={() => setHeroHover(false)}
-      className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6 pt-[120px] pb-20 md:px-12"
-    >
-      {bgType === "falling" && <FallingPattern className="absolute inset-0 z-0" />}
-      {bgType === "dotted" && <DottedSurface className="absolute inset-0 z-0" />}
-      {bgType === "paper" && <PaperDithering isHovered={heroHover} />}
-      {bgType === "icons" && <FloatingIconsShader />}
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6 pt-[120px] pb-20 md:px-12">
+      <DottedSurface className="absolute inset-0 z-0" />
 
       {/* Subtle dot grid overlay underneath shader */}
       <div
@@ -64,7 +46,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           />
         </div>
 
-        <h1 className="font-display font-semibold text-[clamp(80px,14vw,172px)] leading-[0.95] tracking-tight mt-[18px]">
+        <h1 className="font-display font-semibold text-[clamp(48px,12vw,172px)] leading-[0.95] tracking-tight mt-[18px]">
           <span
             className="glitch-1 block text-white"
             style={{ animation: "fadeUp 0.7s 0.5s both ease, glitch 4s 1.5s ease infinite" }}
@@ -90,7 +72,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           className="font-mono text-[clamp(11px,1.1vw,13px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6"
           style={{ animation: "fadeUp 0.6s 1.1s both ease" }}
         >
-          {HACKATHON_INFO.shortDescription}
+          {siteConfig.event.shortDescription}
         </p>
 
         <div
@@ -109,15 +91,18 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         </div>
 
         {/* Stats */}
-        <div className="flex gap-15 mt-18 justify-center flex-wrap">
+        <div className="flex gap-6 md:gap-15 mt-12 md:mt-18 justify-center flex-wrap">
           {[
-            [liveCount != null ? `${liveCount}` : HACKATHON_INFO.buildersCount, "СТРОИТЕЛИ"],
+            [liveCount != null ? `${liveCount}` : "—", "СТРОИТЕЛИ"],
             ["48Ч", "БЕЗ ПРЕКЪСВАНЕ"],
-            [HACKATHON_INFO.prizesPool, "В НАГРАДИ"],
+            [siteConfig.event.prizesPool, "В НАГРАДИ"],
             ["БЕЗПЛАТНО", "ВХОД"],
           ].map(([v, l]) => (
             <div key={l} className="text-center">
-              <CountUp value={v} className="font-display text-5xl text-acid leading-[1.1]" />
+              <CountUp
+                value={v}
+                className="font-display text-3xl md:text-5xl text-acid leading-[1.1]"
+              />
               <div className="font-mono text-[11px] tracking-[0.18em] text-white/55 mt-1.5">
                 {l}
               </div>
@@ -135,37 +120,6 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
             animationDelay: "2s",
           }}
         />
-      </div>
-
-      {/* Background Switcher UI */}
-      <div className="absolute bottom-20 right-6 md:right-12 z-10 flex flex-col items-end gap-2.5">
-        <div className="font-mono text-[10px] tracking-widest text-white/30 uppercase">
-          Смени шейдър
-        </div>
-        <div className="flex gap-2">
-          {[
-            { id: "falling", label: "RAIN" },
-            { id: "dotted", label: "SURFACE" },
-            { id: "paper", label: "WARP" },
-            { id: "icons", label: "ICONS" },
-          ].map((bt) => (
-            <button
-              key={bt.id}
-              onClick={(e) => {
-                e.stopPropagation();
-                setBgType(bt.id as typeof bgType);
-              }}
-              className={cn(
-                "px-3 py-1.5 text-[10px] font-mono cursor-pointer transition-all duration-200 border",
-                bgType === bt.id
-                  ? "bg-acid text-black border-acid"
-                  : "bg-white/5 text-white/50 border-white/10 hover:border-white/20"
-              )}
-            >
-              {bt.label}
-            </button>
-          ))}
-        </div>
       </div>
     </section>
   );

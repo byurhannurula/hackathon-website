@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
-import { toPng } from "html-to-image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import { type TicketData } from "@/lib";
+import { useTicketDownload } from "@/hooks";
 import { TicketVisual } from "@/components/ticket";
 import { useAnalytics } from "@/components/analytics";
-import { XIcon, LIIcon, FBIcon, DLIcon, FormButton } from "@/components/ui";
-import { type TicketData, encryptTicket, cn, siteConfig, fetchAvatarAsBase64 } from "@/lib";
+import { ShareButtons } from "@/components/share-buttons";
 
 interface TicketPageProps {
   data: TicketData | null;
@@ -15,13 +15,11 @@ interface TicketPageProps {
 
 export function TicketPage({ data }: TicketPageProps) {
   const { trackEvent } = useAnalytics();
-  const [copied, setCopied] = useState(false);
-  const [isOwner, setIsOwner] = useState(false);
-  const [downloading, setDownloading] = useState(false);
-  const ticketNodeRef = useRef<HTMLDivElement | null>(null);
+  const [isOwner, setIsOwner] = useState<boolean | null>(null);
+  const { nodeRef, downloading, download } = useTicketDownload(data?.ticketNum);
 
-  const name = data?.name || "Attendee";
-  const firstName = name.split(" ")[0].toUpperCase();
+  const name = data?.name || "Участник";
+  const firstName = name.split(" ")[0];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,68 +32,6 @@ export function TicketPage({ data }: TicketPageProps) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.ticketNum]);
-
-  const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/tickets?t=${encryptTicket(data!)}`
-      : "";
-
-  const shareDescription = `${siteConfig.event.name} ${siteConfig.event.year} \u2014 ${siteConfig.event.duration} AI Hackathon in ${siteConfig.event.location}`;
-
-  const doCopy = () => {
-    navigator.clipboard.writeText(shareUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shr = (url: string) => window.open(url, "_blank", "width=600,height=400");
-
-  const handleDownload = useCallback(async () => {
-    if (!ticketNodeRef.current || downloading) return;
-    setDownloading(true);
-    try {
-      const el = ticketNodeRef.current;
-      const prev = el.style.cssText;
-      el.style.transform = "none";
-      el.style.filter = "drop-shadow(0 20px 44px rgba(0,0,0,0.8))";
-
-      // Pre-fetch avatar as base64 to avoid CORS issues with html-to-image
-      const imgs = el.querySelectorAll("img");
-      const originalSrcs: string[] = [];
-      for (const img of imgs) {
-        originalSrcs.push(img.src);
-        if (img.src && !img.src.startsWith("data:")) {
-          const b64 = await fetchAvatarAsBase64(img.src);
-          if (b64) img.src = b64;
-        }
-      }
-
-      let dataUrl = "";
-      for (let i = 0; i < 3; i++) {
-        dataUrl = await toPng(el, {
-          backgroundColor: "#050505",
-          pixelRatio: 2,
-          cacheBust: true,
-          includeQueryParams: true,
-        });
-      }
-
-      // Restore original srcs
-      imgs.forEach((img, i) => {
-        img.src = originalSrcs[i];
-      });
-      el.style.cssText = prev;
-
-      const link = document.createElement("a");
-      link.download = `${siteConfig.event.name.toLowerCase().replace(/\s+/g, "-")}-ticket-${data?.ticketNum || "000000"}.png`;
-      link.href = dataUrl;
-      link.click();
-    } catch (err) {
-      console.error("Failed to download ticket:", err);
-    } finally {
-      setDownloading(false);
-    }
-  }, [data?.ticketNum, downloading]);
 
   return (
     <div
@@ -116,32 +52,36 @@ export function TicketPage({ data }: TicketPageProps) {
       />
 
       {/* Header text above ticket */}
-      <div className="relative z-1 text-center mb-10 animate-reveal-up">
-        <div className="font-mono text-[11px] tracking-[0.2em] text-acid/70 uppercase mb-4">
-          &#10022; {isOwner ? "БИЛЕТЪТ Е ПОТВЪРДЕН" : "БИЛЕТ"} &#10022;
-        </div>
-        <h1 className="font-display text-[clamp(40px,7vw,52px)] leading-[0.9] text-white">
-          {isOwner ? (
-            <>
-              ВЪТРЕ СИ, <span className="text-acid">{firstName}</span>
-            </>
-          ) : (
-            <>
-              <span className="text-acid">{firstName}</span> — БИЛЕТ
-            </>
+      {isOwner !== null && (
+        <div className="relative z-1 text-center mb-10 animate-reveal-up">
+          <div className="font-mono text-[11px] tracking-[0.2em] text-acid/70 uppercase mb-4">
+            &#10022; {isOwner ? "БИЛЕТЪТ Е ПОТВЪРДЕН" : "БИЛЕТ"} &#10022;
+          </div>
+          <h1 className="font-display text-[clamp(28px,7vw,52px)] leading-[0.9] text-white">
+            {isOwner ? (
+              <>
+                ВЪТРЕ СИ, <span className="text-acid">{firstName.toUpperCase()}</span>
+              </>
+            ) : (
+              <>
+                БИЛЕТ НА <span className="text-acid">{name}</span>
+              </>
+            )}
+          </h1>
+          {!isOwner && (
+            <p className="font-mono text-sm text-white/60 mt-4 leading-relaxed">
+              Присъедини се към {name} на 26 април 2026
+            </p>
           )}
-        </h1>
-        <div className="font-mono text-[10px] tracking-[0.18em] text-white/30 uppercase mt-5">
-          {isOwner ? "ЗАДРЪЖ КУРСОРА НАД БИЛЕТА ЗА ИНТЕРАКЦИЯ" : "ВЗЕМИ СВОЯ БИЛЕТ ЗА ХАКАТОНА"}
         </div>
-      </div>
+      )}
 
       <div className="relative z-1">
         <TicketVisual
           data={data}
           interactive={true}
           onNodeRef={(node) => {
-            ticketNodeRef.current = node;
+            nodeRef.current = node;
           }}
         />
       </div>
@@ -151,69 +91,8 @@ export function TicketPage({ data }: TicketPageProps) {
         className="mt-14 flex flex-col items-center gap-6 relative z-1"
         style={{ animation: "revealUp 0.6s 0.2s both ease-out" }}
       >
-        {isOwner ? (
-          <>
-            <div className="font-mono text-[11px] tracking-[0.18em] text-white/40 uppercase">
-              СПОДЕЛИ БИЛЕТА СИ
-            </div>
-            <div className="flex gap-2 flex-wrap justify-center">
-              <FormButton
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  shr(
-                    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                      `Участвам в Ruse AI Hack '26! Присъедини се. ✦\n\n${shareDescription}`
-                    )}&url=${encodeURIComponent(shareUrl)}`
-                  )
-                }
-              >
-                <XIcon />X
-              </FormButton>
-              <FormButton
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  shr(
-                    `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`
-                  )
-                }
-              >
-                <LIIcon />
-                LINKEDIN
-              </FormButton>
-              <FormButton
-                variant="outline"
-                size="sm"
-                onClick={() =>
-                  shr(
-                    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(`Участвам в Ruse AI Hack '26! Присъедини се. ✦ ${shareDescription}`)}`
-                  )
-                }
-              >
-                <FBIcon />
-                FACEBOOK
-              </FormButton>
-              <FormButton
-                variant="outline"
-                size="sm"
-                onClick={handleDownload}
-                disabled={downloading}
-                className={cn(downloading && "opacity-50 cursor-wait")}
-              >
-                <DLIcon />
-                СВАЛИ
-              </FormButton>
-              <FormButton
-                variant="outline"
-                size="sm"
-                onClick={doCopy}
-                className={cn(copied && "text-acid! border-acid!")}
-              >
-                {copied ? "КОПИРАНО!" : "КОПИРАЙ ЛИНК"}
-              </FormButton>
-            </div>
-          </>
+        {isOwner && data?.ticketId ? (
+          <ShareButtons ticketId={data.ticketId} downloading={downloading} onDownload={download} />
         ) : (
           <Link
             href="/register"

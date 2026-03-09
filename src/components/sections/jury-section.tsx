@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Image from "next/image";
+
+import { cn } from "@/lib";
+import type { Person, Criterion } from "@/lib/types";
+import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
-import { cn, JURY_MEMBERS, MENTORS, JUDGING_CRITERIA, type Person, type Criterion } from "@/lib";
 
 function PersonCard({
   person,

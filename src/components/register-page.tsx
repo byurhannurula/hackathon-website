@@ -6,6 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
+  ROLE_OPTIONS,
+  DEV_EXPERIENCE_OPTIONS,
+  AI_EXPERIENCE_OPTIONS,
+  YES_NO_OPTIONS,
+  YES_NO_MAYBE_OPTIONS,
+} from "@/constants";
+import {
   FormLabel,
   FormInput,
   FormSelect,
@@ -25,11 +32,6 @@ import {
   step3Schema,
   cn,
   getGithubAvatarUrl,
-  ROLE_OPTIONS,
-  DEV_EXPERIENCE_OPTIONS,
-  AI_EXPERIENCE_OPTIONS,
-  YES_NO_OPTIONS,
-  YES_NO_MAYBE_OPTIONS,
 } from "@/lib";
 
 interface RegisterPageProps {
@@ -44,6 +46,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
   const [generating, setGenerating] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
 
   const form1 = useForm<Step1Data>({
     resolver: zodResolver(step1Schema),
@@ -68,19 +71,6 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
     const handle = form1.getValues("handle")?.trim();
     if (!handle || handle.length < 2) return;
 
-    // try {
-    //   const res = await fetch(`https://api.github.com/users/${handle.replace(/^@/, "")}`);
-    //   if (res.ok) {
-    //     const data = await res.json();
-    //     if (data.avatar_url) {
-    //       setAvatarUrl(data.avatar_url);
-    //       form1.setValue("avatarUrl", data.avatar_url);
-    //       return;
-    //     }
-    //   }
-    // } catch {
-    //   // Fallback to constructed URL
-    // }
     const fallback = getGithubAvatarUrl(handle);
     setAvatarUrl(fallback);
     form1.setValue("avatarUrl", fallback);
@@ -109,38 +99,51 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
     try {
       setGenerating(true);
+      setApiError(null);
 
-      // Server assigns the ticket number now — send without it
       const [apiResult] = await Promise.allSettled([
         fetch("/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(fullRegistrationData),
         })
-          .then((res) => res.json())
-          .catch(() => ({ ok: false })),
+          .then(async (res) => {
+            const json = await res.json();
+            if (!res.ok) return { ok: false, ...json };
+            return json;
+          })
+          .catch(() => ({ ok: false, error: "Грешка в мрежата. Моля, опитайте отново." })),
         new Promise((resolve) => setTimeout(resolve, 1500)),
       ]);
 
       const apiData = apiResult.status === "fulfilled" ? apiResult.value : null;
-      if (!apiData?.ticketNumber) {
+
+      if (!apiData?.ok || !apiData?.ticketNumber || !apiData?.ticketId) {
         setGenerating(false);
-        alert("Грешка при регистрацията. Моля, опитайте отново.");
+
+        const errorMsg = apiData?.error || "Грешка при регистрацията. Моля, опитайте отново.";
+        setApiError(errorMsg);
+
+        // If duplicate email, go back to step 1 so user can fix it
+        if (apiData?.code === "DUPLICATE_EMAIL") {
+          setStep(1);
+        }
         return;
       }
-      const ticketNum = apiData.ticketNumber;
 
       const ticketData: TicketData = {
         name: step1Data.fullName.trim(),
         handle: step1Data.handle?.trim() || "",
         avatarUrl,
-        ticketNum,
+        ticketNum: apiData.ticketNumber,
+        ticketId: apiData.ticketId,
       };
 
       onRegister(ticketData);
     } catch (error) {
       console.error("Registration error:", error);
-      alert("An error occurred. Please try again.");
+      setGenerating(false);
+      setApiError("Възникна грешка. Моля, опитайте отново.");
     }
   };
 
@@ -202,6 +205,22 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
       </div>
 
       <div className="w-full max-w-[520px] animate-slide-in" key={step}>
+        {/* Error banner */}
+        {apiError && (
+          <div className="mb-6 border border-red-500/30 bg-red-500/10 rounded-sm px-4 py-3 flex items-start gap-3">
+            <span className="text-red-400 text-lg leading-none mt-0.5">!</span>
+            <div>
+              <p className="font-mono text-xs text-red-400 leading-relaxed">{apiError}</p>
+              <button
+                onClick={() => setApiError(null)}
+                className="font-mono text-[10px] text-red-400/60 hover:text-red-400 mt-1 underline cursor-pointer"
+              >
+                Затвори
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Step indicator */}
         <div className="flex items-center gap-3 mb-8">
           <div
@@ -328,7 +347,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                   className="font-mono text-[11px] font-bold"
                   onClick={handleFetchAvatar}
                 >
-                  Извличай
+                  Зареди
                 </FormButton>
               </div>
             </div>
@@ -464,6 +483,14 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                 {...form3.register("agreeRandomTeams")}
                 label="Едно от правилата на Ruse AI Hack | App in a Snap e разпределение на отборите на произволен принцип чрез комбиниране на хора с различен опит. Моля да потвърдите, че сте съгласни с това."
                 error={form3.formState.errors.agreeRandomTeams?.message}
+              />
+            </div>
+
+            <div>
+              <FormCheckbox
+                {...form3.register("gdprConsent")}
+                label="Съгласен/на съм личните ми данни да бъдат обработвани от организаторите на Ruse AI Hack '26 за целите на регистрацията, комуникацията по събитието и статистически анализ. Данните ви няма да бъдат споделяни с трети страни извън организаторите и спонсорите на събитието."
+                error={form3.formState.errors.gdprConsent?.message}
               />
             </div>
 

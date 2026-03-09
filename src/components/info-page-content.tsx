@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { INFO_CRITERIA } from "@/lib";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { INFO_CRITERIA } from "@/constants";
 
 const sectionCls = "py-16 px-6 md:px-12 border-b border-border";
 const containerCls = "max-w-[800px] mx-auto";

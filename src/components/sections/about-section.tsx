@@ -1,12 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { Cpu, Users, Calendar, Rocket, Target } from "lucide-react";
 
-import { cn, ABOUT_CARDS, ABOUT_THEMES } from "@/lib";
-import { FormButton, GlowingEffect } from "@/components/ui";
+import { cn } from "@/lib";
+import { ABOUT_CARDS, ABOUT_THEMES } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
-import { useRouter } from "next/navigation";
+import { FormButton, GlowingEffect } from "@/components/ui";
 
 interface GridItemProps {
   className?: string;

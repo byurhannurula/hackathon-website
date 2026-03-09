@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
 
     const results: { airtable?: boolean; supabase?: boolean } = {};
     let ticketNumber: number | null = null;
+    let ticketId: string | null = null;
 
     // ── Supabase (primary — provides sequential ticket number) ──
     if (SUPABASE_URL && SUPABASE_PRIVATE_KEY) {
@@ -37,18 +38,36 @@ export async function POST(req: NextRequest) {
             want_challenge: body.wantChallenge,
             volunteer_help: body.volunteerHelp,
             agree_random_teams: body.agreeRandomTeams,
+            gdpr_consent: body.gdprConsent,
             additional_questions: body.additionalQuestions || null,
             github_handle: body.handle || null,
             avatar_url: body.avatarUrl || null,
           })
-          .select("ticket_number")
+          .select("ticket_number, ticket_id")
           .single();
 
-        results.supabase = !error;
-        if (data?.ticket_number) {
-          ticketNumber = data.ticket_number;
+        if (error) {
+          console.error("Supabase error:", error.message, error.code);
+          // 23505 = unique_violation (e.g. duplicate email)
+          if (error.code === "23505") {
+            const isDuplicateEmail = error.message?.includes("registrations_email_key");
+            return NextResponse.json(
+              {
+                ok: false,
+                code: isDuplicateEmail ? "DUPLICATE_EMAIL" : "DUPLICATE_ENTRY",
+                error: isDuplicateEmail
+                  ? "Този имейл вече е регистриран."
+                  : "Вече съществува регистрация с тези данни.",
+              },
+              { status: 409 }
+            );
+          }
+          results.supabase = false;
+        } else {
+          results.supabase = true;
+          if (data?.ticket_number) ticketNumber = data.ticket_number;
+          if (data?.ticket_id) ticketId = data.ticket_id;
         }
-        if (error) console.error("Supabase error:", error.message);
       } catch (e) {
         console.error("Supabase write failed:", e);
         results.supabase = false;
@@ -58,7 +77,7 @@ export async function POST(req: NextRequest) {
     // No fallback — ticket number must come from Supabase
     if (!ticketNumber) {
       return NextResponse.json(
-        { ok: false, error: "Failed to generate ticket number" },
+        { ok: false, error: "Неуспешна регистрация. Моля, опитайте отново." },
         { status: 500 }
       );
     }
@@ -66,7 +85,7 @@ export async function POST(req: NextRequest) {
     // ── Airtable (secondary backup) ──
     if (AIRTABLE_TOKEN && AIRTABLE_BASE_ID) {
       try {
-        const fields: Record<string, string | number | boolean> = {
+        const fields: Record<string, string | number> = {
           Name: body.fullName,
           Email: body.email,
           Phone: body.phone,
@@ -80,7 +99,8 @@ export async function POST(req: NextRequest) {
           HasTheme: body.hasTheme,
           WantChallenge: body.wantChallenge,
           VolunteerHelp: body.volunteerHelp,
-          AgreeRandomTeams: body.agreeRandomTeams,
+          AgreeRandomTeams: body.agreeRandomTeams ? "Да" : "Не",
+          GdprConsent: body.gdprConsent ? "Да" : "Не",
           TicketNumber: ticketNumber,
         };
         if (body.themeDescription) fields.ThemeDescription = body.themeDescription;
@@ -106,7 +126,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true, ticketNumber, ...results });
+    return NextResponse.json({ ok: true, ticketNumber, ticketId, ...results });
   } catch (e) {
     console.error("Registration API error:", e);
     return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });

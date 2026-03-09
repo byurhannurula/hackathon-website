@@ -1,4 +1,4 @@
-import { HACKATHON_INFO, siteConfig } from "@/lib";
+import { siteConfig } from "@/constants";
 
 export function Footer() {
   return (
@@ -12,9 +12,9 @@ export function Footer() {
             rel="noopener noreferrer"
             className="text-acid/70 hover:text-acid"
           >
-            {HACKATHON_INFO.organizer}
+            {siteConfig.event.organizer}
           </a>{" "}
-          &middot; {HACKATHON_INFO.name}
+          &middot; {siteConfig.event.name}
         </span>
         <span className="font-mono text-[10px] text-white/30 tracking-widest">
           Направено с вайб.

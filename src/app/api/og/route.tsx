@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
-import { decryptTicket } from "@/lib/utils";
-import { siteConfig } from "@/lib/site";
+import { createClient } from "@supabase/supabase-js";
+import { siteConfig } from "@/constants";
 
 export const runtime = "edge";
 
@@ -36,8 +36,35 @@ async function fetchImageAsDataUri(url: string): Promise<string | null> {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const token = searchParams.get("t");
-    const data = token ? decryptTicket(token) : null;
+    const id = searchParams.get("id");
+
+    // Look up ticket from Supabase by UUID
+    let data: { name: string; handle: string; avatarUrl: string; ticketNum: number } | null = null;
+    if (id) {
+      const sbUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const sbKey = process.env.SUPABASE_PRIVATE_KEY;
+      if (sbUrl && sbKey) {
+        try {
+          const supabase = createClient(sbUrl, sbKey);
+          const { data: row } = await supabase
+            .from("registrations")
+            .select("full_name, github_handle, avatar_url, ticket_number")
+            .eq("ticket_id", id)
+            .single();
+          if (row) {
+            const handle = (row.github_handle || "").replace(/^@/, "");
+            data = {
+              name: row.full_name,
+              handle: handle ? `@${handle}` : "",
+              avatarUrl: handle ? `https://github.com/${handle}.png` : row.avatar_url || "",
+              ticketNum: row.ticket_number,
+            };
+          }
+        } catch {
+          /* ticket not found — fall through to generic OG */
+        }
+      }
+    }
 
     const ev = siteConfig.event;
 
@@ -74,13 +101,22 @@ export async function GET(request: Request) {
                 "radial-gradient(ellipse at center, rgba(200,255,0,0.08) 0%, transparent 70%)",
             }}
           />
-          {/* Dot grid */}
+          {/* Dot grid — SVG pattern (Satori can't render CSS repeating radial-gradient) */}
+          <svg width="1200" height="630" style={{ position: "absolute", top: 0, left: 0 }}>
+            <defs>
+              <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+                <circle cx="12" cy="12" r="1.2" fill="rgba(200,255,0,0.14)" />
+              </pattern>
+            </defs>
+            <rect width="1200" height="630" fill="url(#dots)" />
+          </svg>
+          {/* Vignette */}
           <div
             style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: "radial-gradient(circle, rgba(200,255,0,0.06) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
+              background:
+                "radial-gradient(ellipse 80% 75% at 50% 50%, transparent 10%, rgba(5,5,5,0.65) 60%, rgba(5,5,5,0.95) 100%)",
             }}
           />
           {/* Content */}

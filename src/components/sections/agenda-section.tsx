@@ -1,8 +1,8 @@
 "use client";
 
-import { SectionHeader } from "@/components/section-header";
+import { AGENDA_ITEMS } from "@/constants";
 import { AgendaItem } from "@/components/agenda-item";
-import { AGENDA_ITEMS } from "@/lib";
+import { SectionHeader } from "@/components/section-header";
 
 export function AgendaSection() {
   return (
