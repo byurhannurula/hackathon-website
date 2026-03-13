@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
             expectations: body.expectations,
             has_theme: body.hasTheme,
             theme_description: body.themeDescription || null,
+            has_team: body.hasTeam,
+            team_name: body.teamName || null,
             want_challenge: body.wantChallenge,
             volunteer_help: body.volunteerHelp,
             agree_random_teams: body.agreeRandomTeams,
@@ -97,6 +99,7 @@ export async function POST(req: NextRequest) {
           Motivation: body.motivation,
           Expectations: body.expectations,
           HasTheme: body.hasTheme,
+          HasTeam: body.hasTeam,
           WantChallenge: body.wantChallenge,
           VolunteerHelp: body.volunteerHelp,
           AgreeRandomTeams: body.agreeRandomTeams ? "Да" : "Не",
@@ -104,6 +107,7 @@ export async function POST(req: NextRequest) {
           TicketNumber: ticketNumber,
         };
         if (body.themeDescription) fields.ThemeDescription = body.themeDescription;
+        if (body.teamName) fields.TeamName = body.teamName;
         if (body.additionalQuestions) fields.AdditionalQuestions = body.additionalQuestions;
         if (body.handle) fields.Github = body.handle;
 

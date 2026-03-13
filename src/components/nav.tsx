@@ -27,22 +27,25 @@ export function Nav({}: NavProps) {
       </Link>
       <div className="flex gap-7 items-center">
         {[
-          { key: "about", label: "За нас" },
-          { key: "sponsors", label: "Спонсори" },
-          { key: "agenda", label: "Програма" },
-          { key: "jury", label: "Жури" },
-          { key: "prizes", label: "Награди" },
-          { key: "faq", label: "Въпроси" },
+          { key: "about", label: "За нас", href: "/#about" },
+          { key: "sponsors", label: "Спонсори", href: "/#sponsors" },
+          { key: "agenda", label: "Програма", href: "/#agenda" },
+          { key: "jury", label: "Жури", href: "/#jury" },
+          { key: "prizes", label: "Награди", href: "/#prizes" },
+          { key: "faq", label: "Въпроси", href: "/#faq" },
+          { key: "info", label: "Инфо", href: "/info" },
         ].map((item) => (
           <Link
             key={item.key}
-            href={`/#${item.key}`}
+            href={item.href}
             className="font-mono text-[10px] tracking-[0.14em] text-white/35 cursor-pointer uppercase transition-colors duration-200 hover:text-acid hidden md:inline no-underline"
             onClick={(e) => {
-              const el = document.getElementById(item.key);
-              if (el) {
-                e.preventDefault();
-                el.scrollIntoView({ behavior: "smooth" });
+              if (item.href.startsWith("/#")) {
+                const el = document.getElementById(item.key);
+                if (el) {
+                  e.preventDefault();
+                  el.scrollIntoView({ behavior: "smooth" });
+                }
               }
             }}
           >

@@ -24,6 +24,8 @@ export const step2Schema = z.object({
 export const step3Schema = z.object({
   hasTheme: z.string().min(1, "Изберете опция"),
   themeDescription: z.string().optional(),
+  hasTeam: z.string().min(1, "Изберете опция"),
+  teamName: z.string().optional(),
   wantChallenge: z.string().min(1, "Изберете опция"),
   volunteerHelp: z.string().min(1, "Изберете опция"),
   agreeRandomTeams: z.literal(true, { message: "Трябва да приемете правилата за отборите" }),

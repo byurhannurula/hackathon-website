@@ -28,6 +28,8 @@ CREATE TABLE IF NOT EXISTS registrations (
   -- Step 3: Project & Participation
   has_theme TEXT NOT NULL,
   theme_description TEXT,
+  has_team TEXT NOT NULL DEFAULT 'Не',
+  team_name TEXT,
   want_challenge TEXT NOT NULL,
   volunteer_help TEXT NOT NULL,
   agree_random_teams BOOLEAN NOT NULL DEFAULT false,

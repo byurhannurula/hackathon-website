@@ -43,6 +43,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
   const [hasThemeValue, setHasThemeValue] = useState<string>("");
+  const [hasTeamValue, setHasTeamValue] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
   const [generating, setGenerating] = useState(false);
@@ -450,6 +451,28 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                   placeholder="Кратко опишете какво искате да създадете..."
                   rows={3}
                   error={form3.formState.errors.themeDescription?.message}
+                />
+              </div>
+            )}
+
+            <div>
+              <FormLabel>Имате ли вече формиран екип?</FormLabel>
+              <FormSelect
+                {...form3.register("hasTeam", {
+                  onChange: (e) => setHasTeamValue(e.target.value),
+                })}
+                options={YES_NO_OPTIONS}
+                error={form3.formState.errors.hasTeam?.message}
+              />
+            </div>
+
+            {hasTeamValue === "Да" && (
+              <div>
+                <FormLabel>Име на екипа</FormLabel>
+                <FormInput
+                  {...form3.register("teamName")}
+                  placeholder="Напр. Team Vibe, AI Legends и др."
+                  error={form3.formState.errors.teamName?.message}
                 />
               </div>
             )}
