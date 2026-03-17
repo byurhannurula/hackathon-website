@@ -29,7 +29,7 @@ export function CTASection({ onRegister }: CTASectionProps) {
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(200,255,0,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,0.03) 1px, transparent 1px)",
+            "linear-gradient(rgba(var(--acid-rgb),0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--acid-rgb),0.03) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
@@ -37,7 +37,7 @@ export function CTASection({ onRegister }: CTASectionProps) {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 60% 70% at 50% 50%, rgba(200,255,0,0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 60% 70% at 50% 50%, rgba(var(--acid-rgb),0.04) 0%, transparent 70%)",
         }}
       />
 

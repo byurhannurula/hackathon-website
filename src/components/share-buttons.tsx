@@ -62,7 +62,7 @@ export function ShareButtons({ ticketId, downloading, onDownload }: ShareButtons
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent 0%, rgba(200,255,0,0.15) 50%, transparent 100%)",
+                  "linear-gradient(90deg, transparent 0%, rgba(var(--acid-rgb),0.15) 50%, transparent 100%)",
                 animation: "scanFlash 0.4s ease-out forwards",
               }}
             />

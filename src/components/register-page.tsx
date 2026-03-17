@@ -189,7 +189,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] pointer-events-none z-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(200,255,0,0.06) 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, rgba(var(--acid-rgb),0.06) 0%, transparent 70%)",
         }}
       />
 

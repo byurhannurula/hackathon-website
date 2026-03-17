@@ -33,8 +33,11 @@ export interface InfoCriterion {
   desc: string;
 }
 
+export type SponsorTier = "gold" | "silver" | "bronze";
+
 export interface Sponsor {
   name: string;
   logo?: string;
   href?: string;
+  tier: SponsorTier;
 }

@@ -2,9 +2,9 @@
 
 @theme {
   /* Colors */
-  --color-acid: #c8ff00;
-  --color-acid-dark: #9bcc00;
-  --color-pink: #ff3355;
+  --color-acid: #feee04;
+  --color-acid-dark: #cbbd03;
+  --color-teal: #18abc0;
   --color-bg: #050505;
   --color-card: #0d0d0d;
   --color-card-hover: #141414;
@@ -49,8 +49,10 @@ body {
 }
 
 :root {
-  --acid: #c8ff00;
-  --pink: #ff3355;
+  --acid: #feee04;
+  --acid-rgb: 254, 238, 4;
+  --teal: #18abc0;
+  --teal-rgb: 24, 171, 192;
   --bg: #050505;
   --card: #0d0d0d;
   --border: rgba(255, 255, 255, 0.07);
@@ -149,13 +151,13 @@ body {
   }
   90% {
     text-shadow:
-      -4px 0 var(--pink),
+      -4px 0 var(--teal),
       4px 0 rgba(0, 255, 136, 0.6);
     transform: skewX(-1deg) translateX(2px);
   }
   91% {
     text-shadow:
-      4px 0 var(--pink),
+      4px 0 var(--teal),
       -4px 0 rgba(0, 255, 136, 0.6);
     transform: skewX(1deg) translateX(-2px);
   }
@@ -176,7 +178,7 @@ body {
     transform: none;
   }
   95% {
-    text-shadow: -3px 0 var(--pink);
+    text-shadow: -3px 0 var(--teal);
     transform: translateX(2px);
   }
   97% {
@@ -221,13 +223,13 @@ button:active:not(:disabled),
 /* ── Success pulse (used via class .animate-success-pulse) ── */
 @keyframes successPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 0, 0.4);
+    box-shadow: 0 0 0 0 rgba(var(--acid-rgb), 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(200, 255, 0, 0);
+    box-shadow: 0 0 0 10px rgba(var(--acid-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 0, 0);
+    box-shadow: 0 0 0 0 rgba(var(--acid-rgb), 0);
   }
 }
 

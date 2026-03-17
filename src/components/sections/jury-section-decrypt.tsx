@@ -132,7 +132,7 @@ function DecryptPersonCard({
           <User
             className="w-10 h-10 transition-opacity duration-500"
             style={{
-              color: imageVisible ? "rgba(255,255,255,0.1)" : "rgba(200,255,0,0.15)",
+              color: imageVisible ? "rgba(255,255,255,0.1)" : "rgba(var(--acid-rgb),0.15)",
               opacity: active ? 1 : 0,
             }}
           />
@@ -150,7 +150,7 @@ function DecryptPersonCard({
       <div className="p-3">
         <div
           className="font-mono font-bold text-[13px] leading-tight truncate transition-colors duration-500"
-          style={{ color: active ? "#fff" : "rgba(200,255,0,0.4)" }}
+          style={{ color: active ? "#fff" : "rgba(var(--acid-rgb),0.4)" }}
           suppressHydrationWarning
         >
           {nameText}
@@ -159,7 +159,7 @@ function DecryptPersonCard({
           <>
             <div
               className="font-mono text-[10px] tracking-widest mt-1 uppercase truncate transition-colors duration-500"
-              style={{ color: active ? "rgba(200,255,0,0.7)" : "rgba(200,255,0,0.2)" }}
+              style={{ color: active ? "rgba(var(--acid-rgb),0.7)" : "rgba(var(--acid-rgb),0.2)" }}
               suppressHydrationWarning
             >
               {roleText}
@@ -175,7 +175,7 @@ function DecryptPersonCard({
         ) : (
           <div
             className="font-mono text-[10px] mt-1 transition-colors duration-500"
-            style={{ color: active ? "rgba(200,255,0,0.5)" : "rgba(200,255,0,0.15)" }}
+            style={{ color: active ? "rgba(var(--acid-rgb),0.5)" : "rgba(var(--acid-rgb),0.15)" }}
             suppressHydrationWarning
           >
             {tbaText}
@@ -209,7 +209,7 @@ function DecryptPersonGrid({ people, label }: { people: Person[]; label: string 
       <div className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase mb-5 flex items-center gap-3">
         <span
           className="inline-block w-1.5 h-1.5 rounded-full transition-colors duration-500"
-          style={{ backgroundColor: revealed ? "#c8ff00" : "rgba(255,255,255,0.15)" }}
+          style={{ backgroundColor: revealed ? "var(--acid)" : "rgba(255,255,255,0.15)" }}
         />
         {label}
         {!revealed && <span className="text-acid/30 animate-pulse ml-1">▌</span>}

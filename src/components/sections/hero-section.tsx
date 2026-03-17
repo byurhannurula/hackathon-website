@@ -12,12 +12,12 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
   const liveCount = useLiveCount();
 
   const stats: [string, string][] = [
-    ["48Ч", "БЕЗ ПРЕКЪСВАНЕ"],
-    [siteConfig.event.prizesPool, "В НАГРАДИ"],
-    ["БЕЗПЛАТНО", "ВХОД"],
     ...(liveCount !== null && liveCount > 0
       ? [[`${liveCount}+`, "ЗАПИСАНИ"] as [string, string]]
       : []),
+    ["48Ч", "От 08:00 до 23:00"],
+    [siteConfig.event.prizesPool, "В НАГРАДИ"],
+    ["БЕЗПЛАТНО", "Участие"],
   ];
 
   return (
@@ -28,7 +28,8 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
       <div
         className="absolute inset-0 pointer-events-none z-0"
         style={{
-          backgroundImage: "radial-gradient(circle, rgba(200,255,0,0.08) 1px, transparent 1px)",
+          backgroundImage:
+            "radial-gradient(circle, rgba(var(--acid-rgb),0.08) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
@@ -51,30 +52,36 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           <DecryptText text={siteConfig.event.heroSubline} speed={80} delay={250} />
         </div>
 
-        <h1 className="font-display font-semibold text-[clamp(64px,12vw,172px)] leading-[0.95] tracking-tight mt-[18px]">
+        <h1 className="font-display font-bold leading-[0.9] tracking-tight mt-3">
           <span
-            className="glitch-1 block text-white"
+            className="glitch-1 block text-acid text-[clamp(170px,28vw,400px)]"
             style={{ animation: "fadeUp 0.7s 0.5s both ease, glitch 4s 1.5s ease infinite" }}
           >
-            VIBE TO
+            AI
           </span>
           <span
-            className="glitch-2 block text-acid"
+            className="glitch-2 block text-white text-[clamp(72px,11.5vw,172px)] tracking-[0.06em] mt-1 sm:-mt-1"
             style={{ animation: "fadeUp 0.7s 0.65s both ease, glitch2 8s 4s ease infinite" }}
           >
-            PRODUCTION
+            HACK
+          </span>
+          <span
+            className="glitch-2 block text-acid text-[clamp(12px,11.5vw,28px)] tracking-[1.2rem] pl-4 mt-4"
+            style={{ animation: "fadeUp 0.7s 0.65s both ease, glitch2 8s 4s ease infinite" }}
+          >
+            APP IN A SNAP
           </span>
         </h1>
 
         <div
-          className="font-serif italic text-[clamp(16px,2vw,20px)] text-white/85 mt-8"
-          style={{ animation: "fadeUp 0.6s 0.95s both ease" }}
+          className="font-serif italic text-[clamp(15px,1.8vw,18px)] font-medium text-white/70 mt-8"
+          style={{ animation: "fadeUp 0.6s 0.85s both ease" }}
         >
-          — хакатон от {siteConfig.event.organizer}
+          — AI Хакатон организиран от {siteConfig.event.organizer}
         </div>
 
         <p
-          className="font-mono text-[clamp(11px,1.1vw,13px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6"
+          className="font-mono text-[clamp(11px,1.1vw,16px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6"
           style={{ animation: "fadeUp 0.6s 1.1s both ease" }}
         >
           {siteConfig.event.shortDescription}
@@ -86,12 +93,12 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         >
           <button
             onClick={onRegister}
-            className="font-display text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5"
+            className="font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5"
           >
-            ВЗЕМИ БИЛЕТ
+            Регистрация
           </button>
           <button
-            className="font-display text-lg tracking-[0.07em] bg-transparent text-muted border border-border-hover py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
+            className="font-display uppercase text-lg tracking-[0.07em] bg-transparent text-acid border border-acid/60 py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
             onClick={() =>
               document.getElementById("agenda")?.scrollIntoView({ behavior: "smooth" })
             }
@@ -108,7 +115,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
                 value={v}
                 className="font-display text-3xl md:text-5xl text-acid leading-[1.1]"
               />
-              <div className="font-mono text-[11px] tracking-[0.18em] text-white/55 mt-1.5">
+              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/55 mt-1.5">
                 {l}
               </div>
             </div>
@@ -121,7 +128,8 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         <div
           className="w-px h-11 animate-fade-up"
           style={{
-            background: "linear-gradient(to bottom, transparent, rgba(200,255,0,0.4), transparent)",
+            background:
+              "linear-gradient(to bottom, transparent, rgba(var(--acid-rgb),0.4), transparent)",
             animationDelay: "2s",
           }}
         />

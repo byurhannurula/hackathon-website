@@ -73,7 +73,7 @@ export function TicketUnlockSequence({ enabled = true, onComplete }: TicketUnloc
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(200,255,0,0.5) 2px, rgba(200,255,0,0.5) 3px)",
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(var(--acid-rgb),0.5) 2px, rgba(var(--acid-rgb),0.5) 3px)",
           backgroundSize: "100% 3px",
         }}
       />

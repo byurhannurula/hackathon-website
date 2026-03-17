@@ -54,7 +54,7 @@ export function TicketPage({ data }: TicketPageProps) {
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] pointer-events-none z-0"
         style={{
           background:
-            "radial-gradient(ellipse at center, rgba(200,255,0,0.08) 0%, transparent 70%)",
+            "radial-gradient(ellipse at center, rgba(var(--acid-rgb),0.08) 0%, transparent 70%)",
         }}
       />
 

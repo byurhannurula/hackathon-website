@@ -38,7 +38,7 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
     if (!enabled) return;
     console.log(
       "%c🎮 Psst… there's a secret code hidden on this page. Gamers know it.",
-      "color: #c8ff00; font-size: 12px; font-family: monospace;"
+      "color: #feee04; font-size: 12px; font-family: monospace;"
     );
   }, [enabled]);
 
@@ -92,7 +92,7 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
 
         // Mix acid green and white
         const isAccent = Math.random() > 0.7;
-        ctx.fillStyle = isAccent ? "rgba(200, 255, 0, 0.9)" : "rgba(200, 255, 0, 0.35)";
+        ctx.fillStyle = isAccent ? "rgba(254, 238, 4, 0.9)" : "rgba(254, 238, 4, 0.35)";
         ctx.fillText(char, x, y);
 
         if (y > canvas.height && Math.random() > 0.975) {
@@ -132,7 +132,7 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
           <canvas ref={canvasRef} className="absolute inset-0" />
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center" style={{ animation: "fadeUp 0.8s 1s both ease" }}>
-              <div className="font-display text-4xl md:text-6xl text-acid drop-shadow-[0_0_30px_rgba(200,255,0,0.5)]">
+              <div className="font-display text-4xl md:text-6xl text-acid drop-shadow-[0_0_30px_rgba(254,238,4,0.5)]">
                 ТИ СИ ИСТИНСКИ СТРОИТЕЛ
               </div>
               <div className="font-mono text-sm text-white/60 mt-4 tracking-widest">

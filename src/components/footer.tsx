@@ -32,7 +32,7 @@ export function Footer() {
                   { label: "За нас", href: "/#about" },
                   { label: "Програма", href: "/#agenda" },
                   { label: "Награди", href: "/#prizes" },
-                  { label: "Инфо", href: "/info" },
+                  { label: "Информация", href: "/info" },
                   { label: "Правила", href: "/rules" },
                 ].map((link) => (
                   <Link
@@ -110,7 +110,7 @@ export function Footer() {
             href={siteConfig.contact.organizerUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/40 hover:text-acid no-underline"
+            className="text-white/40 hover:text-teal no-underline"
           >
             {siteConfig.event.organizer}
           </a>{" "}

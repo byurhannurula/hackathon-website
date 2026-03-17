@@ -30,7 +30,7 @@ interface Particle {
 export function CursorTrail({
   enabled = true,
   containerSelector = "section",
-  color = "200, 255, 0",
+  color = "254, 238, 4",
 }: CursorTrailProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
@@ -132,11 +132,5 @@ export function CursorTrail({
 
   if (!enabled) return null;
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="absolute pointer-events-none z-3"
-      aria-hidden="true"
-    />
-  );
+  return <canvas ref={canvasRef} className="absolute pointer-events-none z-3" aria-hidden="true" />;
 }

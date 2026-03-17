@@ -24,12 +24,12 @@ export function ConsoleGreeting({ enabled = true }: ConsoleGreetingProps) {
         "| |_) | | | \\___ \\|  _|     / _ \\  | |  | |_| | / _ \\| |   | ' / \n" +
         "|  _ <| |_| |___) | |___   / ___ \\ | |  |  _  |/ ___ \\ |___| . \\ \n" +
         "|_| \\_\\\\___/|____/|_____| /_/   \\_\\___| |_| |_/_/   \\_\\____|_|\\_\\\n",
-      "color: #c8ff00; font-size: 11px; font-family: monospace; font-weight: bold;"
+      "color: #feee04; font-size: 11px; font-family: monospace; font-weight: bold;"
     );
 
     console.log(
-      "%c🚀 VIBE TO PRODUCTION",
-      "color: #c8ff00; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px rgba(200,255,0,0.5);"
+      "%c🚀 APP IN A SNAP",
+      "color: #feee04; font-size: 24px; font-weight: bold; text-shadow: 0 0 10px rgba(254,238,4,0.5);"
     );
 
     console.log(
@@ -52,8 +52,8 @@ export function ConsoleGreeting({ enabled = true }: ConsoleGreetingProps) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
     console.log(
       `%c🎯 Регистрирай се: %c${siteUrl}/register`,
-      "color: #ff3355; font-size: 12px; font-family: monospace;",
-      "color: #c8ff00; font-size: 12px; font-family: monospace; text-decoration: underline;"
+      "color: #18abc0; font-size: 12px; font-family: monospace;",
+      "color: #feee04; font-size: 12px; font-family: monospace; text-decoration: underline;"
     );
 
     console.log("%c─────────────────────────────────────────────", "color: #333;");

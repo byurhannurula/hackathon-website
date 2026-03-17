@@ -12,13 +12,13 @@ export const siteConfig = {
     year: "'26",
     date: "24–26 APRIL 2026",
     dateBG: "24–26 април 2026",
-    duration: "48H",
+    duration: "48Ч",
     durationBG: "48 часа",
     location: "Ruse, Bulgaria",
-    locationBG: "Русе, България",
-    organizer: "StartupFactory",
+    locationBG: "Русенски Университет",
+    organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
-    prizesPool: "€5,750",
+    prizesPool: "€2,500",
     buildersCount: "100+",
     free: "Безплатен вход",
 
@@ -33,7 +33,7 @@ export const siteConfig = {
       return `${this.duration} HACKATHON`;
     },
     get heroSubline() {
-      return `${this.date.toUpperCase()}  ·  ${this.locationBG.toUpperCase()}  ·  ${this.duration} ХАКАТОН`;
+      return `${this.dateBG.toUpperCase()}  ·  ${this.duration} ХАКАТОН  ·  ${this.locationBG.toUpperCase()}`;
     },
     get ctaSubline() {
       return `${this.dateBG} · ${this.locationBG} · ${this.durationBG} · ${this.free}`;
@@ -41,7 +41,7 @@ export const siteConfig = {
 
     // Descriptions
     shortDescription:
-      "Ruse AI Hack — App in a Snap е 48-часов AI хакатон, посветен на създаването на реални, работещи приложения с помощта на изкуствен интелект.",
+      "Включете се в състезание за разработка на приложения с AI и развийте умения за vibe coding",
     longDescription:
       "Ruse AI Hack — App in a Snap е 48-часов AI хакатон, посветен на създаването на реални, работещи приложения с помощта на изкуствен интелект.",
   },

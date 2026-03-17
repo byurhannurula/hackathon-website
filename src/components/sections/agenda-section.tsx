@@ -1,13 +1,13 @@
 "use client";
 
-import { AGENDA_DAYS } from "@/constants";
+import { AGENDA_DAYS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 
 export function AgendaSection() {
   return (
     <section id="agenda" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto">
-        <SectionHeader label="26–28 АПРИЛ 2026" title="ПРОГРАМА" />
+        <SectionHeader label={siteConfig.event.dateBG} title="ПРОГРАМА" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
           {AGENDA_DAYS.map((day) => (
             <div key={day.day} className="border border-white/7 bg-card">

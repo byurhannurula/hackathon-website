@@ -26,7 +26,8 @@ export function AvatarCircle({ name, avatarUrl, size = 68 }: AvatarCircleProps) 
         style={{
           width: size,
           height: size,
-          background: "linear-gradient(135deg, rgba(200,255,0,0.18), rgba(200,255,0,0.05))",
+          background:
+            "linear-gradient(135deg, rgba(var(--acid-rgb),0.18), rgba(var(--acid-rgb),0.05))",
         }}
       >
         <span

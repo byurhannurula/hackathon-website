@@ -64,7 +64,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         positions.push(x, y, z);
 
         // Use acid green for theme consistency instead of gray
-        colors.push(0.784, 1.0, 0.0); // #C8FF00
+        colors.push(0.996, 0.933, 0.016); // #FEEE04
       }
     }
 

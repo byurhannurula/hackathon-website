@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Oswald, JetBrains_Mono, Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 
-import { AnalyticsScript } from "@/components/analytics";
 import { cn } from "@/lib";
-import { KonamiEasterEgg } from "@/components/ui/konami-easter-egg";
+import { ScrollToTop } from "@/components/ui";
+import { AnalyticsScript } from "@/components/analytics";
 import { CursorTrail } from "@/components/ui/cursor-trail";
+import { KonamiEasterEgg } from "@/components/ui/konami-easter-egg";
 import { ConsoleGreeting } from "@/components/ui/console-greeting";
 
 const oswald = Oswald({
@@ -106,6 +107,7 @@ export default function RootLayout({
         <CursorTrail enabled={true} />
         <ConsoleGreeting enabled={true} />
         {children}
+        <ScrollToTop />
         <AnalyticsScript />
       </body>
     </html>
