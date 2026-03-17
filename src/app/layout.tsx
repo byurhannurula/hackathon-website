@@ -4,6 +4,9 @@ import "./globals.css";
 
 import { AnalyticsScript } from "@/components/analytics";
 import { cn } from "@/lib";
+import { KonamiEasterEgg } from "@/components/ui/konami-easter-egg";
+import { CursorTrail } from "@/components/ui/cursor-trail";
+import { ConsoleGreeting } from "@/components/ui/console-greeting";
 
 const oswald = Oswald({
   weight: ["400", "500", "600", "700"],
@@ -98,6 +101,10 @@ export default function RootLayout({
           manrope.variable
         )}
       >
+        {/* Toggle: set enabled={false} to disable */}
+        <KonamiEasterEgg enabled={true} />
+        <CursorTrail enabled={true} />
+        <ConsoleGreeting enabled={true} />
         {children}
         <AnalyticsScript />
       </body>

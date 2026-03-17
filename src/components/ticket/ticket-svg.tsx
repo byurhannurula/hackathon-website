@@ -30,6 +30,11 @@ export function TicketSVG() {
           <stop offset="85%" stopColor="#FF3355" />
           <stop offset="100%" stopColor="#C8FF00" />
         </linearGradient>
+
+        {/* Clip path matching inner dark fill */}
+        <clipPath id="inner-clip">
+          <path d="M23 7C13.61 7 6 14.61 6 24V125.8C22.76 128.35 35.5 143.6 35.5 160C35.5 176.4 22.76 191.65 6 194.2V296C6 305.39 13.61 313 23 313H697C706.39 313 714 305.39 714 296V194.2C697.24 191.65 684.5 176.4 684.5 160C684.5 143.6 697.24 128.35 714 125.8V24C714 14.61 706.39 7 697 7H23Z" />
+        </clipPath>
       </defs>
 
       {/* ── OUTER SHAPE (border fill, 7px thick) ── */}

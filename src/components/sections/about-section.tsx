@@ -48,7 +48,7 @@ export function AboutSection() {
   const router = useRouter();
 
   return (
-    <section id="about" className="px-6 py-25 md:px-12 ">
+    <section id="about" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto">
         <div className="mb-12">
           <SectionHeader label="КАКВО Е ТОВА" title="ЗА ХАКАТОНА" />

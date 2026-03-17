@@ -31,9 +31,7 @@ export function InfoPageContent() {
           >
             ← Към Началото
           </Link>
-          <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9]">
-            ИНФОРМАЦИЯ <span className="text-acid">ЗА ХАКАТОНА</span>
-          </h1>
+          <h1 className="font-display text-[clamp(48px,8vw,80px)] leading-[0.9]">ИНФОРМАЦИЯ</h1>
           <p className="font-mono text-sm text-white/55 leading-[1.9] mt-6 max-w-[600px]">
             Всичко, което трябва да знаете за RUSE AI HACK &apos;26 — формат, правила, изисквания и
             полезна информация за участниците.

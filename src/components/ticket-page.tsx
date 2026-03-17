@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { type TicketData } from "@/lib";
+import { siteConfig } from "@/constants";
 import { useTicketDownload } from "@/hooks";
 import { TicketVisual } from "@/components/ticket";
 import { useAnalytics } from "@/components/analytics";
 import { ShareButtons } from "@/components/share-buttons";
+import { ConfettiBurst } from "@/components/ui/confetti-burst";
 
 interface TicketPageProps {
   data: TicketData | null;
@@ -42,6 +44,11 @@ export function TicketPage({ data }: TicketPageProps) {
         backgroundSize: "60px 60px",
       }}
     >
+      {/* Confetti — only on first visit right after registration */}
+      {isOwner && sessionStorage.getItem("confetti_fired") !== "1" && (
+        <ConfettiBurst enabled onFired={() => sessionStorage.setItem("confetti_fired", "1")} />
+      )}
+
       {/* Background glow behind ticket */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] pointer-events-none z-0"
@@ -70,7 +77,7 @@ export function TicketPage({ data }: TicketPageProps) {
           </h1>
           {!isOwner && (
             <p className="font-mono text-sm text-white/60 mt-4 leading-relaxed">
-              Присъедини се към {name} на 26 април 2026
+              Присъедини се към {name} на {siteConfig.event.dateBG}
             </p>
           )}
         </div>

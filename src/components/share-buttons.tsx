@@ -54,8 +54,19 @@ export function ShareButtons({ ticketId, downloading, onDownload }: ShareButtons
           variant="outline"
           size="sm"
           onClick={() => copy(shareUrl)}
-          className={cn(copied && "text-acid! border-acid!")}
+          className={cn("relative overflow-hidden", copied && "text-acid! border-acid!")}
         >
+          {/* Scan flash on copy */}
+          {copied && (
+            <span
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(200,255,0,0.15) 50%, transparent 100%)",
+                animation: "scanFlash 0.4s ease-out forwards",
+              }}
+            />
+          )}
           <CopyIcon className="size-4" />
           {copied ? "КОПИРАНО!" : "КОПИРАЙ ЛИНК"}
         </FormButton>

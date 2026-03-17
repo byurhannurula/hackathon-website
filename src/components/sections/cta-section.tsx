@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import { CountdownTimer } from "@/components/ui/countdown-timer";
+import { siteConfig } from "@/constants";
 
 interface CTASectionProps {
   onRegister: () => void;
@@ -84,9 +86,14 @@ export function CTASection({ onRegister }: CTASectionProps) {
             transform: visible ? "none" : "translateY(24px)",
           }}
         >
-          <p className="font-mono text-xs text-muted mt-6 tracking-[0.12em]">
-            26 април 2026 · Русе, България · 48 часа · Безплатен вход
+          <p className="font-mono text-sm text-muted mt-12 tracking-[0.05em]">
+            {siteConfig.event.ctaSubline}
           </p>
+
+          <div className="mt-10" style={{ animation: "fadeUp 0.6s 1.5s both ease" }}>
+            <CountdownTimer enabled={true} />
+          </div>
+
           <button
             onClick={onRegister}
             className="font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-10 transition-all duration-200 hover:bg-white hover:scale-[1.03]"

@@ -120,8 +120,11 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
 FormSelect.displayName = "FormSelect";
 
 // ─── CHECKBOX ───────────────────────────────────────────────────────────────
-interface FormCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
-  label: string;
+interface FormCheckboxProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "type" | "label"
+> {
+  label: React.ReactNode;
   error?: string;
 }
 

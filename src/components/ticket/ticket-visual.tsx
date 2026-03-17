@@ -65,9 +65,9 @@ export function TicketVisual({ data, interactive = false, onNodeRef }: TicketVis
         transformStyle: "preserve-3d",
       }}
     >
-      {/* Black circular overlays to hide glare at left/right cutouts */}
+      {/* Circular overlays to hide glare at left/right cutouts — matches page bg */}
       <div
-        className="absolute w-[72px] h-[58px] bg-black rounded-full z-100 pointer-events-none"
+        className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
         style={{
           top: "50%",
           left: "-7%",
@@ -75,7 +75,7 @@ export function TicketVisual({ data, interactive = false, onNodeRef }: TicketVis
         }}
       />
       <div
-        className="absolute w-[72px] h-[58px] bg-black rounded-full z-100 pointer-events-none"
+        className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
         style={{
           top: "50%",
           left: "96%",

@@ -21,6 +21,7 @@ import {
   FormButton,
   AvatarCircle,
   TextShimmer,
+  TicketUnlockSequence,
 } from "@/components/ui";
 import {
   type TicketData,
@@ -47,6 +48,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
   const [generating, setGenerating] = useState(false);
+  const [pendingTicket, setPendingTicket] = useState<TicketData | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
   const form1 = useForm<Step1Data>({
@@ -140,7 +142,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
         ticketId: apiData.ticketId,
       };
 
-      onRegister(ticketData);
+      setPendingTicket(ticketData);
     } catch (error) {
       console.error("Registration error:", error);
       setGenerating(false);
@@ -151,7 +153,12 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const currentForm = step === 1 ? form1 : step === 2 ? form2 : form3;
   const isValid = currentForm.formState.isValid;
 
-  // ── GENERATING STATE ──
+  // ── UNLOCK SEQUENCE (plays after API success, before redirect) ──
+  if (pendingTicket) {
+    return <TicketUnlockSequence enabled onComplete={() => onRegister(pendingTicket)} />;
+  }
+
+  // ── GENERATING STATE (API in flight) ──
   if (generating) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 relative">
@@ -160,7 +167,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             duration={1.8}
             className="font-mono text-xl dark:[--base-gradient-color:theme(--color-acid)]"
           >
-            Генериране на билета...
+            Свързване със сървъра...
           </TextShimmer>
         </div>
       </div>
@@ -504,7 +511,21 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div>
               <FormCheckbox
                 {...form3.register("agreeRandomTeams")}
-                label="Едно от правилата на Ruse AI Hack | App in a Snap e разпределение на отборите на произволен принцип чрез комбиниране на хора с различен опит. Моля да потвърдите, че сте съгласни с това."
+                label={
+                  <>
+                    Приемам{" "}
+                    <Link
+                      href="/rules"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-acid/70 underline hover:text-acid"
+                    >
+                      правилата на събитието
+                    </Link>
+                    , включително разпределение на отборите на произволен принцип чрез комбиниране
+                    на хора с различен опит.
+                  </>
+                }
                 error={form3.formState.errors.agreeRandomTeams?.message}
               />
             </div>

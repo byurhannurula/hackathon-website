@@ -17,8 +17,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="font-mono text-[11px] text-white/40 leading-[1.8] mt-3">
-              48-часов AI хакатон в Русе, България. Създай реално работещо приложение с помощта на
-              изкуствен интелект.
+              {siteConfig.event.shortDescription}
             </p>
           </div>
 
@@ -34,6 +33,7 @@ export function Footer() {
                   { label: "Програма", href: "/#agenda" },
                   { label: "Награди", href: "/#prizes" },
                   { label: "Инфо", href: "/info" },
+                  { label: "Правила", href: "/rules" },
                 ].map((link) => (
                   <Link
                     key={link.href}

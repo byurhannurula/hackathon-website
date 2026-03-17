@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 import { type TicketData } from "@/lib";
+import { siteConfig } from "@/constants";
 import { TicketPage } from "@/components/ticket-page";
 
 export const revalidate = 10;
@@ -43,17 +44,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const data = await fetchTicket(slug);
 
+  const ev = siteConfig.event;
+  const base = siteConfig.url;
+
   if (!data) {
     return {
-      title: "RUSE AI HACK '26 Ticket",
-      description:
-        "48-часов AI хакатон в Русе, България. Реални продукти, реални награди. 26 април 2026.",
+      title: `${ev.name} ${ev.year} Ticket`,
+      description: `${ev.duration} AI хакатон в ${ev.locationBG}. Реални продукти, реални награди. ${ev.dateBG}.`,
     };
   }
 
-  const ticketTitle = `${data.name} — RUSE AI HACK '26 Ticket`;
-  const ticketDescription = `${data.name} участва в RUSE AI HACK '26 — 48-часов AI хакатон в Русе, България. Вземи и ти своя билет!`;
-  const ogImage = `/api/og?id=${slug}`;
+  const ticketTitle = `${data.name} — ${ev.name} ${ev.year} Ticket`;
+  const ticketDescription = `${data.name} участва в ${ev.name} ${ev.year} — ${ev.duration} AI хакатон в ${ev.locationBG}. Вземи и ти своя билет!`;
+  const ogImage = `${base}/api/og?id=${slug}`;
 
   return {
     title: ticketTitle,
@@ -62,14 +65,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
       title: ticketTitle,
       description: ticketDescription,
-      url: `/tickets/${slug}`,
-      siteName: "RUSE AI HACK '26",
+      url: `${base}/tickets/${slug}`,
+      siteName: `${ev.name} ${ev.year}`,
       images: [
         {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: `Билет на ${data.name} за RUSE AI HACK '26`,
+          alt: `Билет на ${data.name} за ${ev.name} ${ev.year}`,
         },
       ],
     },

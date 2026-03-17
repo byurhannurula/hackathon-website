@@ -48,20 +48,19 @@ export async function fetchAvatarAsBase64(url: string): Promise<string> {
  * Build the full share URL for a ticket.
  */
 export function buildShareUrl(ticketId: string): string {
-  if (typeof window === "undefined") return "";
-  return `${window.location.origin}/tickets/${ticketId}`;
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  return `${baseUrl}/tickets/${ticketId}`;
 }
 
 /**
  * Build social share URLs for a ticket.
  */
 export function buildSocialShareUrls(shareUrl: string) {
+  const tweetText = `🚀 Участвам в RUSE AI HACK '26 — 48-часов AI хакатон в Русе! Вземи и ти билет 👇`;
   return {
-    // Twitter/X is the only platform that supports custom text via URL params
-    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      `Участвам в Ruse AI Hack '26! Присъедини се ✦`
-    )}&url=${encodeURIComponent(shareUrl)}`,
-    // LinkedIn & Facebook read og:title, og:description, og:image from the page — no text params supported
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
   };

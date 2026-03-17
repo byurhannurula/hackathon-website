@@ -1,5 +1,6 @@
 "use client";
 
+import { useLiveCount } from "@/hooks";
 import { siteConfig } from "@/constants";
 import { DottedSurface, DecryptText, CountUp } from "@/components/ui";
 
@@ -8,6 +9,17 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onRegister }: HeroSectionProps) {
+  const liveCount = useLiveCount();
+
+  const stats: [string, string][] = [
+    ["48Ч", "БЕЗ ПРЕКЪСВАНЕ"],
+    [siteConfig.event.prizesPool, "В НАГРАДИ"],
+    ["БЕЗПЛАТНО", "ВХОД"],
+    ...(liveCount !== null && liveCount > 0
+      ? [[`${liveCount}+`, "ЗАПИСАНИ"] as [string, string]]
+      : []),
+  ];
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6 pt-[120px] pb-20 md:px-12">
       <DottedSurface className="absolute inset-0 z-0" />
@@ -36,14 +48,10 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         style={{ background: "radial-gradient(circle, rgba(5,5,5,0.5) 0%, transparent 80%)" }}
       >
         <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          <DecryptText
-            text={`26 АПРИЛ 2026  \u00B7  РУСЕ, БЪЛГАРИЯ  \u00B7  48Ч ХАКАТОН`}
-            speed={45}
-            delay={100}
-          />
+          <DecryptText text={siteConfig.event.heroSubline} speed={80} delay={250} />
         </div>
 
-        <h1 className="font-display font-semibold text-[clamp(48px,12vw,172px)] leading-[0.95] tracking-tight mt-[18px]">
+        <h1 className="font-display font-semibold text-[clamp(64px,12vw,172px)] leading-[0.95] tracking-tight mt-[18px]">
           <span
             className="glitch-1 block text-white"
             style={{ animation: "fadeUp 0.7s 0.5s both ease, glitch 4s 1.5s ease infinite" }}
@@ -62,7 +70,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           className="font-serif italic text-[clamp(16px,2vw,20px)] text-white/85 mt-8"
           style={{ animation: "fadeUp 0.6s 0.95s both ease" }}
         >
-          — хакатон от StartupFactory
+          — хакатон от {siteConfig.event.organizer}
         </div>
 
         <p
@@ -94,11 +102,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
 
         {/* Stats */}
         <div className="flex gap-6 md:gap-15 mt-12 md:mt-18 justify-center flex-wrap">
-          {[
-            ["48Ч", "БЕЗ ПРЕКЪСВАНЕ"],
-            [siteConfig.event.prizesPool, "В НАГРАДИ"],
-            ["БЕЗПЛАТНО", "ВХОД"],
-          ].map(([v, l]) => (
+          {stats.map(([v, l]) => (
             <div key={l} className="text-center">
               <CountUp
                 value={v}

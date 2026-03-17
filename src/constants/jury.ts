@@ -10,12 +10,12 @@ export const JURY_MEMBERS: Person[] = [
 ];
 
 export const MENTORS: Person[] = [
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "" },
 ];
 
 export const JUDGING_CRITERIA: Criterion[] = [

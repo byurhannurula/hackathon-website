@@ -14,3 +14,4 @@
 // export { JurySectionOld as JurySection } from "./jury-section-old";
 export { JurySectionMedium as JurySection } from "./jury-section-medium";
 // export { JurySectionGlare as JurySection } from "./jury-section-glare";
+// export { JurySectionDecrypt as JurySection } from "./jury-section-decrypt";

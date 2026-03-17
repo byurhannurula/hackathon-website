@@ -13,3 +13,4 @@ export * from "./icons";
 export * from "./ai-icons";
 export * from "./form-fields";
 export * from "./text-shimmer";
+export * from "./ticket-unlock-sequence";
