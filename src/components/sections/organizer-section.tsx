@@ -9,19 +9,19 @@ export function OrganizerSection() {
       <div className="max-w-[1100px] mx-auto flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-13">
         {/* Organizer + co-organizers */}
         <div className="shrink-0 md:w-[360px]">
-          <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 mb-3 uppercase">
+          <div className="font-mono text-[10px] tracking-[0.18em] text-white/50 mb-3 uppercase">
             Организирано от
           </div>
           <Image
-            src="/logos/startupfactory2.png"
+            src="/logos/sf-h.svg"
             alt="Startup Factory"
             width={200}
             height={100}
-            className="object-contain brightness-150"
+            className="object-contain "
             // style={{ mixBlendMode: "lighten" }}
           />
 
-          <div className="font-mono text-[10px] tracking-[0.18em] text-white/30 mt-6 mb-3 uppercase">
+          <div className="font-mono text-[10px] tracking-[0.18em] text-white/50 mt-6 mb-3 uppercase">
             Със съдействието на
           </div>
           <div className="flex items-center gap-6">
@@ -51,7 +51,6 @@ export function OrganizerSection() {
             Технологични партньори
           </div>
           <Ticker />
-          <Ticker dir={-1} />
         </div>
       </div>
     </section>
