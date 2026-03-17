@@ -34,7 +34,7 @@ export function OrganizerSection() {
               style={{ mixBlendMode: "lighten" }}
             />
             <Image
-              src="/logos/software-roastery3.png"
+              src="/logos/software-roastery.png"
               alt="Software Roastery"
               width={200}
               height={60}
@@ -51,6 +51,7 @@ export function OrganizerSection() {
             Технологични партньори
           </div>
           <Ticker />
+          <Ticker dir={-1} />
         </div>
       </div>
     </section>

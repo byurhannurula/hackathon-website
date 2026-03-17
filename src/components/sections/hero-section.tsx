@@ -39,7 +39,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         className="absolute inset-0 pointer-events-none z-1"
         style={{
           background:
-            "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 10%, rgba(5,5,5,0.7) 65%, rgba(5,5,5,0.97) 100%)",
+            "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 30%, rgba(5,5,5,0.7) 65%, rgba(5,5,5,0.97) 100%)",
         }}
       />
 
@@ -54,7 +54,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
 
         <h1 className="font-display font-bold leading-[0.9] tracking-tight mt-3">
           <span
-            className="glitch-1 block text-acid text-[clamp(170px,28vw,400px)]"
+            className="glitch-1 block text-acid text-[clamp(170px,28vw,200px)]"
             style={{ animation: "fadeUp 0.7s 0.5s both ease, glitch 4s 1.5s ease infinite" }}
           >
             AI
@@ -69,7 +69,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
             className="glitch-2 block text-acid text-[clamp(12px,11.5vw,28px)] tracking-[1.2rem] pl-4 mt-4"
             style={{ animation: "fadeUp 0.7s 0.65s both ease, glitch2 8s 4s ease infinite" }}
           >
-            APP IN A SNAP
+            {/* APP IN A SNAP */}
           </span>
         </h1>
 

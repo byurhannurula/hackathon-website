@@ -56,7 +56,7 @@ export function Nav({}: NavProps) {
           <Link
             key={item.key}
             href={item.href}
-            className="font-mono text-[10px] tracking-[0.14em] text-white/35 cursor-pointer uppercase transition-colors duration-200 hover:text-acid no-underline"
+            className="font-mono text-[10px] tracking-[0.14em] text-white/50 cursor-pointer uppercase transition-colors duration-200 hover:text-acid no-underline"
             onClick={(e) => handleNavClick(e, item.href, item.key)}
           >
             {item.label}
