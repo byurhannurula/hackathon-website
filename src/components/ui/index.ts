@@ -10,3 +10,4 @@ export * from "./form-fields";
 export * from "./text-shimmer";
 export * from "./ticket-unlock-sequence";
 export * from "./scroll-to-top";
+export * from "./typewriter-text";

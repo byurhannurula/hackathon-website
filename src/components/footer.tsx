@@ -120,6 +120,27 @@ export function Footer() {
           Направено с вайб.
         </span>
       </div>
+
+      {/* Large outlined text — bottom of page, gradient fade to bg */}
+      <div className="hidden md:block relative overflow-hidden h-[clamp(100px,18vw,220px)]">
+        {/* Gradient mask: visible at top, fades to bg at bottom */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: "linear-gradient(to bottom, transparent 0%, var(--color-card) 85%)",
+          }}
+        />
+        <div className="absolute inset-x-0 top-0 flex items-start justify-center select-none pointer-events-none">
+          <span
+            className="font-display font-bold text-[clamp(100px,18vw,220px)] leading-none tracking-tight whitespace-nowrap text-transparent"
+            style={{
+              WebkitTextStroke: "2px rgba(var(--acid-rgb), 0.5)",
+            }}
+          >
+            RUSE AI HACK
+          </span>
+        </div>
+      </div>
     </footer>
   );
 }
