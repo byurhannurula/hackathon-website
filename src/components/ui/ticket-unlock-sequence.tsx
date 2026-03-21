@@ -136,19 +136,6 @@ export function TicketUnlockSequence({ enabled = true, onComplete }: TicketUnloc
           {isComplete ? "REDIRECTING…" : "GENERATING TICKET"}
         </div>
       </div>
-
-      {/* Blink cursor keyframe */}
-      <style jsx>{`
-        @keyframes blink {
-          0%,
-          100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,14 +1,11 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import { CountdownTimer } from "@/components/ui/countdown-timer";
 import { siteConfig } from "@/constants";
 
-interface CTASectionProps {
-  onRegister: () => void;
-}
-
-export function CTASection({ onRegister }: CTASectionProps) {
+export function CTASection() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -74,7 +71,7 @@ export function CTASection({ onRegister }: CTASectionProps) {
               transform: visible ? "none" : "translateY(40px) skewY(3deg)",
             }}
           >
-            ЗАПОЧНИ ДА ДОСТАВЯШ.
+            ЗАПОЧНИ ДА СЪЗДАВАШ.
           </div>
         </div>
 
@@ -94,12 +91,12 @@ export function CTASection({ onRegister }: CTASectionProps) {
             <CountdownTimer enabled={true} />
           </div>
 
-          <button
-            onClick={onRegister}
-            className="font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-10 transition-all duration-200 hover:bg-white hover:scale-[1.03]"
+          <Link
+            href="/register"
+            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-10 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
           >
-            РЕГИСТРИРАЙ СЕ — БЕЗПЛАТНО Е
-          </button>
+            РЕГИСТРИРАЙ СЕ &mdash; БЕЗПЛАТНО Е
+          </Link>
         </div>
       </div>
     </section>

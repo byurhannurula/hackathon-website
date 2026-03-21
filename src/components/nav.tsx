@@ -7,11 +7,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib";
 import { siteConfig } from "@/constants";
 
-interface NavProps {
-  onRegister?: () => void;
-}
-
-export function Nav({}: NavProps) {
+export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [

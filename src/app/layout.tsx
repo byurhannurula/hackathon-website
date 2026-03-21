@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Oswald, JetBrains_Mono, Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
 
 import { cn } from "@/lib";
 import { ScrollToTop } from "@/components/ui";
 import { AnalyticsScript } from "@/components/analytics";
-import { CursorTrail } from "@/components/ui/cursor-trail";
-import { KonamiEasterEgg } from "@/components/ui/konami-easter-egg";
 import { ConsoleGreeting } from "@/components/ui/console-greeting";
+import { ClientExtras } from "@/components/ui/client-extras";
 
 const oswald = Oswald({
   weight: ["400", "500", "600", "700"],
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     template: "%s | RUSE AI HACK '26",
   },
   description:
-    "RUSE AI HACK '26 е 48-часов AI хакатон в Русе, България. Създай работещо AI приложение, спечели награди на стойност €5,750 и се свържи с най-добрите разработчици. 26 април 2026.",
+    "RUSE AI HACK '26 е 48-часов AI хакатон в Русе, България. Създай работещо AI приложение, спечели награди на стойност €2,500 и се свържи с най-добрите разработчици. 24–26 април 2026.",
   keywords: [
     "хакатон",
     "hackathon",
@@ -102,12 +102,12 @@ export default function RootLayout({
           manrope.variable
         )}
       >
-        {/* Toggle: set enabled={false} to disable */}
-        <KonamiEasterEgg enabled={true} />
-        <CursorTrail enabled={true} />
+        <ClientExtras />
         <ConsoleGreeting enabled={true} />
         {children}
         <ScrollToTop />
+        <SpeedInsights />
+
         <AnalyticsScript />
       </body>
     </html>

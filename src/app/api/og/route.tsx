@@ -3,8 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 
 import { siteConfig } from "@/constants";
 
-export const runtime = "edge";
-
 async function loadGoogleFont(font: string, text: string) {
   const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
@@ -71,7 +69,7 @@ export async function GET(request: Request) {
 
     // ── GENERIC OG (no ticket token) ──
     if (!data) {
-      const genericText = `${ev.name}HACKATHON${ev.year}${ev.date}${ev.location}${ev.duration}by ${ev.organizer}${ev.prizesPool}${ev.buildersCount}BUILDERS IN PRIZESGET YOUR TICKET`;
+      const genericText = `${ev.name}HACKATHON${ev.year}${ev.date}${ev.location}${ev.duration}by ${ev.organizer}${ev.prizesPool}${ev.participantsCount}PARTICIPANTS IN PRIZESGET YOUR TICKET`;
       const bebasData = await loadGoogleFont("Bebas+Neue", genericText);
       const monoData = await loadGoogleFont("Space+Mono", genericText);
       const syneData = await loadGoogleFont("Syne", genericText);
@@ -146,7 +144,7 @@ export async function GET(request: Request) {
                 style={{
                   fontFamily: "Bebas Neue",
                   fontSize: "140px",
-                  color: "#C8FF00",
+                  color: "#feee04",
                   lineHeight: "0.95",
                 }}
               >
@@ -194,7 +192,7 @@ export async function GET(request: Request) {
               }}
             >
               {[
-                [ev.buildersCount, "BUILDERS"],
+                [ev.participantsCount, "PARTICIPANTS"],
                 [ev.duration, "NON-STOP"],
                 [ev.prizesPool, "IN PRIZES"],
               ].map(([value, label]) => (
@@ -210,7 +208,7 @@ export async function GET(request: Request) {
                     style={{
                       fontFamily: "Bebas Neue",
                       fontSize: "36px",
-                      color: "#C8FF00",
+                      color: "#feee04",
                     }}
                   >
                     {value}
@@ -399,7 +397,7 @@ export async function GET(request: Request) {
                 ) : (
                   <span
                     style={{
-                      color: "#C8FF00",
+                      color: "#feee04",
                       fontSize: `${30 * scale}px`,
                       fontFamily: "Syne",
                       fontWeight: 700,
@@ -449,7 +447,7 @@ export async function GET(request: Request) {
                     fontSize: `${44 * scale}px`,
                   }}
                 >
-                  <span style={{ color: "#C8FF00" }}>RUSE</span>
+                  <span style={{ color: "#feee04" }}>RUSE</span>
                   <span style={{ color: "#fff", marginLeft: `${10 * scale}px` }}>AI HACK</span>
                 </div>
                 <span
@@ -529,7 +527,7 @@ export async function GET(request: Request) {
             >
               <span
                 style={{
-                  color: "#C8FF00",
+                  color: "#feee04",
                   fontFamily: "Space Mono",
                   fontSize: `${28 * scale}px`,
                   fontWeight: 700,

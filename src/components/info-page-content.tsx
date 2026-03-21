@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
@@ -15,12 +12,9 @@ const pCls = "font-mono text-sm text-white/70 leading-[1.9] mb-4";
 const listCls = "font-mono text-sm text-white/70 leading-[2] list-disc pl-5 mb-6";
 
 export function InfoPageContent() {
-  const router = useRouter();
-  const handleRegister = () => router.push("/register");
-
   return (
     <div className="bg-bg min-h-screen">
-      <Nav onRegister={handleRegister} />
+      <Nav />
 
       {/* Header */}
       <section className="pt-[140px] pb-16 px-6 md:px-12">

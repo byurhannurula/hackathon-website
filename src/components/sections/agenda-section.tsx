@@ -14,7 +14,7 @@ export function AgendaSection() {
               {/* Day header */}
               <div className="px-5 py-4 border-b border-white/7">
                 <div className="font-display text-lg tracking-[0.06em] text-acid">{day.day}</div>
-                <div className="font-mono text-[10px] tracking-[0.14em] text-white/40 mt-0.5">
+                <div className="font-mono text-[10px] tracking-[0.14em] text-white/50 mt-0.5">
                   {day.date}
                 </div>
               </div>

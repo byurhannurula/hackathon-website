@@ -19,7 +19,7 @@ export const siteConfig = {
     organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
     prizesPool: "€2,500",
-    buildersCount: "100+",
+    participantsCount: "100+",
     free: "Безплатен вход",
 
     // Derived fields

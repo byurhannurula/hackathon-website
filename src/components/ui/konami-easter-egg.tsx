@@ -133,7 +133,7 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center" style={{ animation: "fadeUp 0.8s 1s both ease" }}>
               <div className="font-display text-4xl md:text-6xl text-acid drop-shadow-[0_0_30px_rgba(254,238,4,0.5)]">
-                ТИ СИ ИСТИНСКИ СТРОИТЕЛ
+                ТИ СИ ИСТИНСКИ ХАКЕР
               </div>
               <div className="font-mono text-sm text-white/60 mt-4 tracking-widest">
                 🛠️ KONAMI CODE UNLOCKED 🛠️

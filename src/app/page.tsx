@@ -1,7 +1,3 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import { Ticker } from "@/components/ticker";
@@ -18,16 +14,10 @@ import {
 } from "@/components/sections";
 
 export default function Page() {
-  const router = useRouter();
-
-  const handleRegister = () => {
-    router.push("/register");
-  };
-
   return (
     <div className="bg-bg">
-      <Nav onRegister={handleRegister} />
-      <HeroSection onRegister={handleRegister} />
+      <Nav />
+      <HeroSection />
       <OrganizerSection />
       <AboutSection />
       <SponsorsSection />
@@ -36,7 +26,7 @@ export default function Page() {
       <JurySection />
       <PrizesSection />
       <FaqSection />
-      <CTASection onRegister={handleRegister} />
+      <CTASection />
       <Footer />
     </div>
   );

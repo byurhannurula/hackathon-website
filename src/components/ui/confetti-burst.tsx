@@ -30,14 +30,32 @@ export function ConfettiBurst({ enabled = true, onFired }: ConfettiBurstProps) {
         angle: 60,
         spread: 55,
         origin: { x: 0, y: 0.7 },
-        colors: ["#C8FF00", "#ffffff", "#a3e635", "#22d3ee", "#FF3355", "#7B61FF"],
+        colors: [
+          "#FF3355",
+          "#3B82F6",
+          "#FACC15",
+          "#22C55E",
+          "#A855F7",
+          "#F97316",
+          "#EC4899",
+          "#06B6D4",
+        ],
       });
       confetti({
         particleCount: 3,
         angle: 120,
         spread: 55,
         origin: { x: 1, y: 0.7 },
-        colors: ["#C8FF00", "#ffffff", "#a3e635", "#22d3ee", "#FF3355", "#7B61FF"],
+        colors: [
+          "#FF3355",
+          "#3B82F6",
+          "#FACC15",
+          "#22C55E",
+          "#A855F7",
+          "#F97316",
+          "#EC4899",
+          "#06B6D4",
+        ],
       });
 
       if (Date.now() < end) {

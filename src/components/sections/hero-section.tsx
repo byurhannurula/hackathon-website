@@ -1,14 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useLiveCount } from "@/hooks";
 import { siteConfig } from "@/constants";
-import { DottedSurface, DecryptText, CountUp } from "@/components/ui";
+import { DecryptText, CountUp } from "@/components/ui";
 
-interface HeroSectionProps {
-  onRegister: () => void;
-}
+const DottedSurface = dynamic(
+  () => import("@/components/ui/dotted-surface").then((m) => m.DottedSurface),
+  { ssr: false }
+);
 
-export function HeroSection({ onRegister }: HeroSectionProps) {
+export function HeroSection() {
   const liveCount = useLiveCount();
 
   const stats: [string, string][] = [
@@ -49,7 +52,7 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
         style={{ background: "radial-gradient(circle, rgba(5,5,5,0.5) 0%, transparent 80%)" }}
       >
         <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          <DecryptText text={siteConfig.event.heroSubline} speed={80} delay={250} />
+          <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
         </div>
 
         <h1 className="font-display font-bold leading-[0.9] tracking-tight mt-3">
@@ -91,12 +94,12 @@ export function HeroSection({ onRegister }: HeroSectionProps) {
           className="flex gap-3.5 mt-11 justify-center flex-wrap"
           style={{ animation: "fadeUp 0.6s 1.25s both ease" }}
         >
-          <button
-            onClick={onRegister}
-            className="font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5"
+          <Link
+            href="/register"
+            className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 no-underline"
           >
             Регистрация
-          </button>
+          </Link>
           <button
             className="font-display uppercase text-lg tracking-[0.07em] bg-transparent text-acid border border-acid/60 py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
             onClick={() =>

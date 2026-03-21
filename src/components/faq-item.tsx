@@ -12,9 +12,10 @@ export const FaqItem = ({ question, answer }: FaqItemProps) => {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-b border-border py-4.5">
-      <div
+      <button
         onClick={() => setOpen(!open)}
-        className="flex justify-between cursor-pointer items-center"
+        aria-expanded={open}
+        className="flex w-full justify-between cursor-pointer items-center text-left"
       >
         <span
           className={cn(
@@ -25,6 +26,7 @@ export const FaqItem = ({ question, answer }: FaqItemProps) => {
           {question}
         </span>
         <span
+          aria-hidden="true"
           className={cn(
             "font-display text-[22px] text-acid shrink-0 ml-4 transition-transform duration-200",
             open && "rotate-45"
@@ -32,8 +34,8 @@ export const FaqItem = ({ question, answer }: FaqItemProps) => {
         >
           +
         </span>
-      </div>
-      {open && <p className="font-mono text-xs text-white/60 mt-3 leading-[1.9]">{answer}</p>}
+      </button>
+      {open && <p className="font-mono text-xs text-white/65 mt-3 leading-[1.9]">{answer}</p>}
     </div>
   );
 };

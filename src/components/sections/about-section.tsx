@@ -35,7 +35,7 @@ const GridItem = ({ className, icon, title, description, extra }: GridItemProps)
             <h3 className="text-lg font-semibold font-body tracking-[-0.02em] md:text-xl text-white">
               {title}
             </h3>
-            <p className="font-mono text-[12px] leading-[1.7] text-white/50">{description}</p>
+            <p className="font-mono text-[12px] leading-[1.7] text-white/60">{description}</p>
           </div>
           {extra}
         </div>

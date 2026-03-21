@@ -137,13 +137,6 @@ function DecryptPersonCard({
             }}
           />
         )}
-
-        {/* Hover: show image without filters */}
-        <style jsx>{`
-          .group:hover img {
-            filter: grayscale(0) brightness(1) !important;
-          }
-        `}</style>
       </div>
 
       {/* Text area */}
@@ -206,7 +199,7 @@ function DecryptPersonGrid({ people, label }: { people: Person[]; label: string 
 
   return (
     <div ref={ref}>
-      <div className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase mb-5 flex items-center gap-3">
+      <div className="font-mono text-[10px] tracking-[0.18em] text-white/50 uppercase mb-5 flex items-center gap-3">
         <span
           className="inline-block w-1.5 h-1.5 rounded-full transition-colors duration-500"
           style={{ backgroundColor: revealed ? "var(--acid)" : "rgba(255,255,255,0.15)" }}
@@ -251,18 +244,6 @@ export function JurySectionDecrypt() {
           </div>
         </div>
       </div>
-
-      {/* Scanline animation keyframes */}
-      <style jsx>{`
-        @keyframes scanDown {
-          0% {
-            top: 0;
-          }
-          100% {
-            top: 100%;
-          }
-        }
-      `}</style>
     </section>
   );
 }

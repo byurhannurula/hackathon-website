@@ -38,7 +38,7 @@ export function SponsorsSection() {
 
           return (
             <div key={tier} className="mt-10 first:mt-13">
-              <div className="font-mono text-[10px] tracking-[0.18em] text-white/30 uppercase mb-4">
+              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-4">
                 {SPONSOR_TIER_LABELS[tier]}
               </div>
               <div className={`grid ${TIER_GRID[tier]} gap-4`}>

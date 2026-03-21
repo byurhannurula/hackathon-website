@@ -17,8 +17,7 @@ export function OrganizerSection() {
             alt="Startup Factory"
             width={200}
             height={100}
-            className="object-contain "
-            // style={{ mixBlendMode: "lighten" }}
+            className="object-contain"
           />
 
           <div className="font-mono text-[10px] tracking-[0.18em] text-white/50 mt-6 mb-3 uppercase">

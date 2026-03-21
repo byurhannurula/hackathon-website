@@ -18,7 +18,7 @@ export function PrizesSection() {
                 <div
                   className={cn(
                     "font-mono text-[11px] tracking-[0.18em]",
-                    i === 0 ? "text-acid" : "text-white/55"
+                    i === 0 ? "text-acid" : "text-white/60"
                   )}
                 >
                   {p.place}
@@ -31,7 +31,7 @@ export function PrizesSection() {
                 >
                   {p.amount}
                 </div>
-                <div className="font-mono text-[11px] text-white/55 mt-2.5 leading-[1.8]">
+                <div className="font-mono text-[11px] text-white/60 mt-2.5 leading-[1.8]">
                   {p.desc}
                 </div>
               </div>
@@ -48,7 +48,7 @@ export function PrizesSection() {
             <div className="font-display text-5xl leading-[1.1] mt-2 text-acid">
               {PRIZES[0].amount}
             </div>
-            <div className="font-mono text-[11px] text-white/55 mt-2.5 leading-[1.8]">
+            <div className="font-mono text-[11px] text-white/60 mt-2.5 leading-[1.8]">
               {PRIZES[0].desc}
             </div>
           </div>
@@ -57,13 +57,13 @@ export function PrizesSection() {
               const borderColors = ["border-t-white/45", "border-t-white/25"];
               return (
                 <div key={i} className={cn("bg-card p-6 border-t-[3px]", borderColors[i])}>
-                  <div className="font-mono text-[11px] tracking-[0.18em] text-white/55">
+                  <div className="font-mono text-[11px] tracking-[0.18em] text-white/60">
                     {p.place}
                   </div>
                   <div className="font-display text-5xl leading-[1.1] mt-2 text-white">
                     {p.amount}
                   </div>
-                  <div className="font-mono text-[11px] text-white/55 mt-2.5 leading-[1.8]">
+                  <div className="font-mono text-[11px] text-white/60 mt-2.5 leading-[1.8]">
                     {p.desc}
                   </div>
                 </div>

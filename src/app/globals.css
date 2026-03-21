@@ -258,3 +258,18 @@ button:active:not(:disabled),
 .glitch-2 {
   animation: glitch2 11s 4s ease infinite;
 }
+
+/* ── Scan down animation (jury decrypt effect) ── */
+@keyframes scanDown {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+/* ── Jury card hover effect ── */
+.group:hover img {
+  filter: grayscale(0) brightness(1) !important;
+}
