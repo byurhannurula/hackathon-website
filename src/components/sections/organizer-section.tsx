@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { Ticker } from "@/components/ticker";
 
@@ -13,10 +11,11 @@ export function OrganizerSection() {
             Организирано от
           </div>
           <Image
-            src="/logos/sf-h.svg"
+            src="/logos/startupfactory-horizontal.svg"
             alt="Startup Factory"
             width={200}
-            height={100}
+            height={63} // original aspect hint
+            style={{ width: "200px", height: "63.45px" }}
             className="object-contain"
           />
 
@@ -25,20 +24,20 @@ export function OrganizerSection() {
           </div>
           <div className="flex items-center gap-6">
             <Image
-              src="/logos/ur4.png"
+              src="/logos/uni-ruse.png"
               alt="Русенски Университет"
               width={70}
-              height={30}
+              height={70}
               className="object-contain brightness-120"
-              style={{ mixBlendMode: "lighten" }}
+              style={{ mixBlendMode: "lighten", width: "70px", height: "70px" }}
             />
             <Image
               src="/logos/software-roastery.png"
               alt="Software Roastery"
               width={200}
-              height={60}
+              height={84}
               className="object-contain brightness-120"
-              style={{ mixBlendMode: "lighten" }}
+              style={{ mixBlendMode: "lighten", width: "200px", height: "84.38px" }}
             />
           </div>
         </div>

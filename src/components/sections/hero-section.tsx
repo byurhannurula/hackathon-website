@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
+
 import { useLiveCount } from "@/hooks";
 import { siteConfig } from "@/constants";
-import { DecryptText, CountUp } from "@/components/ui";
+import { DecryptText, CountUp, GlitchImage } from "@/components/ui";
 
 const DottedSurface = dynamic(
   () => import("@/components/ui/dotted-surface").then((m) => m.DottedSurface),
@@ -55,29 +56,22 @@ export function HeroSection() {
           <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
         </div>
 
-        <h1 className="font-display font-bold leading-[0.9] tracking-tight mt-3">
-          <span
-            className="glitch-1 block text-acid text-[clamp(170px,28vw,200px)]"
-            style={{ animation: "fadeUp 0.7s 0.5s both ease, glitch 4s 1.5s ease infinite" }}
-          >
-            AI
-          </span>
-          <span
-            className="glitch-2 block text-white text-[clamp(72px,11.5vw,172px)] tracking-[0.06em] mt-1 sm:-mt-1"
-            style={{ animation: "fadeUp 0.7s 0.65s both ease, glitch2 8s 4s ease infinite" }}
-          >
-            HACK
-          </span>
-          <span
-            className="glitch-2 block text-acid text-[clamp(12px,11.5vw,28px)] tracking-[1.2rem] pl-4 mt-4"
-            style={{ animation: "fadeUp 0.7s 0.65s both ease, glitch2 8s 4s ease infinite" }}
-          >
-            {/* APP IN A SNAP */}
-          </span>
-        </h1>
+        <div
+          className="flex items-center justify-center my-8"
+          style={{ animation: "fadeUp 0.7s 0.5s both ease" }}
+        >
+          <GlitchImage
+            src="/logos/ai-hack-logo.png"
+            alt="AI HACK Text"
+            priority
+            width={600}
+            height={200}
+            className="w-[clamp(100px,50vw,320px)]"
+          />
+        </div>
 
         <div
-          className="font-serif italic text-[clamp(15px,1.8vw,18px)] font-medium text-white/70 mt-8"
+          className="font-serif italic text-[clamp(15px,1.8vw,18px)] font-medium text-white/85 "
           style={{ animation: "fadeUp 0.6s 0.85s both ease" }}
         >
           — AI Хакатон организиран от {siteConfig.event.organizer}
