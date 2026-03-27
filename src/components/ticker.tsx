@@ -21,17 +21,19 @@ export const Ticker = ({ dir = 1 }: TickerProps) => (
         animation: `ticker ${dir > 0 ? 28 : 22}s linear infinite ${dir < 0 ? "reverse" : ""}`,
       }}
     >
-      {[...SPONSOR_NAMES, ...SPONSOR_NAMES, ...SPONSOR_NAMES].map((p, i) => (
-        <span
-          key={i}
-          className={cn(
-            "font-mono text-[11px] tracking-[0.14em] uppercase whitespace-nowrap",
-            i % 4 === 0 ? "text-acid/75" : "text-white/45"
-          )}
-        >
-          {i % 4 === 0 ? "\u25C6" : "\u00B7"} {p}
-        </span>
-      ))}
+      {Array.from({ length: 5 }, () => SPONSOR_NAMES)
+        .flat()
+        .map((p, i) => (
+          <span
+            key={i}
+            className={cn(
+              "font-mono text-[11px] tracking-[0.14em] uppercase whitespace-nowrap",
+              i % 4 === 0 ? "text-acid/75" : "text-white/45"
+            )}
+          >
+            {i % 4 === 0 ? "\u25C6" : "\u00B7"} {p}
+          </span>
+        ))}
     </div>
   </div>
 );

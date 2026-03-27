@@ -8,6 +8,7 @@ import { cn } from "@/lib";
 import type { Person, Criterion } from "@/lib/types";
 import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { LIIcon } from "@/components/ui";
 
 function PersonCard({
   person,
@@ -55,8 +56,21 @@ function PersonCard({
         )}
       </div>
       <div className="p-4">
-        <div className="font-body font-bold text-[14px] text-white leading-tight">
-          {person.name}
+        <div className="flex items-center gap-1.5">
+          <div className="font-body font-bold text-[14px] text-white leading-tight">
+            {person.name}
+          </div>
+          {person.linkedin && (
+            <a
+              href={person.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-white/30 hover:text-acid transition-colors duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <LIIcon />
+            </a>
+          )}
         </div>
         {hasDetails ? (
           <>

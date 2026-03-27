@@ -18,7 +18,7 @@ interface TicketPageProps {
 export function TicketPage({ data }: TicketPageProps) {
   const { trackEvent } = useAnalytics();
   const [isOwner, setIsOwner] = useState<boolean | null>(null);
-  const { nodeRef, downloading, download } = useTicketDownload(data?.ticketNum);
+  const { nodeRef, downloading, exporting, download } = useTicketDownload(data?.ticketNum);
 
   const name = data?.name || "Участник";
   const firstName = name.split(" ")[0];
@@ -58,9 +58,9 @@ export function TicketPage({ data }: TicketPageProps) {
         }}
       />
 
-      {/* Header text above ticket */}
+      {/* Header text — appears first */}
       {isOwner !== null && (
-        <div className="relative z-1 text-center mb-10 animate-reveal-up">
+        <div className="relative z-1 text-center mb-10 animate-[ticketFadeIn_0.6s_ease_both]">
           <div className="font-mono text-[11px] tracking-[0.2em] text-acid/70 uppercase mb-4">
             &#10022; {isOwner ? "БИЛЕТЪТ Е ПОТВЪРДЕН" : "БИЛЕТ"} &#10022;
           </div>
@@ -83,21 +83,20 @@ export function TicketPage({ data }: TicketPageProps) {
         </div>
       )}
 
-      <div className="relative z-1">
+      {/* Ticket — follows text */}
+      <div className="relative z-1 animate-[ticketFadeIn_0.7s_0.15s_ease_both]">
         <TicketVisual
           data={data}
           interactive={true}
+          exporting={exporting}
           onNodeRef={(node) => {
             nodeRef.current = node;
           }}
         />
       </div>
 
-      {/* Share Actions / Viewer CTA */}
-      <div
-        className="mt-14 flex flex-col items-center gap-6 relative z-1"
-        style={{ animation: "revealUp 0.6s 0.2s both ease-out" }}
-      >
+      {/* Share Actions / Viewer CTA — follows ticket */}
+      <div className="mt-14 flex flex-col items-center gap-6 relative z-1 animate-[ticketFadeIn_0.6s_0.35s_ease_both]">
         {isOwner && data?.ticketId ? (
           <ShareButtons ticketId={data.ticketId} downloading={downloading} onDownload={download} />
         ) : (
@@ -113,7 +112,7 @@ export function TicketPage({ data }: TicketPageProps) {
       {/* Back link at bottom */}
       <Link
         href="/"
-        className="relative z-1 mt-12 font-mono text-[11px] tracking-[0.14em] text-white/30 no-underline transition-colors duration-200 hover:text-white/60"
+        className="relative z-1 mt-12 font-mono text-[11px] tracking-[0.14em] text-white/30 no-underline transition-colors duration-200 hover:text-white/60 animate-[ticketFadeIn_0.5s_0.5s_ease_both]"
       >
         ← Към Началото
       </Link>

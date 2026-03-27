@@ -7,6 +7,7 @@ import type { Person, Criterion } from "@/lib/types";
 import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import { GlareCard } from "@/components/ui/glare-card";
+import { LIIcon } from "@/components/ui";
 
 function PersonGlareCard({ person }: { person: Person }) {
   const hasImage = person.image.length > 0;
@@ -34,8 +35,21 @@ function PersonGlareCard({ person }: { person: Person }) {
 
       {/* Info at bottom */}
       <div className="relative z-10 p-5 pb-6 w-full text-left">
-        <div className="font-body font-bold text-[15px] text-white leading-tight">
-          {person.name}
+        <div className="flex items-center gap-1.5">
+          <div className="font-body font-bold text-[15px] text-white leading-tight">
+            {person.name}
+          </div>
+          {person.linkedin && (
+            <a
+              href={person.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-white/30 hover:text-acid transition-colors duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <LIIcon />
+            </a>
+          )}
         </div>
         {hasDetails ? (
           <>

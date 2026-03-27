@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+import { step1Schema, step2Schema, step3Schema } from "@/lib/schemas";
+
 const AIRTABLE_TOKEN = process.env.AIRTABLE_PAT;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "EventRegistrations";
@@ -8,11 +10,29 @@ const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || "EventRegistratio
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_PRIVATE_KEY = process.env.SUPABASE_PRIVATE_KEY;
 
+const registrationSchema = step1Schema.merge(step2Schema).merge(step3Schema);
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const raw = await req.json();
 
-    const results: { airtable?: boolean; supabase?: boolean } = {};
+    // Guard against oversized payloads
+    const rawStr = JSON.stringify(raw);
+    if (rawStr.length > 50_000) {
+      return NextResponse.json({ ok: false, error: "Заявката е твърде голяма." }, { status: 413 });
+    }
+
+    // Server-side validation
+    const parsed = registrationSchema.safeParse(raw);
+    if (!parsed.success) {
+      console.error("Validation error:", parsed.error.flatten().fieldErrors);
+      return NextResponse.json(
+        { ok: false, error: "Невалидни данни. Моля, проверете полетата и опитайте отново." },
+        { status: 400 }
+      );
+    }
+    const body = parsed.data;
+
     let ticketNumber: number | null = null;
     let ticketId: string | null = null;
 
@@ -26,6 +46,7 @@ export async function POST(req: NextRequest) {
             full_name: body.fullName,
             email: body.email,
             phone: body.phone,
+            age: body.age,
             role: body.role,
             organization: body.organization,
             dev_experience: body.devExperience,
@@ -49,7 +70,7 @@ export async function POST(req: NextRequest) {
           .single();
 
         if (error) {
-          console.error("Supabase error:", error.message, error.code);
+          console.error("Supabase error:", error.code);
           // 23505 = unique_violation (e.g. duplicate email)
           if (error.code === "23505") {
             const isDuplicateEmail = error.message?.includes("registrations_email_key");
@@ -64,15 +85,13 @@ export async function POST(req: NextRequest) {
               { status: 409 }
             );
           }
-          results.supabase = false;
+          // Non-duplicate Supabase error — fall through to "no ticket" check
         } else {
-          results.supabase = true;
           if (data?.ticket_number) ticketNumber = data.ticket_number;
           if (data?.ticket_id) ticketId = data.ticket_id;
         }
       } catch (e) {
         console.error("Supabase write failed:", e);
-        results.supabase = false;
       }
     }
 
@@ -104,12 +123,14 @@ export async function POST(req: NextRequest) {
           VolunteerHelp: body.volunteerHelp,
           AgreeRandomTeams: body.agreeRandomTeams ? "Да" : "Не",
           GdprConsent: body.gdprConsent ? "Да" : "Не",
+          Age: body.age || "",
           TicketNumber: ticketNumber,
         };
         if (body.themeDescription) fields.ThemeDescription = body.themeDescription;
         if (body.teamName) fields.TeamName = body.teamName;
         if (body.additionalQuestions) fields.AdditionalQuestions = body.additionalQuestions;
         if (body.handle) fields.Github = body.handle;
+        if (body.avatarUrl) fields.AvatarUrl = body.avatarUrl;
 
         const res = await fetch(
           `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
@@ -122,15 +143,13 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify({ fields }),
           }
         );
-        results.airtable = res.ok;
-        if (!res.ok) console.error("Airtable error:", await res.text());
+        if (!res.ok) console.error("Airtable error: status", res.status);
       } catch (e) {
         console.error("Airtable write failed:", e);
-        results.airtable = false;
       }
     }
 
-    return NextResponse.json({ ok: true, ticketNumber, ticketId, ...results });
+    return NextResponse.json({ ok: true, ticketNumber, ticketId });
   } catch (e) {
     console.error("Registration API error:", e);
     return NextResponse.json({ ok: false, error: "Internal server error" }, { status: 500 });

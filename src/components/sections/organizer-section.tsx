@@ -11,7 +11,7 @@ export function OrganizerSection() {
             Организирано от
           </div>
           <Image
-            src="/logos/startupfactory-horizontal.svg"
+            src="/sponsors/startupfactory-horizontal.svg"
             alt="Startup Factory"
             width={200}
             height={63} // original aspect hint
@@ -24,7 +24,7 @@ export function OrganizerSection() {
           </div>
           <div className="flex items-center gap-6">
             <Image
-              src="/logos/uni-ruse.png"
+              src="/sponsors/uni-ruse.png"
               alt="Русенски Университет"
               width={70}
               height={70}
@@ -32,7 +32,7 @@ export function OrganizerSection() {
               style={{ mixBlendMode: "lighten", width: "70px", height: "70px" }}
             />
             <Image
-              src="/logos/software-roastery.png"
+              src="/sponsors/software-roastery.png"
               alt="Software Roastery"
               width={200}
               height={84}

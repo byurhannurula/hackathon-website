@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   full_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
   phone TEXT NOT NULL,
+  age TEXT,
   role TEXT NOT NULL,
   organization TEXT NOT NULL,
   dev_experience TEXT NOT NULL,
@@ -42,9 +43,10 @@ CREATE TABLE IF NOT EXISTS registrations (
   github_handle TEXT,
   avatar_url TEXT,
 
-  -- Metadata
-  registration_status TEXT DEFAULT 'pending',
-  notes TEXT
+  -- Metadata (admin-only — defaults enforced, anon cannot set these)
+  registration_status TEXT NOT NULL DEFAULT 'pending',
+  notes TEXT,
+  status_updated_at TIMESTAMPTZ
 );
 
 -- ── Indexes ──────────────────────────────────────────────────
@@ -52,28 +54,41 @@ CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations(email);
 CREATE INDEX IF NOT EXISTS idx_registrations_ticket_id ON registrations(ticket_id);
 CREATE INDEX IF NOT EXISTS idx_registrations_ticket_number ON registrations(ticket_number);
 CREATE INDEX IF NOT EXISTS idx_registrations_created ON registrations(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_registrations_status ON registrations(registration_status);
 
 -- ── Row Level Security ───────────────────────────────────────
 ALTER TABLE registrations ENABLE ROW LEVEL SECURITY;
 
--- Allow anyone to register (insert)
+-- Anon can INSERT registration data only.
+-- They CANNOT read, update, or delete any rows.
+-- Columns like registration_status, notes, status_updated_at use
+-- database defaults and cannot be overridden via the anon INSERT
+-- because the API route (which uses service_role) controls which
+-- columns are sent. Direct anon inserts via the Supabase client
+-- would still rely on DB defaults for those columns.
 CREATE POLICY "Allow public registration" ON registrations
   FOR INSERT
-  WITH CHECK (true);
+  WITH CHECK (
+    -- Ensure anon cannot self-approve or inject metadata
+    registration_status = 'pending'
+    AND notes IS NULL
+    AND status_updated_at IS NULL
+  );
 
--- Allow anyone to look up a ticket by ticket_id (public share links)
--- Only exposes limited columns via the app's select queries
-CREATE POLICY "Allow public ticket lookup" ON registrations
-  FOR SELECT
-  USING (true);
+-- No public SELECT — all reads go through the service role key
+-- in API routes, which bypasses RLS entirely.
+-- This prevents anyone with the anon key from dumping the table.
 
--- Allow service role to do everything (admin)
+-- No public UPDATE or DELETE.
+
+-- Service role can do everything (used by API routes)
 CREATE POLICY "Allow service role full access" ON registrations
   FOR ALL
   USING (auth.role() = 'service_role')
   WITH CHECK (auth.role() = 'service_role');
 
 -- ── Registration count function ──────────────────────────────
+-- Returns only the count, no personal data exposed.
 CREATE OR REPLACE FUNCTION get_registration_count()
 RETURNS INTEGER AS $$
   SELECT COUNT(*)::INTEGER FROM registrations;

@@ -7,53 +7,10 @@ import { User } from "lucide-react";
 import type { Person, Criterion } from "@/lib/types";
 import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { LIIcon } from "@/components/ui";
+import { useDecryptText } from "@/hooks";
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*<>{}[]";
-
-function scramble(text: string): string {
-  return text
-    .split("")
-    .map((ch) => (ch === " " ? " " : CHARS[Math.floor(Math.random() * CHARS.length)]))
-    .join("");
-}
-
-// Deterministic scramble for SSR-safe initial render (same output on server & client)
-function scrambleDeterministic(text: string): string {
-  return text
-    .split("")
-    .map((ch, i) => (ch === " " ? " " : CHARS[(i * 7 + ch.charCodeAt(0) * 13) % CHARS.length]))
-    .join("");
-}
-
-function useDecryptText(target: string, active: boolean, speed = 40) {
-  const [display, setDisplay] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!active) return;
-
-    let pos = 0;
-    // First tick fires immediately (delay 0), subsequent at `speed` ms
-    const tick = () => {
-      const text = target.slice(0, pos) + scramble(target.slice(pos));
-      setDisplay(text);
-      if (pos >= target.length) {
-        clearInterval(interval);
-        return;
-      }
-      pos++;
-    };
-    const interval = setInterval(tick, speed);
-    // fire first tick from within the interval callback context
-    setTimeout(tick, 0);
-
-    return () => {
-      clearInterval(interval);
-      setDisplay(null);
-    };
-  }, [active, target, speed]);
-
-  return display ?? scrambleDeterministic(target);
-}
+const JURY_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*<>{}[]";
 
 function DecryptPersonCard({
   person,
@@ -87,10 +44,10 @@ function DecryptPersonCard({
     return () => clearTimeout(timer);
   }, [active, person.name.length, hasDetails]);
 
-  const nameText = useDecryptText(person.name, active, 40);
-  const roleText = useDecryptText(person.role, active, 35);
-  const orgText = useDecryptText(person.org, active, 30);
-  const tbaText = useDecryptText("Ще бъде обявен скоро", active, 30);
+  const nameText = useDecryptText(person.name, { active, speed: 40, chars: JURY_CHARS });
+  const roleText = useDecryptText(person.role, { active, speed: 35, chars: JURY_CHARS });
+  const orgText = useDecryptText(person.org, { active, speed: 30, chars: JURY_CHARS });
+  const tbaText = useDecryptText("Ще бъде обявен скоро", { active, speed: 30, chars: JURY_CHARS });
 
   return (
     <div className="group border border-white/7 bg-card overflow-hidden transition-all duration-300 hover:border-acid/30">
@@ -141,12 +98,29 @@ function DecryptPersonCard({
 
       {/* Text area */}
       <div className="p-3">
-        <div
-          className="font-mono font-bold text-[13px] leading-tight truncate transition-colors duration-500"
-          style={{ color: active ? "#fff" : "rgba(var(--acid-rgb),0.4)" }}
-          suppressHydrationWarning
-        >
-          {nameText}
+        <div className="flex items-center gap-1.5">
+          <div
+            className="font-mono font-bold text-[13px] leading-tight truncate transition-colors duration-500"
+            style={{ color: active ? "#fff" : "rgba(var(--acid-rgb),0.4)" }}
+            suppressHydrationWarning
+          >
+            {nameText}
+          </div>
+          {person.linkedin && (
+            <a
+              href={person.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 transition-all duration-500"
+              style={{
+                color: imageVisible ? "rgba(255,255,255,0.3)" : "transparent",
+                pointerEvents: imageVisible ? "auto" : "none",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <LIIcon />
+            </a>
+          )}
         </div>
         {hasDetails ? (
           <>

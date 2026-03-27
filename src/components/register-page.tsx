@@ -312,17 +312,29 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               </div>
 
               <div>
-                <FormLabel>Вие сте:</FormLabel>
-                <FormSelect
-                  {...form1.register("role")}
-                  options={ROLE_OPTIONS}
-                  error={form1.formState.errors.role?.message}
+                <FormLabel>Вашата възраст на 24 април 2026 г.</FormLabel>
+                <FormInput
+                  {...form1.register("age")}
+                  type="number"
+                  placeholder="25"
+                  error={form1.formState.errors.age?.message}
                 />
               </div>
             </div>
 
             <div>
-              <FormLabel>Организация или образователна институция</FormLabel>
+              <FormLabel>Вие сте:</FormLabel>
+              <FormSelect
+                {...form1.register("role")}
+                options={ROLE_OPTIONS}
+                error={form1.formState.errors.role?.message}
+              />
+            </div>
+
+            <div>
+              <FormLabel>
+                Организация или образователна институция (напишете NA ако няма такава)
+              </FormLabel>
               <FormInput
                 {...form1.register("organization")}
                 placeholder="Русенски университет, Acme Corp и др."
@@ -513,17 +525,17 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                 {...form3.register("agreeRandomTeams")}
                 label={
                   <>
-                    Приемам{" "}
+                    Запознат/а съм и приемам{" "}
                     <Link
                       href="/rules"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-acid/70 underline hover:text-acid"
                     >
-                      правилата на събитието
-                    </Link>
-                    , включително разпределение на отборите на произволен принцип чрез комбиниране
-                    на хора с различен опит.
+                      Правилата и условията за участие
+                    </Link>{" "}
+                    в Ruse AI Hack | App in a Snap, включително разпределение на отборите на
+                    произволен принцип чрез комбиниране на хора с различен опит.
                   </>
                 }
                 error={form3.formState.errors.agreeRandomTeams?.message}
@@ -533,8 +545,16 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div>
               <FormCheckbox
                 {...form3.register("gdprConsent")}
-                label="Съгласен/на съм личните ми данни да бъдат обработвани от организаторите на Ruse AI Hack '26 за целите на регистрацията, комуникацията по събитието и статистически анализ. Данните ви няма да бъдат споделяни с трети страни извън организаторите и спонсорите на събитието."
+                label="Давам съгласие личните ми данни да бъдат обработвани за целите на организацията и провеждането на събитието."
                 error={form3.formState.errors.gdprConsent?.message}
+              />
+            </div>
+
+            <div>
+              <FormCheckbox
+                {...form3.register("registrationNotGuaranteed")}
+                label="Разбирам, че регистрацията не означава автоматично одобрение за участие."
+                error={form3.formState.errors.registrationNotGuaranteed?.message}
               />
             </div>
 

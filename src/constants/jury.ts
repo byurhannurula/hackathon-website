@@ -1,21 +1,21 @@
 import type { Person, Criterion } from "@/lib/types";
 
 export const JURY_MEMBERS: Person[] = [
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
-  { name: "Предстои", role: "Жури", org: "", image: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Жури", org: "", image: "", linkedin: "" },
 ];
 
 export const MENTORS: Person[] = [
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
-  { name: "Предстои", role: "Ментор", org: "", image: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
+  { name: "Предстои", role: "Ментор", org: "", image: "", linkedin: "" },
 ];
 
 export const JUDGING_CRITERIA: Criterion[] = [

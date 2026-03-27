@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: false,
+  productionBrowserSourceMaps: false,
 
   // Performance optimizations
   experimental: {

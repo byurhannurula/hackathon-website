@@ -21,7 +21,7 @@ export function useLiveCount(enabled = true, intervalMs = 30_000) {
         if (!res.ok) return;
         const json = await res.json();
         if (!cancelled && typeof json.count === "number") {
-          setCount(json.count + 1);
+          setCount(json.count);
         }
       } catch {
         // Silently ignore fetch errors

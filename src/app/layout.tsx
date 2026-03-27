@@ -10,7 +10,7 @@ import { ConsoleGreeting } from "@/components/ui/console-greeting";
 import { ClientExtras } from "@/components/ui/client-extras";
 
 const oswald = Oswald({
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "700"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-bebas",
 });
@@ -22,14 +22,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const playfairDisplay = Playfair_Display({
-  weight: ["400", "700"],
+  weight: ["400"],
   style: ["normal", "italic"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-serif-google",
 });
 
 const manrope = Manrope({
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700", "800"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-syne",
 });

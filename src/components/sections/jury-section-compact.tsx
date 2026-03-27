@@ -6,6 +6,7 @@ import { User } from "lucide-react";
 import type { Person, Criterion } from "@/lib/types";
 import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { LIIcon } from "@/components/ui";
 
 function PersonCard({ person }: { person: Person }) {
   const hasImage = person.image.length > 0;
@@ -26,9 +27,22 @@ function PersonCard({ person }: { person: Person }) {
           <User className="w-5 h-5 text-white/20" />
         )}
       </div>
-      <div className="min-w-0">
-        <div className="font-body font-bold text-[13px] text-white leading-tight truncate">
-          {person.name}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          <div className="font-body font-bold text-[13px] text-white leading-tight truncate">
+            {person.name}
+          </div>
+          {person.linkedin && (
+            <a
+              href={person.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="shrink-0 text-white/30 hover:text-acid transition-colors duration-200"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <LIIcon />
+            </a>
+          )}
         </div>
         {hasDetails ? (
           <div className="font-mono text-[10px] text-white/40 mt-0.5 truncate">

@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/lib";
 import { siteConfig, PRIZES } from "@/constants";
 import { SectionHeader } from "@/components/section-header";

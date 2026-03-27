@@ -5,7 +5,8 @@ import Link from "next/link";
 
 import { useLiveCount } from "@/hooks";
 import { siteConfig } from "@/constants";
-import { DecryptText, CountUp, GlitchImage } from "@/components/ui";
+import { DecryptText, CountUp } from "@/components/ui";
+import { LogoGlitchNoise } from "@/components/ui/logo-glitch-noise";
 
 const DottedSurface = dynamic(
   () => import("@/components/ui/dotted-surface").then((m) => m.DottedSurface),
@@ -60,14 +61,7 @@ export function HeroSection() {
           className="flex items-center justify-center my-8"
           style={{ animation: "fadeUp 0.7s 0.5s both ease" }}
         >
-          <GlitchImage
-            src="/logos/ai-hack-logo.png"
-            alt="AI HACK Text"
-            priority
-            width={600}
-            height={200}
-            className="w-[clamp(100px,50vw,320px)]"
-          />
+          <LogoGlitchNoise className="w-[clamp(100px,50vw,320px)]!" />
         </div>
 
         <div

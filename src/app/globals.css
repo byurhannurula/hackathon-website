@@ -145,73 +145,59 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   4. KEYFRAMES — image glitch (chromatic aberration)
+   4. KEYFRAMES — logo glitch noise
    ═══════════════════════════════════════════════════ */
 
-@keyframes imgGlitchR {
-  0%,
-  88%,
-  93%,
+@keyframes gnoise-static {
+  0% {
+    opacity: 0.03;
+  }
+  20% {
+    opacity: 0.05;
+  }
+  40% {
+    opacity: 0.02;
+  }
+  60% {
+    opacity: 0.06;
+  }
+  80% {
+    opacity: 0.03;
+  }
   100% {
-    opacity: 0;
-    transform: none;
-    filter: none;
-  }
-  89% {
-    opacity: 0.85;
-    transform: translateX(-5px) scaleY(1.003);
-    filter: brightness(1.4) sepia(1) hue-rotate(290deg) saturate(6);
-  }
-  90% {
-    opacity: 0.65;
-    transform: translateX(3px) skewX(-0.5deg);
-    filter: brightness(1.3) sepia(1) hue-rotate(290deg) saturate(4);
-  }
-  91% {
-    opacity: 0.75;
-    transform: translateX(-3px) scaleY(0.997);
-    filter: brightness(1.4) sepia(1) hue-rotate(290deg) saturate(5);
-  }
-  92% {
-    opacity: 0.35;
-    transform: translateX(1px);
-    filter: brightness(1.2) sepia(1) hue-rotate(290deg) saturate(3);
-  }
-}
-
-@keyframes imgGlitchG {
-  0%,
-  88%,
-  93%,
-  100% {
-    opacity: 0;
-    transform: none;
-    filter: none;
-  }
-  89% {
-    opacity: 0.7;
-    transform: translateX(5px) scaleY(0.997);
-    filter: brightness(1.4) sepia(1) hue-rotate(140deg) saturate(6);
-  }
-  90% {
-    opacity: 0.85;
-    transform: translateX(-3px) skewX(0.5deg);
-    filter: brightness(1.3) sepia(1) hue-rotate(140deg) saturate(4);
-  }
-  91% {
-    opacity: 0.6;
-    transform: translateX(3px) scaleY(1.003);
-    filter: brightness(1.4) sepia(1) hue-rotate(140deg) saturate(5);
-  }
-  92% {
-    opacity: 0.25;
-    transform: translateX(-1px);
-    filter: brightness(1.2) sepia(1) hue-rotate(140deg) saturate(3);
+    opacity: 0.04;
   }
 }
 
 /* ═══════════════════════════════════════════════════
-   5. KEYFRAMES — component-specific
+   5. KEYFRAMES — ticket animations
+   ═══════════════════════════════════════════════════ */
+
+/* Smooth ticket entrance */
+@keyframes ticketFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Skeleton loading pulse */
+@keyframes skeleton {
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   6. KEYFRAMES — component-specific
    ═══════════════════════════════════════════════════ */
 
 /* Scan flash (copy link button) */
@@ -235,27 +221,8 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════
-   6. UTILITY CLASSES
+   7. UTILITY CLASSES
    ═══════════════════════════════════════════════════ */
-
-/* Image glitch — chromatic aberration layers */
-.glitch-img {
-  isolation: isolate;
-}
-
-.glitch-img__layer {
-  opacity: 0;
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-}
-
-.glitch-img__layer--r {
-  animation: imgGlitchR 6s 2.5s ease infinite;
-}
-
-.glitch-img__layer--g {
-  animation: imgGlitchG 6s 2.5s ease infinite;
-}
 
 /* Typewriter cursor */
 .animate-blink {

@@ -1,29 +1,73 @@
-"use client";
-
 import Image from "next/image";
+import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import type { SponsorTier } from "@/lib/types";
 
-const TIER_ORDER: SponsorTier[] = ["gold", "silver", "bronze"];
+const TIER_ORDER: SponsorTier[] = ["organizer", "gold", "silver", "bronze"];
 
 const TIER_GRID: Record<SponsorTier, string> = {
+  organizer: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
   gold: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
   silver: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
   bronze: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
 };
 
 const TIER_HEIGHT: Record<SponsorTier, string> = {
-  gold: "min-h-[140px] p-10",
-  silver: "min-h-[110px] p-7",
+  organizer: "min-h-[130px] p-5",
+  gold: "min-h-[120px] p-5",
+  silver: "min-h-[100px] p-5",
   bronze: "min-h-[90px] p-5",
 };
 
 const TIER_LOGO_SIZE: Record<SponsorTier, { w: number; h: number }> = {
-  gold: { w: 180, h: 70 },
-  silver: { w: 150, h: 60 },
+  organizer: { w: 220, h: 80 },
+  gold: { w: 220, h: 80 },
+  silver: { w: 200, h: 50 },
   bronze: { w: 120, h: 45 },
 };
+
+function SponsorCard({
+  sponsor,
+  logoSize,
+  tierHeight,
+}: {
+  sponsor: (typeof SPONSORS)[number];
+  logoSize: { w: number; h: number };
+  tierHeight: string;
+}) {
+  return (
+    <a
+      href={sponsor.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group relative block transition-transform duration-300 hover:-translate-y-1"
+    >
+      <div
+        className={cn(
+          "relative flex items-center justify-center border border-border-hover bg-white/3 transition-all duration-300 group-hover:border-acid/30 group-hover:bg-acid/5 group-hover:shadow-[0_0_20px_rgba(254,238,4,0.06)]",
+          tierHeight
+        )}
+      >
+        {/* Corner accents */}
+        <span className="absolute top-0 left-0 h-0 w-0 border-t border-l border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
+        <span className="absolute top-0 right-0 h-0 w-0 border-t border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
+        <span className="absolute bottom-0 left-0 h-0 w-0 border-b border-l border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
+        <span className="absolute bottom-0 right-0 h-0 w-0 border-b border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
+
+        {sponsor.logo ? (
+          <div className="relative" style={{ width: logoSize.w, height: logoSize.h }}>
+            <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
+          </div>
+        ) : (
+          <span className="font-display text-lg tracking-[0.06em] text-white/70">
+            {sponsor.name}
+          </span>
+        )}
+      </div>
+    </a>
+  );
+}
 
 export function SponsorsSection() {
   return (
@@ -41,32 +85,14 @@ export function SponsorsSection() {
               <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-4">
                 {SPONSOR_TIER_LABELS[tier]}
               </div>
-              <div className={`grid ${TIER_GRID[tier]} gap-4`}>
+              <div className={cn("grid gap-4", TIER_GRID[tier])}>
                 {tierSponsors.map((sponsor) => (
-                  <a
-                    href={sponsor.href}
+                  <SponsorCard
                     key={sponsor.name}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <div
-                      className={`flex items-center justify-center border border-border-hover hover:cursor-pointer bg-white/3 transition-all duration-200 group hover:border-acid/50 hover:bg-acid/5 ${TIER_HEIGHT[tier]}`}
-                    >
-                      {sponsor.logo ? (
-                        <Image
-                          src={sponsor.logo}
-                          alt={sponsor.name}
-                          width={logoSize.w}
-                          height={logoSize.h}
-                          className="object-contain filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all"
-                        />
-                      ) : (
-                        <span className="font-display text-lg tracking-[0.06em] text-white/70">
-                          {sponsor.name}
-                        </span>
-                      )}
-                    </div>
-                  </a>
+                    sponsor={sponsor}
+                    logoSize={logoSize}
+                    tierHeight={TIER_HEIGHT[tier]}
+                  />
                 ))}
               </div>
             </div>

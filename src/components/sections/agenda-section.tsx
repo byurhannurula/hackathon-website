@@ -1,5 +1,3 @@
-"use client";
-
 import { AGENDA_DAYS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 
