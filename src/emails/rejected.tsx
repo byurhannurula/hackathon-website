@@ -88,6 +88,9 @@ const body = {
   fontFamily: "'JetBrains Mono', monospace",
   margin: 0,
   padding: 0,
+  backgroundImage:
+    "radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)",
+  backgroundSize: "24px 24px",
 };
 
 const container = {

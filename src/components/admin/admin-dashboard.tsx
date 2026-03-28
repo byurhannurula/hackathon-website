@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { X } from "lucide-react";
 import type { Registration, RegistrationStatus } from "@/lib/types";
 
 // ─── Types ──────────────────────────────────────────────────
@@ -21,6 +22,11 @@ interface Pagination {
 }
 
 type SortField = "created_at" | "full_name" | "ticket_number" | "registration_status";
+
+interface ConfirmAction {
+  reg: Registration;
+  status: RegistrationStatus;
+}
 
 // ─── Status helpers ─────────────────────────────────────────
 
@@ -54,9 +60,10 @@ export function AdminDashboard() {
   const [sort, setSort] = useState<SortField>("created_at");
   const [order, setOrder] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: "ok" | "error" } | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const debounceRef = useRef<NodeJS.Timeout>(null);
 
   // Fetch data
@@ -98,6 +105,21 @@ export function AdminDashboard() {
     setPage(1);
   }, [statusFilter, sort, order]);
 
+  // Close sheet on Escape
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        if (confirmAction) {
+          setConfirmAction(null);
+        } else {
+          setSelectedReg(null);
+        }
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [confirmAction]);
+
   // Debounced search
   function handleSearch(val: string) {
     setSearch(val);
@@ -121,7 +143,7 @@ export function AdminDashboard() {
   // Page change
   function goToPage(p: number) {
     setPage(p);
-    setExpandedId(null);
+    setSelectedReg(null);
     fetchData({ page: p });
   }
 
@@ -131,8 +153,16 @@ export function AdminDashboard() {
     setTimeout(() => setToast(null), 3000);
   }
 
-  // Update status
-  async function updateStatus(reg: Registration, newStatus: RegistrationStatus) {
+  // Request confirmation before status change
+  function requestStatusChange(reg: Registration, newStatus: RegistrationStatus) {
+    setConfirmAction({ reg, status: newStatus });
+  }
+
+  // Confirm and execute status update
+  async function confirmStatusChange() {
+    if (!confirmAction) return;
+    const { reg, status: newStatus } = confirmAction;
+    setConfirmAction(null);
     setActionLoading(reg.id);
     try {
       const res = await fetch(`/api/kcah-ia-esur/registrations/${reg.id}`, {
@@ -164,6 +194,9 @@ export function AdminDashboard() {
         showToast(`${STATUS_LABELS[newStatus]}, но имейлът не беше изпратен`, "error");
       }
 
+      // Update the selected reg in sheet if it's the same one
+      const updatedReg = { ...reg, registration_status: newStatus };
+      setSelectedReg((prev) => (prev?.id === reg.id ? updatedReg : prev));
       fetchData();
     } catch {
       showToast("Грешка при обновяване", "error");
@@ -202,6 +235,50 @@ export function AdminDashboard() {
         >
           {toast.message}
         </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {confirmAction && (
+        <>
+          <div
+            className="fixed inset-0 z-60 bg-black/70 backdrop-blur-[3px] animate-[fadeIn_0.15s_ease]"
+            onClick={() => setConfirmAction(null)}
+          />
+          <div className="fixed inset-0 z-61 flex items-center justify-center p-4">
+            <div className="bg-card border border-white/10 p-6 max-w-[400px] w-full animate-[fadeUp_0.2s_ease]">
+              <div className="font-display text-xl mb-2">
+                {confirmAction.status === "approved" ? "ОДОБРЯВАНЕ" : "ОТХВЪРЛЯНЕ"}
+              </div>
+              <p className="font-mono text-[13px] text-white/60 leading-[1.7] mb-2">
+                {confirmAction.status === "approved"
+                  ? "Сигурен ли си, че искаш да одобриш"
+                  : "Сигурен ли си, че искаш да отхвърлиш"}{" "}
+                <span className="text-white font-bold">{confirmAction.reg.full_name}</span>?
+              </p>
+              <p className="font-mono text-[11px] text-white/40 mb-6">
+                Ще бъде изпратен имейл до {confirmAction.reg.email}
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setConfirmAction(null)}
+                  className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-2.5 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                >
+                  Отказ
+                </button>
+                <button
+                  onClick={confirmStatusChange}
+                  className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-2.5 cursor-pointer transition-all ${
+                    confirmAction.status === "approved"
+                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
+                      : "bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25"
+                  }`}
+                >
+                  {confirmAction.status === "approved" ? "Одобри" : "Отхвърли"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Header */}
@@ -265,7 +342,7 @@ export function AdminDashboard() {
         {loading ? (
           <div className="space-y-2">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-14 bg-white/[0.02] border border-white/5 animate-pulse" />
+              <div key={i} className="h-14 bg-white/2 border border-white/5 animate-pulse" />
             ))}
           </div>
         ) : data.length === 0 ? (
@@ -278,7 +355,7 @@ export function AdminDashboard() {
             <div className="hidden md:block border border-white/7 overflow-hidden">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-white/7 bg-white/[0.02]">
+                  <tr className="border-b border-white/7 bg-white/2">
                     {[
                       { field: "ticket_number" as SortField, label: "#" },
                       { field: "full_name" as SortField, label: "Име" },
@@ -286,7 +363,6 @@ export function AdminDashboard() {
                       { field: null, label: "Роля" },
                       { field: "registration_status" as SortField, label: "Статус" },
                       { field: "created_at" as SortField, label: "Дата" },
-                      { field: null, label: "" },
                     ].map((col, i) => (
                       <th
                         key={i}
@@ -303,15 +379,32 @@ export function AdminDashboard() {
                 </thead>
                 <tbody>
                   {data.map((reg) => (
-                    <TableRow
+                    <tr
                       key={reg.id}
-                      reg={reg}
-                      expanded={expandedId === reg.id}
-                      onToggle={() => setExpandedId(expandedId === reg.id ? null : reg.id)}
-                      onUpdateStatus={updateStatus}
-                      actionLoading={actionLoading}
-                      fmtDate={fmtDate}
-                    />
+                      onClick={() => setSelectedReg(reg)}
+                      className={`border-b border-white/5 cursor-pointer transition-colors group ${
+                        selectedReg?.id === reg.id ? "bg-acid/3" : "hover:bg-white/3"
+                      }`}
+                    >
+                      <td className="px-4 py-3.5 font-mono text-[12px] text-acid/70">
+                        {String(reg.ticket_number).padStart(4, "0")}
+                      </td>
+                      <td className="px-4 py-3.5 font-body text-[14px] font-bold">
+                        {reg.full_name}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/50">
+                        {reg.email}
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/40">
+                        {reg.role}
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <StatusBadge status={reg.registration_status} />
+                      </td>
+                      <td className="px-4 py-3.5 font-mono text-[11px] text-white/30">
+                        {fmtDate(reg.created_at)}
+                      </td>
+                    </tr>
                   ))}
                 </tbody>
               </table>
@@ -320,15 +413,30 @@ export function AdminDashboard() {
             {/* Mobile cards */}
             <div className="md:hidden space-y-3">
               {data.map((reg) => (
-                <MobileCard
+                <div
                   key={reg.id}
-                  reg={reg}
-                  expanded={expandedId === reg.id}
-                  onToggle={() => setExpandedId(expandedId === reg.id ? null : reg.id)}
-                  onUpdateStatus={updateStatus}
-                  actionLoading={actionLoading}
-                  fmtDate={fmtDate}
-                />
+                  onClick={() => setSelectedReg(reg)}
+                  className={`border bg-card transition-colors cursor-pointer ${
+                    selectedReg?.id === reg.id ? "border-acid/20" : "border-white/7"
+                  }`}
+                >
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-body text-[15px] font-bold">{reg.full_name}</div>
+                        <div className="font-mono text-[12px] text-white/40 mt-0.5">
+                          {reg.email}
+                        </div>
+                      </div>
+                      <StatusBadge status={reg.registration_status} />
+                    </div>
+                    <div className="flex items-center gap-3 mt-2 font-mono text-[11px] text-white/30">
+                      <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
+                      <span>{reg.role}</span>
+                      <span>{fmtDate(reg.created_at)}</span>
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
 
@@ -373,135 +481,43 @@ export function AdminDashboard() {
           </>
         )}
       </div>
-    </div>
-  );
-}
 
-// ─── Table Row ──────────────────────────────────────────────
-
-function TableRow({
-  reg,
-  expanded,
-  onToggle,
-  onUpdateStatus,
-  actionLoading,
-  fmtDate,
-}: {
-  reg: Registration;
-  expanded: boolean;
-  onToggle: () => void;
-  onUpdateStatus: (reg: Registration, status: RegistrationStatus) => void;
-  actionLoading: string | null;
-  fmtDate: (iso: string) => string;
-}) {
-  const isLoading = actionLoading === reg.id;
-
-  return (
-    <>
-      <tr
-        onClick={onToggle}
-        className={`border-b border-white/5 cursor-pointer transition-colors group ${
-          expanded ? "bg-acid/[0.03]" : "hover:bg-white/[0.03]"
-        }`}
-      >
-        <td className="px-4 py-3.5 font-mono text-[12px] text-acid/70">
-          {String(reg.ticket_number).padStart(4, "0")}
-        </td>
-        <td className="px-4 py-3.5 font-body text-[14px] font-bold">{reg.full_name}</td>
-        <td className="px-4 py-3.5 font-mono text-[12px] text-white/50">{reg.email}</td>
-        <td className="px-4 py-3.5 font-mono text-[12px] text-white/40">{reg.role}</td>
-        <td className="px-4 py-3.5">
-          <StatusBadge status={reg.registration_status} />
-        </td>
-        <td className="px-4 py-3.5 font-mono text-[11px] text-white/30">
-          {fmtDate(reg.created_at)}
-        </td>
-        <td className="px-4 py-3.5 font-mono text-[11px] text-white/20 group-hover:text-white/50 transition-colors">
-          {expanded ? "▲" : "▼"}
-        </td>
-      </tr>
-      {expanded && (
-        <tr>
-          <td colSpan={7} className="bg-white/[0.02] border-b border-acid/10 px-6 py-6">
-            <DetailPanel reg={reg} onUpdateStatus={onUpdateStatus} isLoading={isLoading} />
-          </td>
-        </tr>
-      )}
-    </>
-  );
-}
-
-// ─── Mobile Card ────────────────────────────────────────────
-
-function MobileCard({
-  reg,
-  expanded,
-  onToggle,
-  onUpdateStatus,
-  actionLoading,
-  fmtDate,
-}: {
-  reg: Registration;
-  expanded: boolean;
-  onToggle: () => void;
-  onUpdateStatus: (reg: Registration, status: RegistrationStatus) => void;
-  actionLoading: string | null;
-  fmtDate: (iso: string) => string;
-}) {
-  const isLoading = actionLoading === reg.id;
-
-  return (
-    <div
-      className={`border bg-card transition-colors ${expanded ? "border-acid/20" : "border-white/7"}`}
-    >
-      <div onClick={onToggle} className="p-4 cursor-pointer">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="font-body text-[15px] font-bold">{reg.full_name}</div>
-            <div className="font-mono text-[12px] text-white/40 mt-0.5">{reg.email}</div>
-          </div>
-          <div className="flex items-center gap-2">
-            <StatusBadge status={reg.registration_status} />
-            <span className="font-mono text-[11px] text-white/20">{expanded ? "▲" : "▼"}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-3 mt-2 font-mono text-[11px] text-white/30">
-          <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
-          <span>{reg.role}</span>
-          <span>{fmtDate(reg.created_at)}</span>
-        </div>
-      </div>
-      {expanded && (
-        <div className="border-t border-white/5 p-4">
-          <DetailPanel reg={reg} onUpdateStatus={onUpdateStatus} isLoading={isLoading} />
-        </div>
+      {/* Sheet overlay + panel */}
+      {selectedReg && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-[2px] animate-[fadeIn_0.2s_ease]"
+            onClick={() => setSelectedReg(null)}
+          />
+          <aside className="fixed top-0 right-0 z-50 h-full w-full max-w-[520px] bg-bg border-l border-white/7 overflow-y-auto animate-[slideIn_0.25s_ease]">
+            <SheetContent
+              reg={selectedReg}
+              onClose={() => setSelectedReg(null)}
+              onUpdateStatus={requestStatusChange}
+              isLoading={actionLoading === selectedReg.id}
+              fmtDate={fmtDate}
+            />
+          </aside>
+        </>
       )}
     </div>
   );
 }
 
-// ─── Status Badge ───────────────────────────────────────────
+// ─── Sheet Content ──────────────────────────────────────────
 
-function StatusBadge({ status }: { status: RegistrationStatus }) {
-  return (
-    <span
-      className={`inline-block font-mono text-[10px] tracking-[0.1em] uppercase px-2.5 py-1 ${STATUS_COLORS[status]}`}
-    >
-      {STATUS_LABELS[status]}
-    </span>
-  );
-}
-
-// ─── Detail Panel ───────────────────────────────────────────
-
-function DetailPanel({
+function SheetContent({
   reg,
+  onClose,
   onUpdateStatus,
   isLoading,
+  fmtDate,
 }: {
   reg: Registration;
+  onClose: () => void;
   onUpdateStatus: (reg: Registration, status: RegistrationStatus) => void;
   isLoading: boolean;
+  fmtDate: (iso: string) => string;
 }) {
   const fields: [string, string | null][] = [
     ["Телефон", reg.phone],
@@ -520,79 +536,116 @@ function DetailPanel({
   ];
 
   return (
-    <div className="space-y-5">
-      {/* Info grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-3">
-        {fields.map(
-          ([label, value]) =>
-            value && (
-              <div key={label}>
-                <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.1em] mb-0.5">
-                  {label}
+    <div className="flex flex-col h-full">
+      {/* Sheet header */}
+      <div className="flex items-center justify-between px-6 py-5 border-b border-white/7">
+        <div>
+          <div className="font-body text-lg font-bold">{reg.full_name}</div>
+          <div className="flex items-center gap-3 mt-1">
+            <span className="font-mono text-[12px] text-acid/70">
+              #{String(reg.ticket_number).padStart(4, "0")}
+            </span>
+            <StatusBadge status={reg.registration_status} />
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="text-white/30 hover:text-white transition-colors cursor-pointer p-1"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Sheet body */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
+        {/* Contact */}
+        <div className="flex items-center gap-4 font-mono text-[13px]">
+          <span className="text-white/50">{reg.email}</span>
+          <span className="text-white/20">·</span>
+          <span className="text-white/40">{reg.role}</span>
+          <span className="text-white/20">·</span>
+          <span className="text-white/30">{fmtDate(reg.created_at)}</span>
+        </div>
+
+        {/* Info grid */}
+        <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+          {fields.map(
+            ([label, value]) =>
+              value && (
+                <div key={label}>
+                  <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                    {label}
+                  </div>
+                  <div className="font-mono text-[14px] text-white/85">{value}</div>
                 </div>
-                <div className="font-mono text-[13px] text-white/80">{value}</div>
-              </div>
-            )
+              )
+          )}
+        </div>
+
+        {/* Motivation */}
+        <div>
+          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+            Мотивация
+          </div>
+          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
+            {reg.motivation}
+          </div>
+        </div>
+
+        {/* Expectations */}
+        <div>
+          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+            Очаквания
+          </div>
+          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
+            {reg.expectations}
+          </div>
+        </div>
+
+        {/* Notes */}
+        {reg.notes && (
+          <div>
+            <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+              Бележки
+            </div>
+            <div className="font-mono text-[13px] text-white/60 leading-[1.8]">{reg.notes}</div>
+          </div>
         )}
       </div>
 
-      {/* Motivation */}
-      <div>
-        <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.1em] mb-1.5">
-          Мотивация
-        </div>
-        <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/[0.02] p-4 border border-white/5">
-          {reg.motivation}
-        </div>
-      </div>
-
-      {/* Expectations */}
-      <div>
-        <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.1em] mb-1.5">
-          Очаквания
-        </div>
-        <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/[0.02] p-4 border border-white/5">
-          {reg.expectations}
-        </div>
-      </div>
-
-      {/* Notes */}
-      {reg.notes && (
-        <div>
-          <div className="font-mono text-[10px] text-white/30 uppercase tracking-[0.1em] mb-1.5">
-            Бележки
-          </div>
-          <div className="font-mono text-[13px] text-white/60 leading-[1.8]">{reg.notes}</div>
-        </div>
-      )}
-
-      {/* Action buttons */}
-      <div className="flex gap-3 pt-3">
+      {/* Sheet footer with actions */}
+      <div className="px-6 py-5 border-t border-white/7 flex gap-3">
         {reg.registration_status !== "approved" && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onUpdateStatus(reg, "approved");
-            }}
+            onClick={() => onUpdateStatus(reg, "approved")}
             disabled={isLoading}
-            className="font-mono text-[12px] tracking-[0.08em] uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-emerald-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-emerald-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Одобри"}
           </button>
         )}
         {reg.registration_status !== "rejected" && (
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onUpdateStatus(reg, "rejected");
-            }}
+            onClick={() => onUpdateStatus(reg, "rejected")}
             disabled={isLoading}
-            className="font-mono text-[12px] tracking-[0.08em] uppercase bg-red-500/15 text-red-400 border border-red-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-red-500/15 text-red-400 border border-red-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Отхвърли"}
           </button>
         )}
       </div>
     </div>
+  );
+}
+
+// ─── Status Badge ───────────────────────────────────────────
+
+function StatusBadge({ status }: { status: RegistrationStatus }) {
+  return (
+    <span
+      className={`inline-block font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 ${STATUS_COLORS[status]}`}
+    >
+      {STATUS_LABELS[status]}
+    </span>
   );
 }

@@ -15,13 +15,15 @@ import {
 } from "@/components/sections";
 
 export default function Page() {
+  const videoId = process.env.NEXT_PUBLIC_VIDEO_ID;
+
   return (
     <div className="bg-bg">
       <Nav />
       <HeroSection />
       <OrganizerSection />
       <AboutSection />
-      <VideoSection />
+      {videoId && <VideoSection videoId={videoId} />}
       <SponsorsSection />
       <AgendaSection />
       <Ticker dir={-1} />

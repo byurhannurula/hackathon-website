@@ -212,7 +212,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
         </p>
       </div>
 
-      <div className="w-full max-w-[520px] animate-slide-in" key={step}>
+      <div className="w-full max-w-[580px] animate-slide-in" key={step}>
         {/* Error banner */}
         {apiError && (
           <div className="mb-6 border border-red-500/30 bg-red-500/10 rounded-sm px-4 py-3 flex items-start gap-3">

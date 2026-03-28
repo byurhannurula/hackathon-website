@@ -40,7 +40,16 @@ export function ApprovedEmail({ fullName, ticketNumber, ticketId, siteUrl }: App
             <Text style={greeting}>Здравей, {fullName}!</Text>
             <Text style={paragraph}>
               Поздравления! Твоята регистрация за <strong>RUSE AI HACK &apos;26</strong> беше
-              одобрена. Подготви се за 48 часа кодене, AI и невероятни предизвикателства!
+              одобрена. Ти си част от първия AI хакатон в Русе!
+            </Text>
+            <Text style={paragraph}>
+              Подготви се за 48 часа интензивно кодене, AI предизвикателства и невероятна
+              атмосфера. Ще работиш в екип, ще използваш най-новите AI инструменти и ще създадеш
+              нещо от нулата за рекордно време.
+            </Text>
+            <Text style={paragraph}>
+              Очакваме те на място — храна, напитки, кафе и добра енергия са осигурени. Ти
+              просто донеси лаптопа си и ентусиазъм!
             </Text>
           </Section>
 
@@ -58,6 +67,14 @@ export function ApprovedEmail({ fullName, ticketNumber, ticketId, siteUrl }: App
             <Text style={detail}>48-часов AI Хакатон</Text>
           </Section>
 
+          {/* What to bring */}
+          <Section style={content}>
+            <Text style={detailsTitle}>КАКВО ДА НОСИШ</Text>
+            <Text style={detail}>Лаптоп + зарядно</Text>
+            <Text style={detail}>Слушалки</Text>
+            <Text style={detail}>Настроена среда за разработка</Text>
+          </Section>
+
           {/* CTA */}
           <Section style={{ textAlign: "center" as const, padding: "28px 0" }}>
             <Link href={ticketUrl} style={ctaButton}>
@@ -66,6 +83,24 @@ export function ApprovedEmail({ fullName, ticketNumber, ticketId, siteUrl }: App
           </Section>
 
           <Hr style={divider} />
+
+          {/* Social links */}
+          <Section style={socialBox}>
+            <Text style={socialTitle}>СЛЕДИ НИ</Text>
+            <Text style={socialLinksText}>
+              <Link href="https://www.instagram.com/startup._.factory/" style={socialLink}>
+                Instagram
+              </Link>
+              {" · "}
+              <Link href="https://www.facebook.com/factorystartup" style={socialLink}>
+                Facebook
+              </Link>
+              {" · "}
+              <Link href={siteUrl} style={socialLink}>
+                Website
+              </Link>
+            </Text>
+          </Section>
 
           {/* Footer */}
           <Section style={footer}>
@@ -99,6 +134,9 @@ const body = {
   fontFamily: "'JetBrains Mono', monospace",
   margin: 0,
   padding: 0,
+  backgroundImage:
+    "radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)",
+  backgroundSize: "24px 24px",
 };
 
 const container = {
@@ -207,6 +245,31 @@ const ctaButton = {
   color: "#000000",
   padding: "14px 40px",
   textDecoration: "none",
+};
+
+const socialBox = {
+  textAlign: "center" as const,
+  backgroundColor: "rgba(255,255,255,0.03)",
+  border: "1px solid rgba(255,255,255,0.07)",
+  padding: "20px",
+  margin: "16px 0 0",
+};
+
+const socialTitle = {
+  fontSize: "9px",
+  letterSpacing: "0.18em",
+  color: "rgba(255,255,255,0.4)",
+  margin: "0 0 12px",
+};
+
+const socialLinksText = {
+  fontSize: "13px",
+  margin: 0,
+};
+
+const socialLink = {
+  color: "#feee04",
+  textDecoration: "underline",
 };
 
 const footer = {

@@ -12,6 +12,7 @@ export default function Register() {
 
   const handleComplete = (data: TicketData) => {
     trackEvent("registration_complete", { handle: data.handle, ticketNum: data.ticketNum });
+    localStorage.setItem("myTicketNum", String(data.ticketNum));
     sessionStorage.setItem("myTicketNum", String(data.ticketNum));
     router.push(`/tickets/${data.ticketId}`);
   };

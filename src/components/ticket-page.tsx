@@ -25,8 +25,14 @@ export function TicketPage({ data }: TicketPageProps) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const myTicket = sessionStorage.getItem("myTicketNum");
+    // Check both localStorage (persistent) and sessionStorage (legacy/migration)
+    const myTicket =
+      localStorage.getItem("myTicketNum") || sessionStorage.getItem("myTicketNum");
     const owner = !!(myTicket && data?.ticketNum && String(data.ticketNum) === myTicket);
+    // Migrate sessionStorage to localStorage if needed
+    if (owner && !localStorage.getItem("myTicketNum") && myTicket) {
+      localStorage.setItem("myTicketNum", myTicket);
+    }
     setIsOwner(owner);
     trackEvent("ticket_page_view", {
       type: owner ? "owner" : "shared",
@@ -45,8 +51,8 @@ export function TicketPage({ data }: TicketPageProps) {
       }}
     >
       {/* Confetti — only on first visit right after registration */}
-      {isOwner && sessionStorage.getItem("confetti_fired") !== "1" && (
-        <ConfettiBurst enabled onFired={() => sessionStorage.setItem("confetti_fired", "1")} />
+      {isOwner && sessionStorage.getItem("confetti_fired") !== "1" && localStorage.getItem("confetti_fired") !== "1" && (
+        <ConfettiBurst enabled onFired={() => { sessionStorage.setItem("confetti_fired", "1"); localStorage.setItem("confetti_fired", "1"); }} />
       )}
 
       {/* Background glow behind ticket */}
