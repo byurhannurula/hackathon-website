@@ -11,6 +11,7 @@ import {
   JurySection,
   CTASection,
   AboutSection,
+  VideoSection,
 } from "@/components/sections";
 
 export default function Page() {
@@ -20,6 +21,7 @@ export default function Page() {
       <HeroSection />
       <OrganizerSection />
       <AboutSection />
+      <VideoSection />
       <SponsorsSection />
       <AgendaSection />
       <Ticker dir={-1} />
