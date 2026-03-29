@@ -11,9 +11,14 @@ export default function Register() {
   const { trackEvent } = useAnalytics();
 
   const handleComplete = (data: TicketData) => {
-    trackEvent("registration_complete", { handle: data.handle, ticketNum: data.ticketNum });
+    trackEvent("registration_complete", {
+      handle: data.handle,
+      ticketNum: data.ticketNum,
+      ticketId: data.ticketId,
+    });
     localStorage.setItem("myTicketNum", String(data.ticketNum));
     sessionStorage.setItem("myTicketNum", String(data.ticketNum));
+    if (data.ticketId) localStorage.setItem("myTicketId", data.ticketId);
     router.push(`/tickets/${data.ticketId}`);
   };
 

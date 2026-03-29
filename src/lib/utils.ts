@@ -58,10 +58,11 @@ export function buildShareUrl(ticketId: string): string {
  * Build social share URLs for a ticket.
  */
 export function buildSocialShareUrls(shareUrl: string) {
+  const hashtags = "RuseAIHack,AI,Hackathon,VibeCoding,AppInASnap";
   const tweetText = `🚀 Участвам в RUSE AI HACK '26 — 48-часов AI хакатон в Русе! Вземи и ти билет 👇`;
   return {
-    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}`,
+    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(shareUrl)}&hashtags=${encodeURIComponent(hashtags)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&hashtag=${encodeURIComponent("#RuseAIHack")}`,
   };
 }

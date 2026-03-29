@@ -23,7 +23,8 @@ interface KonamiEasterEggProps {
 
 /**
  * Konami code easter egg (↑↑↓↓←→←→BA).
- * On activation: acid-rain particle animation + hidden message.
+ * Step 1: User finds hackVerify() in console → tracks event + reveals the code.
+ * Step 2: User enters the code on keyboard → tracks event + acid rain animation.
  *
  * Toggle: set `enabled={false}` to disable without removing from tree.
  */
@@ -33,14 +34,34 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
   const bufferRef = useRef<string[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Console hint
+  // Step 1: hackVerify() — tracks event, reveals the konami code
   useEffect(() => {
     if (!enabled) return;
-    console.log(
-      "%c🎮 Psst… there's a secret code hidden on this page. Gamers know it.",
-      "color: #feee04; font-size: 12px; font-family: monospace;"
-    );
-  }, [enabled]);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).hackVerify = () => {
+      const ticketId = localStorage.getItem("myTicketId") || "";
+      trackEvent("console_secret_found", { ticketId });
+      console.log(
+        "%c✅ Браво! Намери скритото.",
+        "color: #00ffb2; font-size: 14px; font-weight: bold;"
+      );
+      console.log(
+        "%c🎮 Има още едно ниво. Натисни тази последователност на клавиатурата:",
+        "color: #888; font-size: 12px; font-family: monospace;"
+      );
+      console.log(
+        "%c↑ ↑ ↓ ↓ ← → ← → B A",
+        "color: #feee04; font-size: 16px; font-weight: bold; font-family: monospace; background: #1a1a1a; padding: 6px 12px;"
+      );
+      return "🔓 Код получен. Натисни го.";
+    };
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).hackVerify;
+    };
+  }, [enabled, trackEvent]);
 
   // Listen for key sequence
   useEffect(() => {
@@ -50,7 +71,8 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
       bufferRef.current = [...bufferRef.current, e.code].slice(-KONAMI_SEQUENCE.length);
       if (bufferRef.current.join(",") === KONAMI_SEQUENCE.join(",")) {
         setActivated(true);
-        trackEvent("konami_code_activated");
+        const ticketId = localStorage.getItem("myTicketId") || "";
+        trackEvent("konami_code_activated", { ticketId });
       }
     };
 
@@ -133,10 +155,10 @@ export function KonamiEasterEgg({ enabled = true }: KonamiEasterEggProps) {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center" style={{ animation: "fadeUp 0.8s 1s both ease" }}>
               <div className="font-display text-4xl md:text-6xl text-acid drop-shadow-[0_0_30px_rgba(254,238,4,0.5)]">
-                ТИ СИ ИСТИНСКИ ХАКЕР
+                ГОТОВ ЗА ХАКАТОНА
               </div>
               <div className="font-mono text-sm text-white/60 mt-4 tracking-widest">
-                🛠️ KONAMI CODE UNLOCKED 🛠️
+                ⚡ НИВО 2 ОТКЛЮЧЕНО ⚡
               </div>
             </div>
           </div>

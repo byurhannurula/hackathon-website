@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
@@ -8,7 +11,7 @@ const TIER_ORDER: SponsorTier[] = ["organizer", "gold", "silver", "bronze"];
 
 const TIER_GRID: Record<SponsorTier, string> = {
   organizer: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  gold: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  gold: "grid-cols-1 sm:grid-cols-2 ",
   silver: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
   bronze: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
 };
@@ -70,18 +73,44 @@ function SponsorCard({
 }
 
 export function SponsorsSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <section id="sponsors" className="px-6 py-25 md:px-12 bg-card border-t border-border">
-      <div className="max-w-[1100px] mx-auto">
+      <div ref={ref} className="max-w-[1100px] mx-auto">
         <SectionHeader label="ПРАВЯТ ТОВА ВЪЗМОЖНО" title="СПОНСОРИ" />
 
-        {TIER_ORDER.map((tier) => {
+        {TIER_ORDER.map((tier, tierIdx) => {
           const tierSponsors = SPONSORS.filter((s) => s.tier === tier);
           if (tierSponsors.length === 0) return null;
           const logoSize = TIER_LOGO_SIZE[tier];
 
           return (
-            <div key={tier} className="mt-10 first:mt-13">
+            <div
+              key={tier}
+              className={cn(
+                "mt-10 first:mt-13 transition-all duration-700 ease-out",
+                inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              )}
+              style={{ transitionDelay: inView ? `${tierIdx * 150}ms` : "0ms" }}
+            >
               <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-4">
                 {SPONSOR_TIER_LABELS[tier]}
               </div>
@@ -100,7 +129,13 @@ export function SponsorsSection() {
         })}
 
         {/* Sponsor CTA */}
-        <div className="mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5">
+        <div
+          className={cn(
+            "mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5 transition-all duration-700 ease-out",
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          )}
+          style={{ transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms" }}
+        >
           <div>
             <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>
           </div>

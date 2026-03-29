@@ -44,7 +44,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
       <input
         ref={ref}
         className={cn(
-          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid",
+          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid focus:shadow-[0_0_0_1px_rgba(254,238,4,0.15)]",
           error && "border-red-500/60 focus:border-red-500",
           sizes[size].input,
           className
@@ -69,7 +69,7 @@ export const FormTextarea = React.forwardRef<HTMLTextAreaElement, FormTextareaPr
       <textarea
         ref={ref}
         className={cn(
-          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid resize-none",
+          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid focus:shadow-[0_0_0_1px_rgba(254,238,4,0.15)] resize-none",
           error && "border-red-500/60 focus:border-red-500",
           sizes[size].input,
           className
@@ -97,7 +97,7 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
         ref={ref}
         defaultValue=""
         className={cn(
-          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid appearance-none cursor-pointer",
+          "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid focus:shadow-[0_0_0_1px_rgba(254,238,4,0.15)] appearance-none cursor-pointer",
           error && "border-red-500/60 focus:border-red-500",
           sizes[size].input,
           className
@@ -135,7 +135,7 @@ export const FormCheckbox = React.forwardRef<HTMLInputElement, FormCheckboxProps
         <input
           ref={ref}
           type="checkbox"
-          className="mt-0.5 w-4 h-4 accent-acid cursor-pointer"
+          className="mt-0.5 w-4 h-4 accent-acid cursor-pointer transition-transform duration-150 active:scale-75 checked:animate-[checkBounce_0.25s_ease]"
           {...props}
         />
         <span className="font-mono text-[11px] text-white/50 leading-[1.6] group-hover:text-white/70 transition-colors duration-200">
@@ -158,7 +158,7 @@ interface FormButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-acid text-black border-none hover:bg-white hover:scale-[1.02] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-acid disabled:hover:scale-100",
+    "bg-acid text-black border-none hover:bg-white hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-acid disabled:hover:scale-100 disabled:hover:translate-y-0",
   secondary:
     "bg-white/5 text-white border border-white/15 hover:bg-white/10 hover:border-acid hover:text-acid",
   ghost: "bg-transparent text-muted border border-white/15 hover:border-white/30 hover:text-white",

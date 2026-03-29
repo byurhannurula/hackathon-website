@@ -26,43 +26,41 @@ export function TicketPage({ data }: TicketPageProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
     // Check both localStorage (persistent) and sessionStorage (legacy/migration)
-    const myTicket =
-      localStorage.getItem("myTicketNum") || sessionStorage.getItem("myTicketNum");
+    const myTicket = localStorage.getItem("myTicketNum") || sessionStorage.getItem("myTicketNum");
     const owner = !!(myTicket && data?.ticketNum && String(data.ticketNum) === myTicket);
     // Migrate sessionStorage to localStorage if needed
     if (owner && !localStorage.getItem("myTicketNum") && myTicket) {
       localStorage.setItem("myTicketNum", myTicket);
     }
+    if (owner && data?.ticketId) {
+      localStorage.setItem("myTicketId", data.ticketId);
+    }
     setIsOwner(owner);
     trackEvent("ticket_page_view", {
       type: owner ? "owner" : "shared",
       ticketNum: data?.ticketNum || 0,
+      ticketId: data?.ticketId || "",
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.ticketNum]);
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center justify-center px-6 py-20 relative"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-        backgroundSize: "60px 60px",
-      }}
-    >
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 py-20 relative bg-grid-white">
       {/* Confetti — only on first visit right after registration */}
-      {isOwner && sessionStorage.getItem("confetti_fired") !== "1" && localStorage.getItem("confetti_fired") !== "1" && (
-        <ConfettiBurst enabled onFired={() => { sessionStorage.setItem("confetti_fired", "1"); localStorage.setItem("confetti_fired", "1"); }} />
-      )}
+      {isOwner &&
+        sessionStorage.getItem("confetti_fired") !== "1" &&
+        localStorage.getItem("confetti_fired") !== "1" && (
+          <ConfettiBurst
+            enabled
+            onFired={() => {
+              sessionStorage.setItem("confetti_fired", "1");
+              localStorage.setItem("confetti_fired", "1");
+            }}
+          />
+        )}
 
       {/* Background glow behind ticket */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] pointer-events-none z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(var(--acid-rgb),0.08) 0%, transparent 70%)",
-        }}
-      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[40vw] pointer-events-none z-0 bg-glow-acid-wide" />
 
       {/* Header text — appears first */}
       {isOwner !== null && (

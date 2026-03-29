@@ -75,13 +75,7 @@ export function VideoSection({ videoId }: VideoSectionProps) {
               <div className="absolute inset-0 bg-linear-to-t from-bg via-bg/40 to-transparent" />
 
               {/* Scanline effect */}
-              <div
-                className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)",
-                }}
-              />
+              <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-scanlines" />
 
               {/* Play button */}
               <div className="absolute inset-0 flex items-center justify-center">
@@ -90,7 +84,7 @@ export function VideoSection({ videoId }: VideoSectionProps) {
                   <div className="absolute w-24 h-24 border border-acid/20 group-hover:border-acid/40 group-hover:scale-125 transition-all duration-500" />
                   {/* Button */}
                   <div className="w-16 h-16 bg-acid flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <Play className="w-7 h-7 text-bg ml-1" fill="currentColor" />
+                    <Play className="w-7 h-7 text-bg" fill="currentColor" />
                   </div>
                 </div>
               </div>

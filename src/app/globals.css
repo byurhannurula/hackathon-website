@@ -112,6 +112,18 @@ body {
   }
 }
 
+@keyframes checkBounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @keyframes revealUp {
   from {
     opacity: 0;
@@ -223,6 +235,52 @@ body {
 /* ═══════════════════════════════════════════════════
    7. UTILITY CLASSES
    ═══════════════════════════════════════════════════ */
+
+/* Reusable background patterns */
+.bg-grid-acid {
+  background-image:
+    linear-gradient(rgba(var(--acid-rgb), 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(var(--acid-rgb), 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bg-grid-white {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.bg-glow-acid {
+  background: radial-gradient(
+    ellipse 60% 70% at 50% 50%,
+    rgba(var(--acid-rgb), 0.04) 0%,
+    transparent 70%
+  );
+}
+
+.bg-glow-acid-wide {
+  background: radial-gradient(ellipse at center, rgba(var(--acid-rgb), 0.08) 0%, transparent 70%);
+}
+
+.bg-glow-acid-subtle {
+  background: radial-gradient(ellipse at center, rgba(var(--acid-rgb), 0.06) 0%, transparent 70%);
+}
+
+.bg-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.03) 2px,
+    rgba(255, 255, 255, 0.03) 4px
+  );
+}
+
+/* Easing tokens */
+.ease-expo-out {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* Typewriter cursor */
 .animate-blink {

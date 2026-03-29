@@ -14,9 +14,8 @@ export function OrganizerSection() {
             src="/sponsors/startupfactory-horizontal.svg"
             alt="Startup Factory"
             width={200}
-            height={63} // original aspect hint
-            style={{ width: "200px", height: "63.45px" }}
-            className="object-contain"
+            height={63}
+            className="object-contain w-[200px] h-auto"
           />
 
           <div className="font-mono text-[10px] tracking-[0.18em] text-white/50 mt-6 mb-3 uppercase">
@@ -28,16 +27,14 @@ export function OrganizerSection() {
               alt="Русенски Университет"
               width={70}
               height={70}
-              className="object-contain brightness-120"
-              style={{ mixBlendMode: "lighten", width: "70px", height: "70px" }}
+              className="object-contain brightness-120 mix-blend-lighten w-[70px] h-[70px]"
             />
             <Image
               src="/sponsors/software-roastery.png"
               alt="Software Roastery"
               width={200}
               height={84}
-              className="object-contain brightness-120"
-              style={{ mixBlendMode: "lighten", width: "200px", height: "84.38px" }}
+              className="object-contain brightness-120 mix-blend-lighten w-[200px] h-auto"
             />
           </div>
         </div>

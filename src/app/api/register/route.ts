@@ -109,6 +109,7 @@ export async function POST(req: NextRequest) {
         const fields: Record<string, string | number> = {
           Name: body.fullName,
           Email: body.email,
+          Age: body.age || "",
           Phone: body.phone,
           Role: body.role,
           Organization: body.organization,
@@ -123,7 +124,6 @@ export async function POST(req: NextRequest) {
           VolunteerHelp: body.volunteerHelp,
           AgreeRandomTeams: body.agreeRandomTeams ? "Да" : "Не",
           GdprConsent: body.gdprConsent ? "Да" : "Не",
-          Age: body.age || "",
           TicketNumber: ticketNumber,
         };
         if (body.themeDescription) fields.ThemeDescription = body.themeDescription;

@@ -62,6 +62,15 @@ export function ConsoleGreeting({ enabled = true }: ConsoleGreetingProps) {
       "%c⚡ Powered by Next.js, Tailwind, Supabase & good vibes",
       "color: #555; font-size: 10px; font-family: monospace;"
     );
+
+    console.log("%c─────────────────────────────────────────────", "color: #333;");
+
+    console.log(
+      "%c🔍 Псст… тази страница крие тайни. Напиши %chackVerify()%c в конзолата.",
+      "color: #888; font-size: 11px; font-family: monospace;",
+      "color: #feee04; font-weight: bold; font-size: 11px; font-family: monospace;",
+      "color: #888; font-size: 11px; font-family: monospace;"
+    );
   }, [enabled]);
 
   return null;

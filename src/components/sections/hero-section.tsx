@@ -30,58 +30,30 @@ export function HeroSection() {
       <DottedSurface className="absolute inset-0 z-0" />
 
       {/* Subtle dot grid overlay underneath shader */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(var(--acid-rgb),0.08) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(circle,rgba(var(--acid-rgb),0.08)_1px,transparent_1px)] bg-[length:60px_60px]" />
 
       {/* Vignette — pulls focus to center */}
-      <div
-        className="absolute inset-0 pointer-events-none z-1"
-        style={{
-          background:
-            "radial-gradient(ellipse 85% 80% at 50% 50%, transparent 30%, rgba(5,5,5,0.7) 65%, rgba(5,5,5,0.97) 100%)",
-        }}
-      />
+      <div className="absolute inset-0 pointer-events-none z-1 bg-[radial-gradient(ellipse_85%_80%_at_50%_50%,transparent_30%,rgba(5,5,5,0.7)_65%,rgba(5,5,5,0.97)_100%)]" />
 
       {/* CONTENT */}
-      <div
-        className="relative z-2 max-w-[1000px] p-5"
-        style={{ background: "radial-gradient(circle, rgba(5,5,5,0.5) 0%, transparent 80%)" }}
-      >
-        <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+      <div className="relative z-2 max-w-[1000px] p-5 bg-[radial-gradient(circle,rgba(5,5,5,0.5)_0%,transparent_80%)]">
+        <div className="animate-fade-in delay-200">
           <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
         </div>
 
-        <div
-          className="flex items-center justify-center my-8"
-          style={{ animation: "fadeUp 0.7s 0.5s both ease" }}
-        >
+        <div className="flex items-center justify-center my-8 animate-[fadeUp_0.7s_0.5s_both_ease]">
           <LogoGlitchNoise className="w-[clamp(100px,50vw,320px)]!" />
         </div>
 
-        <div
-          className="font-serif italic text-[clamp(15px,1.8vw,18px)] font-medium text-white/85 "
-          style={{ animation: "fadeUp 0.6s 0.85s both ease" }}
-        >
+        <div className="font-serif italic text-[clamp(15px,1.8vw,18px)] font-medium text-white/85 animate-[fadeUp_0.6s_0.85s_both_ease]">
           — AI Хакатон организиран от {siteConfig.event.organizer}
         </div>
 
-        <p
-          className="font-mono text-[clamp(11px,1.1vw,16px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6"
-          style={{ animation: "fadeUp 0.6s 1.1s both ease" }}
-        >
+        <p className="font-mono text-[clamp(11px,1.1vw,16px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6 animate-[fadeUp_0.6s_1.1s_both_ease]">
           {siteConfig.event.shortDescription}
         </p>
 
-        <div
-          className="flex gap-3.5 mt-11 justify-center flex-wrap"
-          style={{ animation: "fadeUp 0.6s 1.25s both ease" }}
-        >
+        <div className="flex gap-3.5 mt-11 justify-center flex-wrap animate-[fadeUp_0.6s_1.25s_both_ease]">
           <Link
             href="/register"
             className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 no-underline"
@@ -116,14 +88,7 @@ export function HeroSection() {
 
       {/* Scroll cue */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-2 flex flex-col items-center gap-1.5">
-        <div
-          className="w-px h-11 animate-fade-up"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent, rgba(var(--acid-rgb),0.4), transparent)",
-            animationDelay: "2s",
-          }}
-        />
+        <div className="w-px h-11 animate-fade-up delay-[2s] bg-linear-to-b from-transparent via-acid/40 to-transparent" />
       </div>
     </section>
   );

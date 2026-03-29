@@ -18,7 +18,7 @@ export const Ticker = ({ dir = 1 }: TickerProps) => (
     <div
       className="flex gap-15 w-max"
       style={{
-        animation: `ticker ${dir > 0 ? 28 : 22}s linear infinite ${dir < 0 ? "reverse" : ""}`,
+        animation: `ticker ${dir > 0 ? 20 : 16}s linear infinite ${dir < 0 ? "reverse" : ""}`,
       }}
     >
       {Array.from({ length: 5 }, () => SPONSOR_NAMES)

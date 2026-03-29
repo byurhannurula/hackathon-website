@@ -23,6 +23,7 @@ import {
   TextShimmer,
   TicketUnlockSequence,
 } from "@/components/ui";
+import { useAnalytics } from "@/components/analytics";
 import {
   type TicketData,
   type Step1Data,
@@ -40,6 +41,7 @@ interface RegisterPageProps {
 }
 
 export function RegisterPage({ onRegister }: RegisterPageProps) {
+  const { trackEvent } = useAnalytics();
   const [step, setStep] = useState(1);
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
@@ -47,6 +49,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [hasTeamValue, setHasTeamValue] = useState<string>("");
   const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
+  const [submitting, setSubmitting] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [pendingTicket, setPendingTicket] = useState<TicketData | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
@@ -80,11 +83,13 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   };
 
   const onStep1Submit = (data: Step1Data) => {
+    trackEvent("registration_step_complete", { step: 1 });
     setStep1Data(data);
     setStep(2);
   };
 
   const onStep2Submit = (data: Step2Data) => {
+    trackEvent("registration_step_complete", { step: 2 });
     setStep2Data(data);
     setStep(3);
   };
@@ -101,8 +106,12 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
     };
 
     try {
-      setGenerating(true);
+      setSubmitting(true);
       setApiError(null);
+
+      // Brief button loader before full-screen transition
+      await new Promise((r) => setTimeout(r, 600));
+      setGenerating(true);
 
       const [apiResult] = await Promise.allSettled([
         fetch("/api/register", {
@@ -123,6 +132,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
       if (!apiData?.ok || !apiData?.ticketNumber || !apiData?.ticketId) {
         setGenerating(false);
+        setSubmitting(false);
 
         const errorMsg = apiData?.error || "Грешка при регистрацията. Моля, опитайте отново.";
         setApiError(errorMsg);
@@ -146,6 +156,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
     } catch (error) {
       console.error("Registration error:", error);
       setGenerating(false);
+      setSubmitting(false);
       setApiError("Възникна грешка. Моля, опитайте отново.");
     }
   };
@@ -176,22 +187,9 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 py-20 relative">
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }}
-      />
+      <div className="absolute inset-0 z-0 bg-grid-white" />
 
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] pointer-events-none z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(var(--acid-rgb),0.06) 0%, transparent 70%)",
-        }}
-      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] pointer-events-none z-0 bg-glow-acid-subtle" />
 
       <Link
         href="/"
@@ -231,24 +229,16 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
         {/* Step indicator */}
         <div className="flex items-center gap-3 mb-8">
-          <div
-            className={cn(
-              "h-1 flex-1 rounded-full transition-colors duration-300",
-              step >= 1 ? "bg-acid" : "bg-white/10"
-            )}
-          />
-          <div
-            className={cn(
-              "h-1 flex-1 rounded-full transition-colors duration-300",
-              step >= 2 ? "bg-acid" : "bg-white/10"
-            )}
-          />
-          <div
-            className={cn(
-              "h-1 flex-1 rounded-full transition-colors duration-300",
-              step >= 3 ? "bg-acid" : "bg-white/10"
-            )}
-          />
+          {[1, 2, 3].map((s) => (
+            <div
+              key={s}
+              className={cn(
+                "h-1 flex-1 rounded-full transition-all duration-500",
+                step >= s ? "bg-acid" : "bg-white/10",
+                step === s && "shadow-[0_0_8px_rgba(254,238,4,0.5)] animate-pulse"
+              )}
+            />
+          ))}
         </div>
 
         <h2 className="font-display text-[clamp(24px,6vw,32px)] leading-[0.9] mb-3">
@@ -353,10 +343,10 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
             {/* GitHub Handle + Avatar (optional) */}
             <div>
-              <FormLabel>GitHub handle (опционално)</FormLabel>
+              <FormLabel>GitHub потребителско име (опционално)</FormLabel>
               <div className="flex gap-2">
                 <FormInput
-                  placeholder="@username"
+                  placeholder="username"
                   className="flex-1"
                   {...form1.register("handle")}
                 />
@@ -371,6 +361,10 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                 </FormButton>
               </div>
             </div>
+
+            <p className="font-mono text-[10px] text-white/50 -mt-3">
+              Само потребителското име, не email. Напр. octocat
+            </p>
 
             <div className="flex items-center gap-4">
               <AvatarCircle name={fullName || "?"} avatarUrl={avatarUrl} size={48} />
@@ -578,7 +572,12 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               >
                 ← НАЗАД
               </FormButton>
-              <FormButton type="submit" disabled={!isValid} size="md" className="flex-1">
+              <FormButton
+                type="submit"
+                disabled={!isValid || submitting}
+                size="md"
+                className="flex-1"
+              >
                 ВЗЕМИ БИЛЕТ ✦
               </FormButton>
             </div>
