@@ -6,9 +6,10 @@ import { TypewriterText } from "@/components/ui";
 interface SectionHeaderProps {
   title: ReactNode;
   label?: string;
+  as?: "h1" | "h2";
 }
 
-export const SectionHeader = ({ title, label }: SectionHeaderProps) => {
+export const SectionHeader = ({ title, label, as: Tag = "h2" }: SectionHeaderProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -40,7 +41,7 @@ export const SectionHeader = ({ title, label }: SectionHeaderProps) => {
           />
         </div>
       )}
-      <h2 className="font-display text-[clamp(52px,7vw,64px)] leading-[1.05]">{title}</h2>
+      <Tag className="font-display text-[clamp(52px,7vw,64px)] leading-[1.05]">{title}</Tag>
     </div>
   );
 };

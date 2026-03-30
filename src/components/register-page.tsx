@@ -193,7 +193,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
       <Link
         href="/"
-        className="relative z-1 mb-8 font-mono text-[11px] tracking-[0.14em] text-white/30 no-underline transition-colors duration-200 hover:text-white/60"
+        className="relative z-1 mb-8 font-mono text-[11px] tracking-[0.14em] text-white/50 no-underline transition-colors duration-200 hover:text-white/70"
       >
         ← Към Началото
       </Link>

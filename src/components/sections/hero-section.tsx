@@ -30,13 +30,16 @@ export function HeroSection() {
       <DottedSurface className="absolute inset-0 z-0" />
 
       {/* Subtle dot grid overlay underneath shader */}
-      <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(circle,rgba(var(--acid-rgb),0.08)_1px,transparent_1px)] bg-[length:60px_60px]" />
+      <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(circle,rgba(var(--acid-rgb),0.08)_1px,transparent_1px)] bg-size-[60px_60px]" />
 
       {/* Vignette — pulls focus to center */}
       <div className="absolute inset-0 pointer-events-none z-1 bg-[radial-gradient(ellipse_85%_80%_at_50%_50%,transparent_30%,rgba(5,5,5,0.7)_65%,rgba(5,5,5,0.97)_100%)]" />
 
       {/* CONTENT */}
       <div className="relative z-2 max-w-[1000px] p-5 bg-[radial-gradient(circle,rgba(5,5,5,0.5)_0%,transparent_80%)]">
+        <h1 className="sr-only">
+          {siteConfig.event.name} {siteConfig.event.year} — {siteConfig.event.shortDescription}
+        </h1>
         <div className="animate-fade-in delay-200">
           <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
         </div>

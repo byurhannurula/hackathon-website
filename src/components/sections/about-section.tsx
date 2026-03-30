@@ -51,7 +51,7 @@ export function AboutSection() {
     <section id="about" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto">
         <div className="mb-12">
-          <SectionHeader label="Накратко" title="ЗА ХАКАТОНА" />
+          <SectionHeader label="Накратко" title="За хакатона" />
         </div>
 
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/5">

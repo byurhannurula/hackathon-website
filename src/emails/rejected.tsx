@@ -29,8 +29,8 @@ export function RejectedEmail({ fullName, siteUrl }: RejectedEmailProps) {
           <Section style={content}>
             <Text style={greeting}>Здравей, {fullName}!</Text>
             <Text style={paragraph}>
-              Благодарим ти за интереса към <strong>RUSE AI HACK &apos;26</strong>. За съжаление, не
-              успяхме да одобрим регистрацията ти за това издание.
+              Благодарим ти за интереса към <strong>RUSE AI HACK &apos;26</strong>. За съжаление,
+              нямаме възможност да одобрим регистрацията ти за това издание.
             </Text>
             <Text style={paragraph}>
               Места за участие са ограничени и изборът беше труден. Това не означава край — следи ни

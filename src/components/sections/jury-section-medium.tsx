@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { User } from "lucide-react";
 
-import type { Person, Criterion } from "@/lib/types";
-import { JURY_MEMBERS, MENTORS, JUDGING_CRITERIA } from "@/constants";
+import type { Person, InfoCriterion } from "@/lib/types";
+import { MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import { LIIcon } from "@/components/ui";
 
@@ -78,10 +78,9 @@ export function JurySectionMedium() {
   return (
     <section id="jury" className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div className="max-w-[1100px] mx-auto">
-        <SectionHeader label="КОЙ ОЦЕНЯВА И НАСОЧВА" title="ЖУРИ И МЕНТОРИ" />
+        <SectionHeader label="КОЙ НАСОЧВА" title="Ментори" />
 
         <div className="mt-12 space-y-12">
-          <PersonGrid people={JURY_MEMBERS} label="ЖУРИ" />
           <PersonGrid people={MENTORS} label="МЕНТОРИ" />
         </div>
 
@@ -90,9 +89,10 @@ export function JurySectionMedium() {
           <div className="font-mono text-[10px] tracking-[0.18em] text-acid/85 uppercase mb-6">
             КРИТЕРИИ ЗА ОЦЕНЯВАНЕ
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-px bg-white/5">
-            {JUDGING_CRITERIA.map((c: Criterion, i: number) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-white/5">
+            {JUDGING_CRITERIA.map((c: InfoCriterion, i: number) => (
               <div key={i} className="bg-bg p-5 border-t-2 border-t-acid/30">
+                <div className="font-display text-2xl text-acid/80 mb-1">{c.pct}</div>
                 <div className="font-body font-bold text-[13px] text-white">{c.title}</div>
                 <div className="font-mono text-[11px] text-white/45 mt-2 leading-[1.7]">
                   {c.desc}

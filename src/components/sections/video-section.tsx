@@ -35,7 +35,7 @@ export function VideoSection({ videoId }: VideoSectionProps) {
     <section id="video" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto" ref={ref}>
         <div className="mb-12">
-          <SectionHeader label="Виж повече" title="КАКВО ТЕ ОЧАКВА" />
+          <SectionHeader label="Виж повече" title="Какво те очаква" />
         </div>
 
         {/* Video container */}

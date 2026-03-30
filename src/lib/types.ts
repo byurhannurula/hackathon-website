@@ -65,10 +65,11 @@ export interface Registration {
   status_updated_at: string | null;
 }
 
-export type SponsorTier = "organizer" | "gold" | "silver" | "bronze";
+export type SponsorTier = "general" | "strategic" | "partner" | "supporter" | "media";
 
 export interface Sponsor {
   name: string;
+  label?: string;
   logo?: string;
   href?: string;
   tier: SponsorTier;

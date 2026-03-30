@@ -12,6 +12,7 @@ import {
   CTASection,
   AboutSection,
   VideoSection,
+  MediaPartnersSection,
 } from "@/components/sections";
 
 export default function Page() {
@@ -29,6 +30,7 @@ export default function Page() {
       <Ticker dir={-1} />
       <JurySection />
       <PrizesSection />
+      <MediaPartnersSection />
       <FaqSection />
       <CTASection />
       <Footer />

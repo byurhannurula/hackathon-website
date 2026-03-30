@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, Mail } from "lucide-react";
+import { Instagram, Facebook, Mail, Linkedin } from "lucide-react";
 import { siteConfig } from "@/constants";
 
 export function Footer() {
@@ -91,6 +91,15 @@ export function Footer() {
                 <Facebook className="w-4 h-4" />
               </a>
               <a
+                href={siteConfig.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a
                 href={`mailto:${siteConfig.contact.sponsorEmail}`}
                 className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
                 aria-label="Email"
@@ -116,7 +125,7 @@ export function Footer() {
           </a>{" "}
           &middot; {siteConfig.event.name} {siteConfig.event.year}. Всички права запазени.
         </span>
-        <span className="font-mono text-[10px] text-white/40 tracking-widest">
+        <span className="font-mono text-[10px] text-white/50 tracking-widest">
           Разработено с много вайб от{" "}
           <a
             href="https://linkedin.com/in/byurhannurula"

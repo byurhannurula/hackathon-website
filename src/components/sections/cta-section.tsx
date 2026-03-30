@@ -35,23 +35,13 @@ export function CTASection() {
           ◆ ОГРАНИЧЕНИ МЕСТА ◆
         </div>
 
-        <div className="font-display text-[clamp(56px,10vw,130px)] leading-[1.05]">
-          <div
-            className={cn(
-              "text-white/12 transition-all duration-700 ease-expo-out delay-250",
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            )}
-          >
-            СПРИ ДА МИСЛИШ.
-          </div>
-          <div
-            className={cn(
-              "text-acid transition-all duration-700 ease-expo-out delay-450",
-              visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-            )}
-          >
-            ЗАПОЧНИ ДА СЪЗДАВАШ.
-          </div>
+        <div
+          className={cn(
+            "font-display text-[clamp(40px,7vw,90px)] leading-[1.1] text-acid transition-all duration-700 ease-expo-out delay-350",
+            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          )}
+        >
+          Създай смислено и <br /> полезно приложение с AI
         </div>
 
         <div

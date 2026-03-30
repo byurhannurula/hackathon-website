@@ -8,3 +8,4 @@ export { AboutSection } from "./about-section";
 export { JurySection } from "./jury-section";
 export { CTASection } from "./cta-section";
 export { VideoSection } from "./video-section";
+export { MediaPartnersSection } from "./media-partners-section";

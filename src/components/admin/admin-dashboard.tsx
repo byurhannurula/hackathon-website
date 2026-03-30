@@ -245,8 +245,13 @@ export function AdminDashboard() {
             onClick={() => setConfirmAction(null)}
           />
           <div className="fixed inset-0 z-61 flex items-center justify-center p-4">
-            <div className="bg-card border border-white/10 p-6 max-w-[400px] w-full animate-[fadeUp_0.2s_ease]">
-              <div className="font-display text-xl mb-2">
+            <div
+              role="dialog"
+              aria-labelledby="confirm-dialog-title"
+              aria-modal="true"
+              className="bg-card border border-white/10 p-6 max-w-[400px] w-full animate-[fadeUp_0.2s_ease]"
+            >
+              <div id="confirm-dialog-title" className="font-display text-xl mb-2">
                 {confirmAction.status === "approved" ? "ОДОБРЯВАНЕ" : "ОТХВЪРЛЯНЕ"}
               </div>
               <p className="font-mono text-[13px] text-white/60 leading-[1.7] mb-2">

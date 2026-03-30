@@ -116,7 +116,7 @@ export function TicketPage({ data }: TicketPageProps) {
       {/* Back link at bottom */}
       <Link
         href="/"
-        className="relative z-1 mt-12 font-mono text-[11px] tracking-[0.14em] text-white/30 no-underline transition-colors duration-200 hover:text-white/60 animate-[ticketFadeIn_0.5s_0.5s_ease_both]"
+        className="relative z-1 mt-12 font-mono text-[11px] tracking-[0.14em] text-white/50 no-underline transition-colors duration-200 hover:text-white/70 animate-[ticketFadeIn_0.5s_0.5s_ease_both]"
       >
         ← Към Началото
       </Link>

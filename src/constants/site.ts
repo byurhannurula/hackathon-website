@@ -18,7 +18,7 @@ export const siteConfig = {
     locationBG: "Русенски Университет",
     organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
-    prizesPool: "€2,500",
+    prizesPool: "€2,900",
     participantsCount: "100+",
     free: "Безплатен вход",
 
@@ -49,6 +49,7 @@ export const siteConfig = {
   social: {
     instagram: "https://www.instagram.com/startup._.factory/",
     facebook: "https://www.facebook.com/factorystartup",
+    linkedin: "https://www.linkedin.com/company/startup-factory-ngo-/",
   },
 
   contact: {

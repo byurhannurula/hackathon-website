@@ -7,27 +7,30 @@ import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import type { SponsorTier } from "@/lib/types";
 
-const TIER_ORDER: SponsorTier[] = ["organizer", "gold", "silver", "bronze"];
+const TIER_ORDER: SponsorTier[] = ["general", "strategic", "partner", "supporter"];
 
 const TIER_GRID: Record<SponsorTier, string> = {
-  organizer: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  gold: "grid-cols-1 sm:grid-cols-2 ",
-  silver: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
-  bronze: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
+  general: "grid-cols-1",
+  strategic: "grid-cols-1 sm:grid-cols-2",
+  partner: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
+  supporter: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
+  media: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
 };
 
 const TIER_HEIGHT: Record<SponsorTier, string> = {
-  organizer: "min-h-[130px] p-5",
-  gold: "min-h-[120px] p-5",
-  silver: "min-h-[100px] p-5",
-  bronze: "min-h-[90px] p-5",
+  general: "min-h-[130px] p-5",
+  strategic: "min-h-[120px] p-5",
+  partner: "min-h-[100px] p-5",
+  supporter: "min-h-[90px] p-5",
+  media: "min-h-[90px] p-5",
 };
 
 const TIER_LOGO_SIZE: Record<SponsorTier, { w: number; h: number }> = {
-  organizer: { w: 220, h: 80 },
-  gold: { w: 220, h: 80 },
-  silver: { w: 200, h: 50 },
-  bronze: { w: 120, h: 45 },
+  general: { w: 320, h: 80 },
+  strategic: { w: 220, h: 80 },
+  partner: { w: 200, h: 50 },
+  supporter: { w: 120, h: 45 },
+  media: { w: 120, h: 45 },
 };
 
 function SponsorCard({
@@ -46,6 +49,11 @@ function SponsorCard({
       rel="noopener noreferrer"
       className="group relative block transition-transform duration-300 hover:-translate-y-1"
     >
+      {sponsor.label && (
+        <div className="font-mono text-[10px] tracking-[0.14em] text-white/45 uppercase mb-2">
+          {sponsor.label}
+        </div>
+      )}
       <div
         className={cn(
           "relative flex items-center justify-center border border-border-hover bg-white/3 transition-all duration-300 group-hover:border-acid/30 group-hover:bg-acid/5 group-hover:shadow-[0_0_20px_rgba(254,238,4,0.06)]",
@@ -95,7 +103,7 @@ export function SponsorsSection() {
   return (
     <section id="sponsors" className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div ref={ref} className="max-w-[1100px] mx-auto">
-        <SectionHeader label="ПРАВЯТ ТОВА ВЪЗМОЖНО" title="СПОНСОРИ" />
+        <SectionHeader label="ПРАВЯТ ТОВА ВЪЗМОЖНО" title="Спонсори" />
 
         {TIER_ORDER.map((tier, tierIdx) => {
           const tierSponsors = SPONSORS.filter((s) => s.tier === tier);
@@ -112,7 +120,7 @@ export function SponsorsSection() {
               style={{ transitionDelay: inView ? `${tierIdx * 150}ms` : "0ms" }}
             >
               <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-4">
-                {SPONSOR_TIER_LABELS[tier]}
+                {tier === "strategic" ? "" : SPONSOR_TIER_LABELS[tier]}
               </div>
               <div className={cn("grid gap-4", TIER_GRID[tier])}>
                 {tierSponsors.map((sponsor) => (

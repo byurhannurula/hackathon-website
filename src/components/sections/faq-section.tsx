@@ -6,7 +6,7 @@ export function FaqSection() {
   return (
     <section id="faq" className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div className="max-w-[800px] mx-auto">
-        <SectionHeader title="ЧЕСТО ЗАДАВАНИ ВЪПРОСИ" />
+        <SectionHeader title="Често задавани въпроси" />
         <div className="mt-12">
           {FAQ_ITEMS.map((item, i) => (
             <FaqItem key={i} {...item} />

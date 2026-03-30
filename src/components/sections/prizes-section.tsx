@@ -6,7 +6,7 @@ export function PrizesSection() {
   return (
     <section id="prizes" className="px-6 py-25 md:px-12 border-t border-border">
       <div className="max-w-[1100px] mx-auto">
-        <SectionHeader label={`ОБЩ НАГРАДЕН ФОНД ${siteConfig.event.prizesPool}`} title="НАГРАДИ" />
+        <SectionHeader label={`ОБЩ НАГРАДЕН ФОНД ${siteConfig.event.prizesPool}`} title="Награди" />
         {/* Desktop: all 3 in one row. Mobile: 1st full-width, 2nd+3rd side by side */}
         <div className="mt-12 hidden md:grid md:grid-cols-3 gap-px bg-border">
           {PRIZES.map((p, i) => {
