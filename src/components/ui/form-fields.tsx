@@ -102,13 +102,14 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
           sizes[size].input,
           className
         )}
+        style={{ colorScheme: "dark" }}
         {...props}
       >
-        <option value="" disabled hidden>
+        <option value="" disabled hidden style={{ background: "#0a0a0a", color: "#fff" }}>
           {placeholder}
         </option>
         {options.map((opt) => (
-          <option key={opt} value={opt}>
+          <option key={opt} value={opt} style={{ background: "#0a0a0a", color: "#fff" }}>
             {opt}
           </option>
         ))}

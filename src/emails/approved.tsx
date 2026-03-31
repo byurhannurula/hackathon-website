@@ -71,8 +71,6 @@ export function ApprovedEmail({ fullName, ticketNumber, ticketId, siteUrl }: App
           <Section style={content}>
             <Text style={detailsTitle}>КАКВО ДА НОСИШ</Text>
             <Text style={detail}>Лаптоп + зарядно</Text>
-            <Text style={detail}>Слушалки</Text>
-            <Text style={detail}>Настроена среда за разработка</Text>
           </Section>
 
           {/* CTA */}

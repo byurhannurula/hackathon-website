@@ -73,6 +73,22 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
 
+  // Detect browser autofill: autofill doesn't trigger React onChange,
+  // so react-hook-form misses the values. Sync DOM values after a short delay.
+  useEffect(() => {
+    const syncAutofill = () => {
+      const fields = ["fullName", "email", "phone", "age"] as const;
+      fields.forEach((name) => {
+        const el = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        if (el && el.value && !form1.getValues(name)) {
+          form1.setValue(name, el.value, { shouldValidate: true });
+        }
+      });
+    };
+    const timer = setTimeout(syncAutofill, 800);
+    return () => clearTimeout(timer);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleFetchAvatar = async () => {
     const handle = form1.getValues("handle")?.trim();
     if (!handle || handle.length < 2) return;
