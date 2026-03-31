@@ -73,6 +73,10 @@ export function HeroSection() {
           </button>
         </div>
 
+        <p className="font-mono text-xs tracking-[0.08em] text-white/50 mt-5 animate-[fadeUp_0.6s_1.4s_both_ease]">
+          Регистрациите са отворени до <span className="text-acid/80">20 април</span>
+        </p>
+
         {/* Stats */}
         <div className="flex gap-6 md:gap-15 mt-12 md:mt-18 justify-center flex-wrap">
           {stats.map(([v, l]) => (

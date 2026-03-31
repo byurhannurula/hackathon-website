@@ -392,7 +392,7 @@ export async function GET(request: Request) {
                     src={avatarDataUri}
                     width={72 * scale}
                     height={72 * scale}
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "cover", borderRadius: "50%" }}
                   />
                 ) : (
                   <span

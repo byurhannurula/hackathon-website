@@ -31,7 +31,7 @@ export function OrganizerSection() {
               className="object-contain brightness-120 mix-blend-lighten"
             />
             <Image
-              src="/sponsors/software-roastery.png"
+              src="/sponsors/software-roastery.svg"
               alt="Software Roastery"
               width={200}
               height={84}

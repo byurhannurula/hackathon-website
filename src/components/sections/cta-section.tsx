@@ -58,9 +58,13 @@ export function CTASection() {
             <CountdownTimer enabled={true} />
           </div>
 
+          <p className="font-mono text-xs tracking-[0.12em] text-acid/70 mt-8">
+            Регистрациите са отворени до <span className="text-acid font-bold">20 април</span>
+          </p>
+
           <Link
             href="/register"
-            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-10 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
+            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-6 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
           >
             РЕГИСТРИРАЙ СЕ &mdash; БЕЗПЛАТНО Е
           </Link>
