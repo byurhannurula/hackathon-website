@@ -21,7 +21,6 @@ export function TicketPage({ data }: TicketPageProps) {
   const { nodeRef, downloading, exporting, download } = useTicketDownload(data?.ticketNum);
 
   const name = data?.name || "Участник";
-  const firstName = name.split(" ")[0];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -66,12 +65,14 @@ export function TicketPage({ data }: TicketPageProps) {
       {isOwner !== null && (
         <div className="relative z-1 text-center mb-10 animate-[ticketFadeIn_0.6s_ease_both]">
           <div className="font-mono text-[11px] tracking-[0.2em] text-acid/70 uppercase mb-4">
-            &#10022; {isOwner ? "БИЛЕТЪТ Е ПОТВЪРДЕН" : "БИЛЕТ"} &#10022;
+            &#10022; {isOwner ? "РЕГИСТРАЦИЯТА Е ПРИЕТА" : "БИЛЕТ"} &#10022;
           </div>
           <h1 className="font-display text-[clamp(28px,7vw,52px)] leading-[0.9] text-white">
             {isOwner ? (
               <>
-                ВЪТРЕ СИ, <span className="text-acid">{firstName.toUpperCase()}</span>
+                ОЧАКВАЙ ОТГОВОР
+                <br />
+                <span className="text-[clamp(16px,4vw,28px)] text-white/60">ПО ИМЕЙЛ ДО 48 ЧАСА</span>
               </>
             ) : (
               <>
