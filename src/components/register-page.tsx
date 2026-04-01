@@ -53,6 +53,8 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [generating, setGenerating] = useState(false);
   const [pendingTicket, setPendingTicket] = useState<TicketData | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [regStatusLoading, setRegStatusLoading] = useState(true);
+  const [registrationClosed, setRegistrationClosed] = useState(false);
 
   const form1 = useForm<Step1Data>({
     resolver: zodResolver(step1Schema),
@@ -72,6 +74,17 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [step]);
+
+  // Check if registration is open
+  useEffect(() => {
+    fetch("/api/registration-status")
+      .then((r) => r.json())
+      .then((d) => {
+        if (!d.open) setRegistrationClosed(true);
+      })
+      .catch(() => {})
+      .finally(() => setRegStatusLoading(false));
+  }, []);
 
   // Detect browser autofill: autofill doesn't trigger React onChange,
   // so react-hook-form misses the values. Sync DOM values after a short delay.
@@ -180,6 +193,11 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const currentForm = step === 1 ? form1 : step === 2 ? form2 : form3;
   const isValid = currentForm.formState.isValid;
 
+  // ── LOADING STATUS CHECK ──
+  if (regStatusLoading) {
+    return <div className="min-h-screen bg-bg" />;
+  }
+
   // ── UNLOCK SEQUENCE (plays after API success, before redirect) ──
   if (pendingTicket) {
     return <TicketUnlockSequence enabled onComplete={() => onRegister(pendingTicket)} />;
@@ -196,6 +214,29 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
           >
             Свързване със сървъра...
           </TextShimmer>
+        </div>
+      </div>
+    );
+  }
+
+  if (registrationClosed) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 py-20 relative">
+        <div className="absolute inset-0 z-0 bg-grid-white" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vw] pointer-events-none z-0 bg-glow-acid-subtle" />
+        <div className="relative z-1 text-center max-w-[500px]">
+          <h1 className="font-display text-[clamp(40px,7vw,56px)] leading-tight mb-4">
+            РЕГИСТРАЦИЯТА Е <span className="text-acid">ЗАТВОРЕНА</span>
+          </h1>
+          <p className="font-mono text-sm text-white/50 leading-relaxed mb-8">
+            Благодарим за интереса! Регистрацията за RUSE AI HACK &apos;26 приключи.
+          </p>
+          <Link
+            href="/"
+            className="inline-block font-display text-[14px] tracking-[0.08em] border border-acid/30 text-acid px-8 py-3 no-underline transition-all duration-200 hover:bg-acid/7"
+          >
+            ← КЪМ НАЧАЛОТО
+          </Link>
         </div>
       </div>
     );
@@ -223,6 +264,9 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
         </h1>
         <p className="font-mono text-xs text-muted leading-relaxed">
           Попълнете формата, за да се регистрирате и да генерирате уникалния си хакерски билет.
+        </p>
+        <p className="mt-3 inline-block rounded border border-acid/40 bg-acid/10 px-3 py-1.5 font-mono text-xs font-semibold tracking-wide text-acid">
+          ⏳ Краен срок за регистрация - 20 април
         </p>
       </div>
 

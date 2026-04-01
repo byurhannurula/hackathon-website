@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
 import { step1Schema, step2Schema, step3Schema } from "@/lib/schemas";
+import { isRegistrationOpen } from "@/lib/registration-status";
 
 const AIRTABLE_TOKEN = process.env.AIRTABLE_PAT;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
@@ -14,6 +15,13 @@ const registrationSchema = step1Schema.merge(step2Schema).merge(step3Schema);
 
 export async function POST(req: NextRequest) {
   try {
+    if (!(await isRegistrationOpen())) {
+      return NextResponse.json(
+        { ok: false, error: "Регистрацията е затворена." },
+        { status: 403 }
+      );
+    }
+
     const raw = await req.json();
 
     // Guard against oversized payloads

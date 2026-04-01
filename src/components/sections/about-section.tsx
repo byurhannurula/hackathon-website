@@ -97,7 +97,7 @@ export function AboutSection() {
 
         <div className="flex items-center justify-center">
           <FormButton type="button" size="sm" onClick={() => router.push("/info")} className="mt-8">
-            Повече Информация & Правила
+            Повече информация & правила
           </FormButton>
         </div>
       </div>

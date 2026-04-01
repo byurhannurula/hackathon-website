@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
+import { JUDGING_CRITERIA } from "@/constants";
 
 const sectionCls = "py-16 px-6 md:px-12 border-b border-border";
 const containerCls = "max-w-[800px] mx-auto";
@@ -232,44 +233,14 @@ export function RulesPageContent() {
           </p>
 
           <div className="space-y-5 mb-8">
-            <div className="border-l-2 border-acid/30 pl-5">
-              <div className="font-body font-bold text-white/90 text-[15px]">
-                Продукт, полезност и иновация{" "}
-                <span className="text-acid font-mono text-xs ml-1">30%</span>
+            {JUDGING_CRITERIA.map((c) => (
+              <div key={c.title} className="border-l-2 border-acid/30 pl-5">
+                <div className="font-body font-bold text-white/90 text-[15px]">
+                  {c.title} <span className="text-acid font-mono text-xs ml-1">{c.pct}</span>
+                </div>
+                <p className="font-mono text-sm text-white/50 mt-1 leading-[1.7]">{c.desc}</p>
               </div>
-              <p className="font-mono text-sm text-white/50 mt-1 leading-[1.7]">
-                Има ли реално работеща функционалност? Решава ли проектът реален проблем за реални
-                потребители и личи ли стойността му? Има ли реална иновация?
-              </p>
-            </div>
-            <div className="border-l-2 border-acid/30 pl-5">
-              <div className="font-body font-bold text-white/90 text-[15px]">
-                Качество на използване на AI{" "}
-                <span className="text-acid font-mono text-xs ml-1">25%</span>
-              </div>
-              <p className="font-mono text-sm text-white/50 mt-1 leading-[1.7]">
-                Доколко AI е използван смислено, адекватно и в дълбочина?
-              </p>
-            </div>
-            <div className="border-l-2 border-acid/30 pl-5">
-              <div className="font-body font-bold text-white/90 text-[15px]">
-                Потребителски интерфейс и презентация{" "}
-                <span className="text-acid font-mono text-xs ml-1">20%</span>
-              </div>
-              <p className="font-mono text-sm text-white/50 mt-1 leading-[1.7]">
-                Яснота, лекота на използване и практичност на интерфейса. Качество на финалната
-                презентация и демо.
-              </p>
-            </div>
-            <div className="border-l-2 border-acid/30 pl-5">
-              <div className="font-body font-bold text-white/90 text-[15px]">
-                Потенциал за развитие след хакатона{" "}
-                <span className="text-acid font-mono text-xs ml-1">25%</span>
-              </div>
-              <p className="font-mono text-sm text-white/50 mt-1 leading-[1.7]">
-                Има ли проектът потенциал да се превърне в реален продукт, пилот или услуга?
-              </p>
-            </div>
+            ))}
           </div>
 
           <ul className={listCls}>

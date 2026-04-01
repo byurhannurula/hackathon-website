@@ -55,7 +55,14 @@ export function MediaPartnersSection() {
                 <span className="absolute bottom-0 right-0 h-0 w-0 border-b border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
 
                 {sponsor.logo ? (
-                  <div className="relative" style={{ width: 120, height: 45 }}>
+                  <div
+                    className="relative"
+                    style={{
+                      width: 120,
+                      height: 45,
+                      ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+                    }}
+                  >
                     <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
                   </div>
                 ) : (

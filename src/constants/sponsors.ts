@@ -56,6 +56,13 @@ export const SPONSORS: Sponsor[] = [
     tier: "partner",
   },
   {
+    name: "AI-EDIH",
+    logo: "/sponsors/ai-edih.png",
+    href: "https://ric-gabrovo.com/adi4smes/",
+    tier: "supporter",
+    invertLogo: true,
+  },
+  {
     name: "Ocean Investments",
     logo: "/sponsors/ocean_investments/oi_logo.svg",
     href: "https://www.ocean.investments/",
@@ -66,6 +73,13 @@ export const SPONSORS: Sponsor[] = [
     logo: "/sponsors/cp-logo-text.svg",
     href: "https://checkpoint.pub/",
     tier: "supporter",
+  },
+  {
+    name: "Utro",
+    logo: "/sponsors/utro.png",
+    href: "https://utroruse.com/",
+    tier: "media",
+    invertLogo: true,
   },
 ];
 

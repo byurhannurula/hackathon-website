@@ -6,9 +6,11 @@ import { Menu, X } from "lucide-react";
 
 import { cn } from "@/lib";
 import { siteConfig } from "@/constants";
+import { useRegistrationOpen } from "@/hooks";
 
 export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const regOpen = useRegistrationOpen();
 
   const navItems = [
     { key: "about", label: "За нас", href: "/#about" },
@@ -58,12 +60,14 @@ export function Nav() {
             {item.label}
           </Link>
         ))}
-        <Link
-          href="/register"
-          className="font-mono text-[10px] font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black border-none py-2 px-[22px] cursor-pointer transition-colors duration-200 hover:bg-white"
-        >
-          Регистрация &rarr;
-        </Link>
+        {regOpen && (
+          <Link
+            href="/register"
+            className="font-mono text-[10px] font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black border-none py-2 px-[22px] cursor-pointer transition-colors duration-200 hover:bg-white"
+          >
+            Регистрация &rarr;
+          </Link>
+        )}
       </div>
 
       <button
@@ -104,14 +108,16 @@ export function Nav() {
                 {siteConfig.event.duration.toLowerCase()} хакатон
               </div>
 
-              <Link
-                href="/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="mt-6 inline-flex items-center justify-center font-mono text-sm font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black py-3 px-8 transition-colors duration-200 hover:bg-white animate-reveal-up"
-                style={{ animationDelay: "320ms" }}
-              >
-                Регистрация &rarr;
-              </Link>
+              {regOpen && (
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="mt-6 inline-flex items-center justify-center font-mono text-sm font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black py-3 px-8 transition-colors duration-200 hover:bg-white animate-reveal-up"
+                  style={{ animationDelay: "320ms" }}
+                >
+                  Регистрация &rarr;
+                </Link>
+              )}
             </div>
           </div>
         </div>

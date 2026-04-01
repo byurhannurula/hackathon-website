@@ -4,11 +4,13 @@ import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { CountdownTimer } from "@/components/ui/countdown-timer";
 import { siteConfig } from "@/constants";
+import { useRegistrationOpen } from "@/hooks";
 import { cn } from "@/lib";
 
 export function CTASection() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const regOpen = useRegistrationOpen();
   useEffect(() => {
     const obs = new IntersectionObserver(
       ([e]) => {
@@ -58,16 +60,28 @@ export function CTASection() {
             <CountdownTimer enabled={true} />
           </div>
 
-          <p className="font-mono text-xs tracking-[0.12em] text-acid/70 mt-8">
-            Регистрациите са отворени до <span className="text-acid font-bold">20 април</span>
-          </p>
-
-          <Link
-            href="/register"
-            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-6 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
-          >
-            РЕГИСТРИРАЙ СЕ &mdash; БЕЗПЛАТНО Е
-          </Link>
+          {regOpen ? (
+            <>
+              <p className="font-mono text-xs tracking-[0.12em] text-acid/70 mt-8">
+                Регистрациите са отворени до <span className="text-acid font-bold">20 април</span>
+              </p>
+              <Link
+                href="/register"
+                className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-6 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
+              >
+                РЕГИСТРИРАЙ СЕ &mdash; БЕЗПЛАТНО Е
+              </Link>
+            </>
+          ) : (
+            <>
+              <p className="font-mono text-xs tracking-[0.12em] text-white/40 mt-8">
+                Регистрацията за RUSE AI HACK &apos;26 приключи
+              </p>
+              <span className="inline-block font-display text-xl tracking-[0.08em] bg-white/10 text-white/40 py-5 px-18 mt-6 cursor-not-allowed">
+                РЕГИСТРАЦИЯТА ПРИКЛЮЧИ
+              </span>
+            </>
+          )}
         </div>
       </div>
     </section>

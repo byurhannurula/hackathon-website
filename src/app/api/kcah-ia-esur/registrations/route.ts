@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase-admin";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 15;
 const ALLOWED_SORT_COLUMNS = new Set([
   "created_at",
   "full_name",

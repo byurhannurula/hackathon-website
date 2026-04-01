@@ -97,3 +97,23 @@ $$ LANGUAGE SQL STABLE;
 GRANT EXECUTE ON FUNCTION get_registration_count() TO anon, authenticated;
 
 ALTER SEQUENCE ticket_number_seq RESTART WITH 1;
+
+-- ── Site Settings (key-value store) ─────────────────────────
+-- Lightweight table for admin-toggleable settings (e.g. registration_open).
+-- Only service_role can read/write. No public access.
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Service role only" ON site_settings
+  FOR ALL
+  USING (auth.role() = 'service_role')
+  WITH CHECK (auth.role() = 'service_role');
+
+-- Default: registration is open
+INSERT INTO site_settings (key, value) VALUES ('registration_open', 'true')
+  ON CONFLICT (key) DO NOTHING;

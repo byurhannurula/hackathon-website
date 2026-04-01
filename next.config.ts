@@ -2,7 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [{ hostname: "i.pravatar.cc" }, { hostname: "avatars.githubusercontent.com" }],
+    remotePatterns: [
+      { hostname: "i.pravatar.cc" },
+      { hostname: "avatars.githubusercontent.com" },
+      { hostname: "media.licdn.com" },
+    ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,
   },
@@ -63,7 +67,7 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-{
+      {
         source: "/fonts/:path*",
         headers: [
           {

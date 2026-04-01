@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
-import { INFO_CRITERIA } from "@/constants";
+import { JUDGING_CRITERIA } from "@/constants";
 
 const sectionCls = "py-16 px-6 md:px-12 border-b border-border";
 const containerCls = "max-w-[800px] mx-auto";
@@ -126,7 +126,7 @@ export function InfoPageContent() {
             качествено използване на AI и потенциал за развитие.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-            {INFO_CRITERIA.map((c, i) => (
+            {JUDGING_CRITERIA.map((c, i) => (
               <div key={i} className="border border-white/10 p-6 bg-white/2">
                 <div className="flex justify-between items-baseline mb-2">
                   <span className="font-display text-lg text-white">{c.title}</span>

@@ -6,5 +6,4 @@ export * from "./agenda";
 export * from "./prizes";
 export * from "./faq";
 export * from "./about";
-export * from "./info";
 export * from "./form-options";

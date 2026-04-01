@@ -18,7 +18,7 @@ const TIER_GRID: Record<SponsorTier, string> = {
 };
 
 const TIER_HEIGHT: Record<SponsorTier, string> = {
-  general: "min-h-[130px] p-5",
+  general: "min-h-[170px] p-8",
   strategic: "min-h-[120px] p-5",
   partner: "min-h-[100px] p-5",
   supporter: "min-h-[90px] p-5",
@@ -26,7 +26,7 @@ const TIER_HEIGHT: Record<SponsorTier, string> = {
 };
 
 const TIER_LOGO_SIZE: Record<SponsorTier, { w: number; h: number }> = {
-  general: { w: 320, h: 80 },
+  general: { w: 400, h: 100 },
   strategic: { w: 220, h: 80 },
   partner: { w: 200, h: 50 },
   supporter: { w: 120, h: 45 },
@@ -67,7 +67,14 @@ function SponsorCard({
         <span className="absolute bottom-0 right-0 h-0 w-0 border-b border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
 
         {sponsor.logo ? (
-          <div className="relative" style={{ width: logoSize.w, height: logoSize.h }}>
+          <div
+            className="relative"
+            style={{
+              width: logoSize.w,
+              height: logoSize.h,
+              ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+            }}
+          >
             <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
           </div>
         ) : (

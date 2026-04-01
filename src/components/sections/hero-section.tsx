@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 
-import { useLiveCount } from "@/hooks";
+import { useLiveCount, useRegistrationOpen } from "@/hooks";
 import { siteConfig } from "@/constants";
 import { DecryptText, CountUp } from "@/components/ui";
 import { LogoGlitchNoise } from "@/components/ui/logo-glitch-noise";
@@ -15,6 +15,7 @@ const DottedSurface = dynamic(
 
 export function HeroSection() {
   const liveCount = useLiveCount();
+  const regOpen = useRegistrationOpen();
 
   const stats: [string, string][] = [
     ...(liveCount !== null && liveCount > 0
@@ -57,12 +58,18 @@ export function HeroSection() {
         </p>
 
         <div className="flex gap-3.5 mt-11 justify-center flex-wrap animate-[fadeUp_0.6s_1.25s_both_ease]">
-          <Link
-            href="/register"
-            className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 no-underline"
-          >
-            Регистрация
-          </Link>
+          {regOpen ? (
+            <Link
+              href="/register"
+              className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 no-underline"
+            >
+              Регистрация
+            </Link>
+          ) : (
+            <span className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-white/10 text-white/40 border-none py-4 px-11 cursor-not-allowed">
+              Регистрацията приключи
+            </span>
+          )}
           <button
             className="font-display uppercase text-lg tracking-[0.07em] bg-transparent text-acid border border-acid/60 py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
             onClick={() =>
