@@ -34,6 +34,7 @@ export function Footer() {
                   { label: "Награди", href: "/#prizes" },
                   { label: "Информация", href: "/info" },
                   { label: "Правила", href: "/rules" },
+                  { label: "Галерия", href: "/showcase" },
                 ].map((link) => (
                   <Link
                     key={link.href}

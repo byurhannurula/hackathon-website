@@ -449,7 +449,7 @@ export function AdminDashboard() {
         </Link>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[10px] tracking-[0.1em] text-white/40 uppercase">
+            <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">
               Регистрация
             </span>
             <button

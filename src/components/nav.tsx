@@ -21,6 +21,7 @@ export function Nav() {
     { key: "faq", label: "Въпроси", href: "/#faq" },
     { key: "info", label: "Инфо", href: "/info" },
     { key: "rules", label: "Правила", href: "/rules" },
+    { key: "showcase", label: "Галерия", href: "/showcase" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, key: string) => {

@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       { hostname: "i.pravatar.cc" },
       { hostname: "avatars.githubusercontent.com" },
       { hostname: "media.licdn.com" },
+      { hostname: "images.unsplash.com" },
     ],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60,

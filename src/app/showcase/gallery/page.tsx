@@ -1,0 +1,16 @@
+import type { Metadata } from "next";
+
+import { FullGalleryContent } from "@/components/full-gallery-content";
+
+export const metadata: Metadata = {
+  title: "Пълна Галерия | RUSE AI HACK '26",
+  description: "Всички снимки от RUSE AI HACK '26 — 48-часов AI хакатон в Русе.",
+  openGraph: {
+    title: "Пълна Галерия | RUSE AI HACK '26",
+    description: "Всички снимки от RUSE AI HACK '26 — 48-часов AI хакатон в Русе.",
+  },
+};
+
+export default function GalleryPage() {
+  return <FullGalleryContent />;
+}
