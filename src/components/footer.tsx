@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="border-t border-border bg-card">
       <div className="max-w-[1100px] mx-auto px-6 md:px-12 py-10">
         <div className="flex flex-col md:flex-row justify-between gap-8">
-          {/* Left: branding + description */}
+          {/* Left: branding + description + socials */}
           <div className="max-w-[360px]">
             <Link href="/" className="no-underline flex items-baseline gap-1.5">
               <span className="font-display text-[20px] text-acid">RUSE</span>
@@ -19,59 +19,7 @@ export function Footer() {
             <p className="font-mono text-[11px] text-white/50 leading-[1.8] mt-3">
               {siteConfig.event.shortDescription}
             </p>
-          </div>
-
-          {/* Middle: links */}
-          <div className="flex gap-12">
-            <div>
-              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
-                Навигация
-              </div>
-              <div className="flex flex-col gap-2">
-                {[
-                  { label: "За нас", href: "/#about" },
-                  { label: "Програма", href: "/#agenda" },
-                  { label: "Награди", href: "/#prizes" },
-                  { label: "Информация", href: "/info" },
-                  { label: "Правила", href: "/rules" },
-                ].map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
-                Контакт
-              </div>
-              <div className="flex flex-col gap-2">
-                <a
-                  href={`mailto:${siteConfig.contact.sponsorEmail}`}
-                  className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
-                >
-                  {siteConfig.contact.sponsorEmail}
-                </a>
-                <Link
-                  href="/register"
-                  className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
-                >
-                  Регистрация →
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Right: social */}
-          <div>
-            <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
-              Последвайте ни
-            </div>
-            <div className="flex gap-3">
+            <div className="flex gap-3 mt-4">
               <a
                 href={siteConfig.social.instagram}
                 target="_blank"
@@ -106,6 +54,76 @@ export function Footer() {
               >
                 <Mail className="w-4 h-4" />
               </a>
+            </div>
+          </div>
+
+          {/* Navigation columns */}
+          <div className="flex gap-12">
+            {/* Sections */}
+            <div>
+              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
+                Секции
+              </div>
+              <div className="flex flex-col gap-2">
+                {[
+                  { label: "За нас", href: "/#about" },
+                  { label: "Спонсори", href: "/#sponsors" },
+                  { label: "Програма", href: "/#agenda" },
+                  { label: "Награди", href: "/#prizes" },
+                  { label: "FAQ", href: "/#faq" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Pages */}
+            <div>
+              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
+                Страници
+              </div>
+              <div className="flex flex-col gap-2">
+                {[
+                  { label: "Информация", href: "/info" },
+                  { label: "Правила", href: "/rules" },
+                  { label: "Регистрация", href: "/register" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Contact */}
+            <div>
+              <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
+                Контакт
+              </div>
+              <div className="flex flex-col gap-2">
+                <a
+                  href={`mailto:${siteConfig.contact.sponsorEmail}`}
+                  className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
+                >
+                  {siteConfig.contact.sponsorEmail}
+                </a>
+                <Link
+                  href="/register"
+                  className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
+                >
+                  Регистрация →
+                </Link>
+              </div>
             </div>
           </div>
         </div>

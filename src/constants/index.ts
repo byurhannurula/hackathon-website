@@ -7,3 +7,4 @@ export * from "./prizes";
 export * from "./faq";
 export * from "./about";
 export * from "./form-options";
+export * from "./registration";

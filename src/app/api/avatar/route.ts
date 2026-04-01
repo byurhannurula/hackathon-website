@@ -59,6 +59,11 @@ export async function GET(req: NextRequest) {
 
     const contentType = res.headers.get("content-type") || "image/png";
 
+    // Only serve image content types — block HTML/JS to prevent XSS
+    if (!contentType.startsWith("image/")) {
+      return NextResponse.json({ error: "Not an image" }, { status: 400 });
+    }
+
     return new NextResponse(buffer, {
       headers: {
         "Content-Type": contentType,

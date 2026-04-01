@@ -9,7 +9,15 @@ import { MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import { LIIcon } from "@/components/ui";
 
-function PersonCard({ person, index, priority }: { person: Person; index: number; priority?: boolean }) {
+function PersonCard({
+  person,
+  index,
+  priority,
+}: {
+  person: Person;
+  index: number;
+  priority?: boolean;
+}) {
   const hasImage = person.image.length > 0;
   const hasDetails = person.org.length > 0;
   const ref = useRef<HTMLElement | null>(null);

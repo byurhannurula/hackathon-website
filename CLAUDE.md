@@ -27,15 +27,23 @@ pnpm run format:check # Prettier check
 
 `@/*` maps to `./src/*` (configured in tsconfig.json).
 
+### Route groups
+
+- `src/app/(site)/` — Public-facing pages (homepage, info, rules, register, tickets). Pages that need Nav/Footer (homepage, info, rules) include them via their own `layout.tsx` or directly. Register and ticket pages are full-screen standalone and do **not** include Nav/Footer.
+- `src/app/(admin)/` — Admin panel pages (dashboard, login). No shared Nav/Footer — the admin dashboard uses its own `AdminNav` component.
+- `src/app/api/` — API routes (stays at root, not inside route groups).
+
 ### Key directories
 
-- `src/app/` — Next.js App Router pages and API routes
+- `src/app/` — Next.js App Router pages and API routes (organized with `(site)` and `(admin)` route groups)
+- `src/components/views/` — Full page content components (info, rules, register, ticket), barrel-exported via `index.ts`
 - `src/components/sections/` — Landing page sections (hero, sponsors, agenda, jury, prizes, FAQ, CTA, about, organizer), barrel-exported via `index.ts`
-- `src/components/ui/` — Reusable UI primitives, barrel-exported via `index.ts`
+- `src/components/admin/` — Admin-specific components (dashboard, nav, modals, sheet, table, stats, controls, status badge), barrel-exported via `index.ts`
+- `src/components/ui/` — Reusable UI primitives (form fields, toast, animations), barrel-exported via `index.ts`
 - `src/components/ticket/` — Ticket SVG rendering and visual components (for post-registration shareable tickets)
-- `src/constants/` — Static data (agenda, jury, sponsors, prizes, FAQ, site config, form options), barrel-exported
+- `src/constants/` — Static data (agenda, jury, sponsors, prizes, FAQ, site config, form options, registration status), barrel-exported
 - `src/lib/` — Utilities (`cn` helper, ticket helpers), Zod schemas, types; barrel-exported via `index.ts`
-- `src/hooks/` — Custom hooks (tilt, scroll, clipboard, ticket download, live count, decrypt text); barrel-exported
+- `src/hooks/` — Custom hooks (tilt, scroll, clipboard, ticket download, live count, decrypt text, toast, in-view, admin registrations); barrel-exported
 
 ### Data flow
 
@@ -106,6 +114,16 @@ Flat config (`eslint.config.mjs`): next/core-web-vitals + next/typescript + pret
 
 - Static event data belongs in `src/constants/`. Types for data shapes live in `src/lib/types.ts`.
 - Event-specific values (dates, names, copy) go in `siteConfig` — don't hardcode them in components.
+
+### Component Organization
+
+- **Route groups**: Public pages go in `(site)/`, admin pages go in `(admin)/`. Never mix them.
+- **Nav & Footer**: These live in the `(site)/layout.tsx`. Never import `Nav` or `Footer` directly in page content components — they are provided by the layout.
+- **Views vs Sections**: Full page content components belong in `src/components/views/`. Landing page sections belong in `src/components/sections/`.
+- **Admin components**: All admin-specific UI belongs in `src/components/admin/`. Extract inline modals, sheets, and panels into separate component files.
+- **Component size**: Keep components under ~200 lines. When a component grows larger, split UI into sub-components and logic into custom hooks.
+- **Hook extraction**: When a component has 5+ `useState` calls or complex logic (debouncing, data fetching, pagination), extract that logic into a custom hook in `src/hooks/`.
+- **Reusable UI**: Shared patterns (toast, modal, badges) belong in `src/components/ui/`. Don't inline them in page components.
 
 ### API Routes
 

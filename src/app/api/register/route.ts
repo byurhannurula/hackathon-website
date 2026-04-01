@@ -16,10 +16,7 @@ const registrationSchema = step1Schema.merge(step2Schema).merge(step3Schema);
 export async function POST(req: NextRequest) {
   try {
     if (!(await isRegistrationOpen())) {
-      return NextResponse.json(
-        { ok: false, error: "Регистрацията е затворена." },
-        { status: 403 }
-      );
+      return NextResponse.json({ ok: false, error: "Регистрацията е затворена." }, { status: 403 });
     }
 
     const raw = await req.json();

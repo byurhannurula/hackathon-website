@@ -23,11 +23,11 @@ export async function verifyAdminToken(token: string, secret: string): Promise<b
   const password = process.env.ADMIN_PASSWORD;
   if (!password || !secret) return false;
   const expected = await computeAdminToken(password, secret);
-  // Constant-time comparison
-  if (token.length !== expected.length) return false;
-  let diff = 0;
-  for (let i = 0; i < token.length; i++) {
-    diff |= token.charCodeAt(i) ^ expected.charCodeAt(i);
+  // Constant-time comparison — always iterate max length to prevent timing leaks
+  const len = Math.max(token.length, expected.length);
+  let diff = token.length ^ expected.length;
+  for (let i = 0; i < len; i++) {
+    diff |= (token.charCodeAt(i) || 0) ^ (expected.charCodeAt(i) || 0);
   }
   return diff === 0;
 }

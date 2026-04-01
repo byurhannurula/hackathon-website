@@ -107,7 +107,6 @@ export default function RootLayout({
         {children}
         <ScrollToTop />
         <SpeedInsights />
-
         <AnalyticsScript />
       </body>
     </html>
