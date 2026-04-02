@@ -51,9 +51,7 @@ export async function GET() {
   }
 
   const header = COLUMNS.join(",");
-  const rows = (data || []).map((row) =>
-    COLUMNS.map((col) => escapeCsv(row[col])).join(",")
-  );
+  const rows = (data || []).map((row) => COLUMNS.map((col) => escapeCsv(row[col])).join(","));
   const csv = [header, ...rows].join("\n");
 
   return new NextResponse(csv, {

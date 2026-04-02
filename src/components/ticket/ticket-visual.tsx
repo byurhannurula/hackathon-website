@@ -90,11 +90,19 @@ export function TicketVisual({
       {/* Circular overlays to hide glare at left/right cutouts */}
       <div
         className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
-        style={{ top: "50%", left: "-7%", transform: "translateZ(0) translateY(-50%)" }}
+        style={{
+          top: "50%",
+          left: "-7%",
+          transform: "translateZ(0) translateY(-50%)",
+        }}
       />
       <div
         className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
-        style={{ top: "50%", left: "96%", transform: "translateZ(0) translateY(-50%)" }}
+        style={{
+          top: "50%",
+          left: "96%",
+          transform: "translateZ(0) translateY(-50%)",
+        }}
       />
 
       <TicketSVG />

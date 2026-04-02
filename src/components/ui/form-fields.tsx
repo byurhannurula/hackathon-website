@@ -3,9 +3,21 @@ import { cn } from "@/lib/utils";
 
 // ─── SIZES ──────────────────────────────────────────────────────────────────
 const sizes = {
-  sm: { input: "py-2.5 px-3.5 text-xs", label: "text-[9px] mb-1.5", button: "py-2.5 px-5 text-sm" },
-  md: { input: "py-3 px-4 text-sm", label: "text-[10px] mb-2", button: "py-3.5 px-7 text-base" },
-  lg: { input: "py-4 px-5 text-sm", label: "text-[10px] mb-2", button: "py-5 px-9 text-[22px]" },
+  sm: {
+    input: "py-2.5 px-3.5 text-xs",
+    label: "text-[9px] mb-1.5",
+    button: "py-2.5 px-5 text-sm",
+  },
+  md: {
+    input: "py-3 px-4 text-sm",
+    label: "text-[10px] mb-2",
+    button: "py-3.5 px-7 text-base",
+  },
+  lg: {
+    input: "py-4 px-5 text-sm",
+    label: "text-[10px] mb-2",
+    button: "py-5 px-9 text-[22px]",
+  },
 } as const;
 
 export type FieldSize = keyof typeof sizes;

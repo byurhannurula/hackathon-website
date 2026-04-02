@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import Link from "next/link";
 
-import type { Registration, RegistrationStatus } from "@/lib/types";
+import type { Registration, RegistrationStatus, UserAnalytics } from "@/lib/types";
 
 // ─── Types ──────────────────────────────────────────────────
 
@@ -49,7 +49,12 @@ const STATUS_COLORS: Record<RegistrationStatus, string> = {
 export function AdminDashboard() {
   const router = useRouter();
   const [data, setData] = useState<Registration[]>([]);
-  const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, approved: 0, rejected: 0 });
+  const [stats, setStats] = useState<Stats>({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  });
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     pageSize: 50,
@@ -64,7 +69,10 @@ export function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "ok" | "error" } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "ok" | "error";
+  } | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const debounceRef = useRef<NodeJS.Timeout>(null);
   const [regOpen, setRegOpen] = useState(true);
@@ -490,9 +498,21 @@ export function AdminDashboard() {
           {(
             [
               { label: "Общо", value: stats.total, cls: "text-white" },
-              { label: "Изчакващи", value: stats.pending, cls: "text-white/70" },
-              { label: "Одобрени", value: stats.approved, cls: "text-emerald-400" },
-              { label: "Отхвърлени", value: stats.rejected, cls: "text-red-400" },
+              {
+                label: "Изчакващи",
+                value: stats.pending,
+                cls: "text-white/70",
+              },
+              {
+                label: "Одобрени",
+                value: stats.approved,
+                cls: "text-emerald-400",
+              },
+              {
+                label: "Отхвърлени",
+                value: stats.rejected,
+                cls: "text-red-400",
+              },
             ] as const
           ).map((s) => (
             <div key={s.label} className="border border-white/7 bg-card p-4">
@@ -555,7 +575,10 @@ export function AdminDashboard() {
                       { field: "full_name" as SortField, label: "Име" },
                       { field: null, label: "Имейл" },
                       { field: null, label: "Роля" },
-                      { field: "registration_status" as SortField, label: "Статус" },
+                      {
+                        field: "registration_status" as SortField,
+                        label: "Статус",
+                      },
                       { field: "created_at" as SortField, label: "Дата" },
                     ].map((col, i) => (
                       <th
@@ -685,6 +708,7 @@ export function AdminDashboard() {
           />
           <aside className="fixed top-0 right-0 z-50 h-full w-full max-w-[520px] bg-bg border-l border-white/7 overflow-y-auto animate-[slideIn_0.25s_ease]">
             <SheetContent
+              key={selectedReg.id}
               reg={selectedReg}
               onClose={() => setSelectedReg(null)}
               onUpdateStatus={requestStatusChange}
@@ -700,6 +724,8 @@ export function AdminDashboard() {
 
 // ─── Sheet Content ──────────────────────────────────────────
 
+type SheetTab = "details" | "analytics";
+
 function SheetContent({
   reg,
   onClose,
@@ -713,7 +739,40 @@ function SheetContent({
   isLoading: boolean;
   fmtDate: (iso: string) => string;
 }) {
+  const [tab, setTab] = useState<SheetTab>("details");
+  const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState(false);
+  const analyticsCache = useRef<Record<string, UserAnalytics>>({});
+
+  // Lazy fetch analytics only when tab is opened
+  useEffect(() => {
+    if (tab !== "analytics") return;
+    if (analyticsCache.current[reg.ticket_id]) {
+      setAnalytics(analyticsCache.current[reg.ticket_id]);
+      return;
+    }
+
+    setAnalyticsLoading(true);
+    setAnalyticsError(false);
+    fetch(`/api/kcah-ia-esur/analytics/${reg.ticket_id}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.ok) {
+          setAnalytics(json.data);
+          analyticsCache.current[reg.ticket_id] = json.data;
+        } else {
+          setAnalyticsError(true);
+        }
+      })
+      .catch(() => setAnalyticsError(true))
+      .finally(() => setAnalyticsLoading(false));
+  }, [tab, reg.ticket_id]);
+
   const fields: [string, string | null][] = [
+    ["Имейл", reg.email],
+    ["Роля", reg.role],
+    ["Дата на регистрация", fmtDate(reg.created_at)],
     ["Телефон", reg.phone],
     ["Възраст", reg.age],
     ["Организация", reg.organization],
@@ -750,60 +809,113 @@ function SheetContent({
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex border-b border-white/7 px-6">
+        {(
+          [
+            { key: "details", label: "Детайли" },
+            { key: "analytics", label: "Анализ" },
+          ] as const
+        ).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`font-mono text-[11px] tracking-[0.12em] uppercase px-4 py-3 cursor-pointer transition-colors border-b-2 -mb-px ${
+              tab === t.key
+                ? "text-acid border-acid"
+                : "text-white/40 border-transparent hover:text-white/60"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* Sheet body */}
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-        {/* Contact */}
-        <div className="flex items-center gap-4 font-mono text-[13px]">
-          <span className="text-white/50">{reg.email}</span>
-          <span className="text-white/20">·</span>
-          <span className="text-white/40">{reg.role}</span>
-          <span className="text-white/20">·</span>
-          <span className="text-white/30">{fmtDate(reg.created_at)}</span>
-        </div>
-
-        {/* Info grid */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-5">
-          {fields.map(
-            ([label, value]) =>
-              value && (
-                <div key={label}>
-                  <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
-                    {label}
-                  </div>
-                  <div className="font-mono text-[14px] text-white/85">{value}</div>
-                </div>
-              )
-          )}
-        </div>
-
-        {/* Motivation */}
-        <div>
-          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-            Мотивация
-          </div>
-          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
-            {reg.motivation}
-          </div>
-        </div>
-
-        {/* Expectations */}
-        <div>
-          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-            Очаквания
-          </div>
-          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
-            {reg.expectations}
-          </div>
-        </div>
-
-        {/* Notes */}
-        {reg.notes && (
-          <div>
-            <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-              Бележки
+        {tab === "details" ? (
+          <>
+            {/* Info grid */}
+            <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+              {fields.map(
+                ([label, value]) =>
+                  value && (
+                    <div key={label}>
+                      <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                        {label}
+                      </div>
+                      <div className="font-mono text-[14px] text-white/85 break-words">{value}</div>
+                    </div>
+                  )
+              )}
             </div>
-            <div className="font-mono text-[13px] text-white/60 leading-[1.8]">{reg.notes}</div>
-          </div>
+
+            {/* Motivation */}
+            <div>
+              <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+                Мотивация
+              </div>
+              <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5 break-words">
+                {reg.motivation}
+              </div>
+            </div>
+
+            {/* Expectations */}
+            <div>
+              <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+                Очаквания
+              </div>
+              <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5 break-words">
+                {reg.expectations}
+              </div>
+            </div>
+
+            {/* Notes */}
+            {reg.notes && (
+              <div>
+                <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+                  Бележки
+                </div>
+                <div className="font-mono text-[13px] text-white/60 leading-[1.8] break-words">
+                  {reg.notes}
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          /* Analytics tab */
+          <>
+            {analyticsLoading ? (
+              <div className="grid grid-cols-2 gap-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[72px] bg-white/2 border border-white/5 animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : analyticsError ? (
+              <div className="font-mono text-[13px] text-white/30 py-8 text-center">
+                Грешка при зареждане на данните
+              </div>
+            ) : analytics ? (
+              <div className="grid grid-cols-2 gap-3">
+                <AnalyticCard label="Преглеждания" value={analytics.pageViews} />
+                <AnalyticCard label="Споделяния" value={analytics.shares} />
+                <AnalyticCard label="Изтегляния" value={analytics.downloads} />
+                <AnalyticCard
+                  label="Easter Eggs"
+                  value={
+                    [analytics.consoleSecret && "Конзола", analytics.konamiCode && "Konami"]
+                      .filter(Boolean)
+                      .join(", ") || "—"
+                  }
+                />
+              </div>
+            ) : (
+              <div className="font-mono text-[13px] text-white/30 py-8 text-center">Няма данни</div>
+            )}
+          </>
         )}
       </div>
 
@@ -828,6 +940,17 @@ function SheetContent({
           </button>
         )}
       </div>
+    </div>
+  );
+}
+
+// ─── Analytic Card ──────────────────────────────────────────
+
+function AnalyticCard({ label, value }: { label: string; value: number | string }) {
+  return (
+    <div className="border border-white/7 bg-white/2 p-3">
+      <div className="font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase">{label}</div>
+      <div className="font-display text-xl mt-1 text-white/85">{value}</div>
     </div>
   );
 }

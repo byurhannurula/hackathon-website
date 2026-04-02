@@ -153,7 +153,10 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             if (!res.ok) return { ok: false, ...json };
             return json;
           })
-          .catch(() => ({ ok: false, error: "Грешка в мрежата. Моля, опитайте отново." })),
+          .catch(() => ({
+            ok: false,
+            error: "Грешка в мрежата. Моля, опитайте отново.",
+          })),
         new Promise((resolve) => setTimeout(resolve, 1500)),
       ]);
 

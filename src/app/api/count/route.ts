@@ -24,7 +24,9 @@ export async function GET() {
       { count: data ?? 0 },
       {
         status: 200,
-        headers: { "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60" },
+        headers: {
+          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+        },
       }
     );
   } catch (err) {

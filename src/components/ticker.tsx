@@ -9,7 +9,9 @@ export const Ticker = ({ dir = 1 }: TickerProps) => (
   <div className="overflow-hidden border-y border-white/10 py-3 relative">
     <div
       className="absolute left-0 top-0 bottom-0 w-15 z-1 pointer-events-none"
-      style={{ background: "linear-gradient(to right, var(--bg), transparent)" }}
+      style={{
+        background: "linear-gradient(to right, var(--bg), transparent)",
+      }}
     />
     <div
       className="absolute right-0 top-0 bottom-0 w-15 z-1 pointer-events-none"

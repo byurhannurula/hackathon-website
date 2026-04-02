@@ -38,7 +38,12 @@ export async function GET(request: Request) {
     const id = searchParams.get("id");
 
     // Look up ticket from Supabase by UUID
-    let data: { name: string; handle: string; avatarUrl: string; ticketNum: number } | null = null;
+    let data: {
+      name: string;
+      handle: string;
+      avatarUrl: string;
+      ticketNum: number;
+    } | null = null;
     if (id) {
       const sbUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const sbKey = process.env.SUPABASE_PRIVATE_KEY;
@@ -232,7 +237,12 @@ export async function GET(request: Request) {
           width: 1200,
           height: 630,
           fonts: [
-            { name: "Syne", data: syneData, style: "normal" as const, weight: 700 as const },
+            {
+              name: "Syne",
+              data: syneData,
+              style: "normal" as const,
+              weight: 700 as const,
+            },
             { name: "Bebas Neue", data: bebasData, style: "normal" as const },
             { name: "Space Mono", data: monoData, style: "normal" as const },
           ],

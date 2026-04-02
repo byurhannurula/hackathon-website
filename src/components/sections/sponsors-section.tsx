@@ -73,7 +73,9 @@ function SponsorCard({
               width: logoSize.w,
               height: logoSize.h,
               ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
-              ...(sponsor.logoScale && { transform: `scale(${sponsor.logoScale})` }),
+              ...(sponsor.logoScale && {
+                transform: `scale(${sponsor.logoScale})`,
+              }),
             }}
           >
             <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
@@ -150,7 +152,9 @@ export function SponsorsSection() {
             "mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5 transition-all duration-700 ease-out",
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}
-          style={{ transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms" }}
+          style={{
+            transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms",
+          }}
         >
           <div>
             <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>

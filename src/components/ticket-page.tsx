@@ -72,7 +72,9 @@ export function TicketPage({ data }: TicketPageProps) {
               <>
                 ОЧАКВАЙ ОТГОВОР
                 <br />
-                <span className="text-[clamp(16px,4vw,28px)] text-white/60">ПО ИМЕЙЛ ДО 48 ЧАСА</span>
+                <span className="text-[clamp(16px,4vw,28px)] text-white/60">
+                  ПО ИМЕЙЛ ДО 48 ЧАСА
+                </span>
               </>
             ) : (
               <>

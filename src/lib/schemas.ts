@@ -32,8 +32,12 @@ export const step3Schema = z.object({
   teamName: z.string().max(100, "Максимум 100 символа").optional(),
   wantChallenge: z.string().min(1, "Изберете опция").max(50, "Невалидна стойност"),
   volunteerHelp: z.string().min(1, "Изберете опция").max(50, "Невалидна стойност"),
-  agreeRandomTeams: z.literal(true, { message: "Трябва да приемете правилата за участие" }),
-  gdprConsent: z.literal(true, { message: "Трябва да дадете съгласие за обработка на данните" }),
+  agreeRandomTeams: z.literal(true, {
+    message: "Трябва да приемете правилата за участие",
+  }),
+  gdprConsent: z.literal(true, {
+    message: "Трябва да дадете съгласие за обработка на данните",
+  }),
   registrationNotGuaranteed: z.literal(true, {
     message: "Трябва да потвърдите, че разбирате условието",
   }),
