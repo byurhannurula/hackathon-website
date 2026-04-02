@@ -58,6 +58,16 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Cache OG images at edge for 7 days — critical for Twitter/X card rendering
+        source: "/api/og",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
         source: "/api/:path*",
         headers: [
           {

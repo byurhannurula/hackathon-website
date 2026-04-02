@@ -39,9 +39,9 @@ const STATUS_LABELS: Record<RegistrationStatus, string> = {
 };
 
 const STATUS_COLORS: Record<RegistrationStatus, string> = {
-  pending: "bg-white/10 text-white/70",
-  approved: "bg-emerald-500/15 text-emerald-400",
-  rejected: "bg-red-500/15 text-red-400",
+  pending: "bg-white/12 text-white/80",
+  approved: "bg-emerald-500/20 text-emerald-400",
+  rejected: "bg-red-500/20 text-red-400",
 };
 
 // ─── Main Component ─────────────────────────────────────────
@@ -274,7 +274,7 @@ export function AdminDashboard() {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-70 px-6 py-4 font-mono text-[13px] border shadow-lg ${
+          className={`fixed bottom-6 right-6 z-70 px-6 py-4 font-mono text-sm border shadow-lg ${
             toast.type === "ok"
               ? "bg-emerald-950 border-emerald-500/40 text-emerald-400"
               : "bg-red-950 border-red-500/40 text-red-400"
@@ -298,31 +298,31 @@ export function AdminDashboard() {
               aria-modal="true"
               className="bg-card border border-white/10 p-6 max-w-[400px] w-full animate-[fadeUp_0.2s_ease]"
             >
-              <div id="confirm-dialog-title" className="font-display text-xl mb-2">
+              <div id="confirm-dialog-title" className="font-display text-2xl mb-2">
                 {confirmAction.status === "approved" ? "ОДОБРЯВАНЕ" : "ОТХВЪРЛЯНЕ"}
               </div>
-              <p className="font-mono text-[13px] text-white/60 leading-[1.7] mb-2">
+              <p className="font-mono text-sm text-white/70 leading-[1.7] mb-2">
                 {confirmAction.status === "approved"
                   ? "Сигурен ли си, че искаш да одобриш"
                   : "Сигурен ли си, че искаш да отхвърлиш"}{" "}
                 <span className="text-white font-bold">{confirmAction.reg.full_name}</span>?
               </p>
-              <p className="font-mono text-[11px] text-white/40 mb-6">
+              <p className="font-mono text-[13px] text-white/50 mb-6">
                 Ще бъде изпратен имейл до {confirmAction.reg.email}
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setConfirmAction(null)}
-                  className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-2.5 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                  className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                 >
                   Отказ
                 </button>
                 <button
                   onClick={confirmStatusChange}
-                  className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-2.5 cursor-pointer transition-all ${
+                  className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
                     confirmAction.status === "approved"
-                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
-                      : "bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25"
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
+                      : "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
                   }`}
                 >
                   {confirmAction.status === "approved" ? "Одобри" : "Отхвърли"}
@@ -355,14 +355,14 @@ export function AdminDashboard() {
                   >
                     {regOpen ? "ЗАТВАРЯНЕ НА РЕГИСТРАЦИЯТА" : "ОТВАРЯНЕ НА РЕГИСТРАЦИЯТА"}
                   </div>
-                  <div className="font-mono text-[13px] text-white/60 leading-[1.8] mb-4 space-y-2">
+                  <div className="font-mono text-sm text-white/70 leading-[1.8] mb-4 space-y-2">
                     {regOpen ? (
                       <>
                         <p>
                           Това ще <span className="text-red-400 font-bold">блокира</span> всички
                           нови регистрации:
                         </p>
-                        <ul className="list-disc list-inside text-white/45 space-y-1 pl-1">
+                        <ul className="list-disc list-inside text-white/55 space-y-1 pl-1">
                           <li>
                             Формата за регистрация ще покаже &quot;Регистрацията е затворена&quot;
                           </li>
@@ -376,7 +376,7 @@ export function AdminDashboard() {
                           Това ще <span className="text-emerald-400 font-bold">отвори</span>{" "}
                           регистрациите отново:
                         </p>
-                        <ul className="list-disc list-inside text-white/45 space-y-1 pl-1">
+                        <ul className="list-disc list-inside text-white/55 space-y-1 pl-1">
                           <li>Потребителите ще могат да се регистрират</li>
                           <li>Формата и бутоните ще бъдат активни на сайта</li>
                           <li>API-то ще приема нови заявки</li>
@@ -384,22 +384,22 @@ export function AdminDashboard() {
                       </>
                     )}
                   </div>
-                  <p className="font-mono text-[11px] text-white/30 mb-6">
+                  <p className="font-mono text-[13px] text-white/40 mb-6">
                     Промяната влиза в сила веднага за всички потребители.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setRegToggleStep(0)}
-                      className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                     >
                       Отказ
                     </button>
                     <button
                       onClick={() => setRegToggleStep(2)}
-                      className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
+                      className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
                         regOpen
-                          ? "bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25"
-                          : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
+                          ? "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
+                          : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
                       }`}
                     >
                       Продължи →
@@ -413,28 +413,28 @@ export function AdminDashboard() {
                   >
                     СИГУРЕН ЛИ СИ?
                   </div>
-                  <p className="font-mono text-[14px] text-white/70 leading-[1.8] mb-2">
+                  <p className="font-mono text-[15px] text-white/80 leading-[1.8] mb-2">
                     {regOpen
                       ? "Потвърди, че искаш да ЗАТВОРИШ регистрацията."
                       : "Потвърди, че искаш да ОТВОРИШ регистрацията."}
                   </p>
-                  <p className="font-mono text-[11px] text-white/30 mb-6">
+                  <p className="font-mono text-[13px] text-white/40 mb-6">
                     Тази стъпка не може да бъде отменена автоматично — ще трябва ръчно да превключиш
                     обратно.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setRegToggleStep(1)}
-                      className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                     >
                       ← Назад
                     </button>
                     <button
                       onClick={confirmAndToggleRegistration}
-                      className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all font-bold ${
+                      className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all font-bold ${
                         regOpen
-                          ? "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
-                          : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
+                          ? "bg-red-500/25 text-red-400 border border-red-500/40 hover:bg-red-500/35"
+                          : "bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/35"
                       }`}
                     >
                       {regOpen ? "ЗАТВОРИ РЕГИСТРАЦИЯТА" : "ОТВОРИ РЕГИСТРАЦИЯТА"}
@@ -453,11 +453,17 @@ export function AdminDashboard() {
           <span className="font-display text-xl">
             <span className="text-acid">RUSE</span> AI HACK
           </span>
-          <span className="font-mono text-[10px] text-white/30 ml-3 tracking-[0.14em]">ADMIN</span>
+          <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">ADMIN</span>
         </Link>
         <div className="flex items-center gap-5">
+          <Link
+            href="/kcah-ia-esur/checkin"
+            className="font-mono text-[13px] tracking-[0.08em] uppercase text-acid/70 hover:text-acid transition-colors no-underline"
+          >
+            Check-in
+          </Link>
           <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[10px] tracking-[0.1em] text-white/40 uppercase">
+            <span className="font-mono text-[12px] tracking-[0.1em] text-white/50 uppercase">
               Регистрация
             </span>
             <button
@@ -476,7 +482,7 @@ export function AdminDashboard() {
               />
             </button>
             <span
-              className={`font-mono text-[10px] tracking-widest uppercase ${
+              className={`font-mono text-[12px] tracking-widest uppercase font-bold ${
                 regOpen ? "text-emerald-400" : "text-red-400"
               }`}
             >
@@ -485,7 +491,7 @@ export function AdminDashboard() {
           </div>
           <button
             onClick={handleLogout}
-            className="font-mono text-[11px] text-white/40 hover:text-white transition-colors cursor-pointer"
+            className="font-mono text-[13px] text-white/50 hover:text-white transition-colors cursor-pointer"
           >
             Изход
           </button>
@@ -515,11 +521,11 @@ export function AdminDashboard() {
               },
             ] as const
           ).map((s) => (
-            <div key={s.label} className="border border-white/7 bg-card p-4">
-              <div className="font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase">
+            <div key={s.label} className="border border-white/10 bg-card p-5">
+              <div className="font-mono text-[12px] tracking-[0.14em] text-white/55 uppercase">
                 {s.label}
               </div>
-              <div className={`font-display text-3xl mt-1 ${s.cls}`}>{s.value}</div>
+              <div className={`font-display text-4xl mt-1 ${s.cls}`}>{s.value}</div>
             </div>
           ))}
         </div>
@@ -531,12 +537,12 @@ export function AdminDashboard() {
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder="Търси по име или имейл..."
-            className="flex-1 py-2.5 px-3.5 text-xs bg-white/3 border border-white/12 text-white font-mono outline-none transition-colors duration-200 focus:border-acid placeholder:text-white/20"
+            className="flex-1 py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors duration-200 focus:border-acid placeholder:text-white/30"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2.5 px-3.5 text-xs bg-white/3 border border-white/12 text-white font-mono outline-none cursor-pointer"
+            className="py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none cursor-pointer"
           >
             <option value="all">Всички статуси</option>
             <option value="pending">Изчакващи</option>
@@ -546,7 +552,7 @@ export function AdminDashboard() {
           <a
             href="/api/kcah-ia-esur/export-csv"
             download
-            className="py-2.5 px-4 text-xs bg-white/3 border border-white/12 text-white/60 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/30 no-underline whitespace-nowrap text-center"
+            className="py-3 px-5 text-sm bg-white/4 border border-white/15 text-white/70 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/30 no-underline whitespace-nowrap text-center"
           >
             ↓ CSV Export
           </a>
@@ -560,7 +566,7 @@ export function AdminDashboard() {
             ))}
           </div>
         ) : data.length === 0 ? (
-          <div className="text-center py-20 font-mono text-sm text-white/30">
+          <div className="text-center py-20 font-mono text-base text-white/40">
             Няма намерени регистрации
           </div>
         ) : (
@@ -584,7 +590,7 @@ export function AdminDashboard() {
                       <th
                         key={i}
                         onClick={col.field ? () => handleSort(col.field!) : undefined}
-                        className={`font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase px-4 py-3 ${
+                        className={`font-mono text-[12px] tracking-[0.12em] text-white/55 uppercase px-4 py-3.5 ${
                           col.field ? "cursor-pointer hover:text-acid transition-colors" : ""
                         } ${sort === col.field ? "text-acid" : ""}`}
                       >
@@ -603,22 +609,18 @@ export function AdminDashboard() {
                         selectedReg?.id === reg.id ? "bg-acid/3" : "hover:bg-white/3"
                       }`}
                     >
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-acid/70">
+                      <td className="px-4 py-4 font-mono text-[13px] text-acid/80">
                         {String(reg.ticket_number).padStart(4, "0")}
                       </td>
-                      <td className="px-4 py-3.5 font-body text-[14px] font-bold">
+                      <td className="px-4 py-4 font-body text-[15px] font-bold text-white/95">
                         {reg.full_name}
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/50">
-                        {reg.email}
-                      </td>
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/40">
-                        {reg.role}
-                      </td>
-                      <td className="px-4 py-3.5">
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/65">{reg.email}</td>
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/55">{reg.role}</td>
+                      <td className="px-4 py-4">
                         <StatusBadge status={reg.registration_status} />
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-[11px] text-white/30">
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/45">
                         {fmtDate(reg.created_at)}
                       </td>
                     </tr>
@@ -640,14 +642,16 @@ export function AdminDashboard() {
                   <div className="p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="font-body text-[15px] font-bold">{reg.full_name}</div>
-                        <div className="font-mono text-[12px] text-white/40 mt-0.5">
+                        <div className="font-body text-base font-bold text-white/95">
+                          {reg.full_name}
+                        </div>
+                        <div className="font-mono text-[13px] text-white/55 mt-0.5">
                           {reg.email}
                         </div>
                       </div>
                       <StatusBadge status={reg.registration_status} />
                     </div>
-                    <div className="flex items-center gap-3 mt-2 font-mono text-[11px] text-white/30">
+                    <div className="flex items-center gap-3 mt-2 font-mono text-[13px] text-white/45">
                       <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
                       <span>{reg.role}</span>
                       <span>{fmtDate(reg.created_at)}</span>
@@ -660,7 +664,7 @@ export function AdminDashboard() {
             {/* Pagination */}
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
-                <div className="font-mono text-[11px] text-white/30">
+                <div className="font-mono text-[13px] text-white/45">
                   {(page - 1) * pagination.pageSize + 1}–
                   {Math.min(page * pagination.pageSize, pagination.total)} от {pagination.total}
                 </div>
@@ -668,7 +672,7 @@ export function AdminDashboard() {
                   <button
                     onClick={() => goToPage(page - 1)}
                     disabled={page <= 1}
-                    className="font-mono text-[11px] px-3 py-1.5 border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="font-mono text-[13px] px-4 py-2 border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
                   >
                     ← Назад
                   </button>
@@ -676,10 +680,10 @@ export function AdminDashboard() {
                     <button
                       key={p}
                       onClick={() => goToPage(p)}
-                      className={`font-mono text-[11px] px-3 py-1.5 border transition-colors cursor-pointer ${
+                      className={`font-mono text-[13px] px-4 py-2 border transition-colors cursor-pointer ${
                         p === page
                           ? "border-acid/40 text-acid bg-acid/5"
-                          : "border-white/10 text-white/40 hover:text-white hover:border-white/20"
+                          : "border-white/15 text-white/50 hover:text-white hover:border-white/30"
                       }`}
                     >
                       {p}
@@ -688,7 +692,7 @@ export function AdminDashboard() {
                   <button
                     onClick={() => goToPage(page + 1)}
                     disabled={page >= pagination.totalPages}
-                    className="font-mono text-[11px] px-3 py-1.5 border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="font-mono text-[13px] px-4 py-2 border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
                   >
                     Напред →
                   </button>
@@ -714,6 +718,11 @@ export function AdminDashboard() {
               onUpdateStatus={requestStatusChange}
               isLoading={actionLoading === selectedReg.id}
               fmtDate={fmtDate}
+              onNotesUpdated={(reg, newNotes) => {
+                const updated = { ...reg, notes: newNotes || null };
+                setSelectedReg(updated);
+                setData((prev) => prev.map((r) => (r.id === reg.id ? updated : r)));
+              }}
             />
           </aside>
         </>
@@ -732,18 +741,24 @@ function SheetContent({
   onUpdateStatus,
   isLoading,
   fmtDate,
+  onNotesUpdated,
 }: {
   reg: Registration;
   onClose: () => void;
   onUpdateStatus: (reg: Registration, status: RegistrationStatus) => void;
   isLoading: boolean;
   fmtDate: (iso: string) => string;
+  onNotesUpdated: (reg: Registration, notes: string) => void;
 }) {
   const [tab, setTab] = useState<SheetTab>("details");
   const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [analyticsError, setAnalyticsError] = useState(false);
   const analyticsCache = useRef<Record<string, UserAnalytics>>({});
+  const [notes, setNotes] = useState(reg.notes ?? "");
+  const [notesSaving, setNotesSaving] = useState(false);
+  const [notesSaved, setNotesSaved] = useState(false);
+  const notesDirty = notes !== (reg.notes ?? "");
 
   // Lazy fetch analytics only when tab is opened
   useEffect(() => {
@@ -769,6 +784,27 @@ function SheetContent({
       .finally(() => setAnalyticsLoading(false));
   }, [tab, reg.ticket_id]);
 
+  async function saveNotes() {
+    setNotesSaving(true);
+    try {
+      const res = await fetch(`/api/kcah-ia-esur/registrations/${reg.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        onNotesUpdated(reg, notes);
+        setNotesSaved(true);
+        setTimeout(() => setNotesSaved(false), 2000);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setNotesSaving(false);
+    }
+  }
+
   const fields: [string, string | null][] = [
     ["Имейл", reg.email],
     ["Роля", reg.role],
@@ -793,9 +829,9 @@ function SheetContent({
       {/* Sheet header */}
       <div className="flex items-center justify-between px-6 py-5 border-b border-white/7">
         <div>
-          <div className="font-body text-lg font-bold">{reg.full_name}</div>
+          <div className="font-body text-xl font-bold text-white/95">{reg.full_name}</div>
           <div className="flex items-center gap-3 mt-1">
-            <span className="font-mono text-[12px] text-acid/70">
+            <span className="font-mono text-[14px] text-acid/80">
               #{String(reg.ticket_number).padStart(4, "0")}
             </span>
             <StatusBadge status={reg.registration_status} />
@@ -820,10 +856,10 @@ function SheetContent({
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`font-mono text-[11px] tracking-[0.12em] uppercase px-4 py-3 cursor-pointer transition-colors border-b-2 -mb-px ${
+            className={`font-mono text-[13px] tracking-[0.1em] uppercase px-5 py-3.5 cursor-pointer transition-colors border-b-2 -mb-px ${
               tab === t.key
                 ? "text-acid border-acid"
-                : "text-white/40 border-transparent hover:text-white/60"
+                : "text-white/50 border-transparent hover:text-white/70"
             }`}
           >
             {t.label}
@@ -841,10 +877,10 @@ function SheetContent({
                 ([label, value]) =>
                   value && (
                     <div key={label}>
-                      <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                      <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-1">
                         {label}
                       </div>
-                      <div className="font-mono text-[14px] text-white/85 break-words">{value}</div>
+                      <div className="font-mono text-[15px] text-white/90 break-words">{value}</div>
                     </div>
                   )
               )}
@@ -852,35 +888,54 @@ function SheetContent({
 
             {/* Motivation */}
             <div>
-              <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+              <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-2">
                 Мотивация
               </div>
-              <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5 break-words">
+              <div className="font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words">
                 {reg.motivation}
               </div>
             </div>
 
             {/* Expectations */}
             <div>
-              <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
+              <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-2">
                 Очаквания
               </div>
-              <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5 break-words">
+              <div className="font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words">
                 {reg.expectations}
               </div>
             </div>
 
-            {/* Notes */}
-            {reg.notes && (
-              <div>
-                <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-                  Бележки
+            {/* Notes (editable) */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest">
+                  Бележки <span className="text-white/20 normal-case">(само за админи)</span>
                 </div>
-                <div className="font-mono text-[13px] text-white/60 leading-[1.8] break-words">
-                  {reg.notes}
-                </div>
+                {notesSaved && (
+                  <span className="font-mono text-[12px] text-emerald-400 tracking-wide">
+                    Запазено ✓
+                  </span>
+                )}
               </div>
-            )}
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Добави бележка..."
+                rows={3}
+                maxLength={2000}
+                className="w-full font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words resize-y outline-none transition-colors focus:border-acid/30 placeholder:text-white/20"
+              />
+              {notesDirty && (
+                <button
+                  onClick={saveNotes}
+                  disabled={notesSaving}
+                  className="mt-2 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/10 text-acid border border-acid/25 px-5 py-2 cursor-pointer transition-all hover:bg-acid/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {notesSaving ? "..." : "Запази бележка"}
+                </button>
+              )}
+            </div>
           </>
         ) : (
           /* Analytics tab */
@@ -895,7 +950,7 @@ function SheetContent({
                 ))}
               </div>
             ) : analyticsError ? (
-              <div className="font-mono text-[13px] text-white/30 py-8 text-center">
+              <div className="font-mono text-sm text-white/40 py-8 text-center">
                 Грешка при зареждане на данните
               </div>
             ) : analytics ? (
@@ -913,7 +968,7 @@ function SheetContent({
                 />
               </div>
             ) : (
-              <div className="font-mono text-[13px] text-white/30 py-8 text-center">Няма данни</div>
+              <div className="font-mono text-sm text-white/40 py-8 text-center">Няма данни</div>
             )}
           </>
         )}
@@ -925,7 +980,7 @@ function SheetContent({
           <button
             onClick={() => onUpdateStatus(reg, "approved")}
             disabled={isLoading}
-            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-emerald-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[14px] tracking-[0.08em] uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-6 py-3 cursor-pointer transition-all hover:bg-emerald-500/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Одобри"}
           </button>
@@ -934,7 +989,7 @@ function SheetContent({
           <button
             onClick={() => onUpdateStatus(reg, "rejected")}
             disabled={isLoading}
-            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-red-500/15 text-red-400 border border-red-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[14px] tracking-[0.08em] uppercase bg-red-500/20 text-red-400 border border-red-500/40 px-6 py-3 cursor-pointer transition-all hover:bg-red-500/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Отхвърли"}
           </button>
@@ -948,9 +1003,9 @@ function SheetContent({
 
 function AnalyticCard({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="border border-white/7 bg-white/2 p-3">
-      <div className="font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase">{label}</div>
-      <div className="font-display text-xl mt-1 text-white/85">{value}</div>
+    <div className="border border-white/10 bg-white/3 p-4">
+      <div className="font-mono text-[11px] tracking-[0.14em] text-white/55 uppercase">{label}</div>
+      <div className="font-display text-2xl mt-1 text-white/90">{value}</div>
     </div>
   );
 }
@@ -960,7 +1015,7 @@ function AnalyticCard({ label, value }: { label: string; value: number | string 
 function StatusBadge({ status }: { status: RegistrationStatus }) {
   return (
     <span
-      className={`inline-block font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 ${STATUS_COLORS[status]}`}
+      className={`inline-block font-mono text-[12px] tracking-widest uppercase px-3 py-1 font-bold ${STATUS_COLORS[status]}`}
     >
       {STATUS_LABELS[status]}
     </span>

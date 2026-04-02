@@ -36,6 +36,39 @@ async function getEventPropertyCounts(
   });
 }
 
+export interface AggregateAnalytics {
+  totalPageViews: number;
+  totalShares: number;
+  totalDownloads: number;
+  totalKonamiCodes: number;
+  totalConsoleSecrets: number;
+  topTickets: Array<{ ticketId: string; views: number }>;
+}
+
+export async function getAggregateAnalytics(): Promise<AggregateAnalytics> {
+  const [pageViews, shares, downloads, konamiCodes, consoleSecrets] = await Promise.all([
+    getEventPropertyCounts("ticket_page_view", "props.ticketId"),
+    getEventPropertyCounts("ticket_share", "props.ticketId"),
+    getEventPropertyCounts("ticket_download", "props.ticketId"),
+    getEventPropertyCounts("konami_code_activated", "props.ticketId"),
+    getEventPropertyCounts("console_secret_found", "props.ticketId"),
+  ]);
+
+  const sumTotals = (arr: Array<{ total: number }>) => arr.reduce((s, r) => s + r.total, 0);
+
+  return {
+    totalPageViews: sumTotals(pageViews),
+    totalShares: sumTotals(shares),
+    totalDownloads: sumTotals(downloads),
+    totalKonamiCodes: sumTotals(konamiCodes),
+    totalConsoleSecrets: sumTotals(consoleSecrets),
+    topTickets: pageViews
+      .sort((a, b) => b.total - a.total)
+      .slice(0, 5)
+      .map((r) => ({ ticketId: r.value, views: r.total })),
+  };
+}
+
 export async function getUserAnalytics(ticketId: string): Promise<UserAnalytics> {
   const [pageViews, shares, downloads, consoleSecrets, konamiCodes] = await Promise.all([
     getEventPropertyCounts("ticket_page_view", "props.ticketId"),

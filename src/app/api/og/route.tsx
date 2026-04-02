@@ -3,6 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 
 import { siteConfig } from "@/constants";
 
+export const runtime = "edge";
+
 async function loadGoogleFont(font: string, text: string) {
   const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
@@ -24,7 +26,13 @@ async function fetchImageAsDataUri(url: string): Promise<string | null> {
     const res = await fetch(url);
     if (!res.ok) return null;
     const buf = await res.arrayBuffer();
-    const base64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+    const bytes = new Uint8Array(buf);
+    // Chunk to avoid max call-stack with spread on large buffers
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 8192) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+    }
+    const base64 = btoa(binary);
     const ct = res.headers.get("content-type") || "image/png";
     return `data:${ct};base64,${base64}`;
   } catch {
@@ -236,6 +244,9 @@ export async function GET(request: Request) {
         {
           width: 1200,
           height: 630,
+          headers: {
+            "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+          },
           fonts: [
             {
               name: "Syne",
@@ -563,6 +574,9 @@ export async function GET(request: Request) {
       {
         width: 1200,
         height: 630,
+        headers: {
+          "Cache-Control": "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
+        },
         fonts: [
           {
             name: "Syne",

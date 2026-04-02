@@ -56,7 +56,7 @@ export const adminLoginSchema = z.object({
 });
 
 export const updateStatusSchema = z.object({
-  registration_status: z.enum(["approved", "rejected"]),
+  registration_status: z.enum(["pending", "approved", "rejected"]).optional(),
   notes: z.string().max(2000).optional(),
 });
 
