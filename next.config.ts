@@ -18,7 +18,6 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "three"],
-    webpackBuildWorker: true,
   },
 
   // Security and caching headers

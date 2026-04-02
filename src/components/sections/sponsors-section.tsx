@@ -73,6 +73,7 @@ function SponsorCard({
               width: logoSize.w,
               height: logoSize.h,
               ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+              ...(sponsor.logoScale && { transform: `scale(${sponsor.logoScale})` }),
             }}
           >
             <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />

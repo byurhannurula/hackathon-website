@@ -74,6 +74,7 @@ export const SPONSORS: Sponsor[] = [
     href: "https://checkpoint.pub/",
     tier: "supporter",
   },
+
   {
     name: "Utro",
     logo: "/sponsors/utro.png",
@@ -81,7 +82,14 @@ export const SPONSORS: Sponsor[] = [
     tier: "media",
     invertLogo: true,
   },
+  {
+    name: "Ruse On The Danube",
+    logo: "/sponsors/ruse_on_the_danube_white.png",
+    href: "https://www.instagram.com/ruse.on.the.danube/",
+    tier: "media",
+    logoScale: 1.35,
+  },
 ];
 
 // Just names for ticker scroll
-export const SPONSOR_NAMES = SPONSORS.filter((s) => s.tier !== "media").map((s) => s.name);
+export const SPONSOR_NAMES = SPONSORS.map((s) => s.name);

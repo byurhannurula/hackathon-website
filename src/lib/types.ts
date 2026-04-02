@@ -74,4 +74,5 @@ export interface Sponsor {
   href?: string;
   tier: SponsorTier;
   invertLogo?: boolean;
+  logoScale?: number;
 }

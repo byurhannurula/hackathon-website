@@ -61,6 +61,7 @@ export function MediaPartnersSection() {
                       width: 120,
                       height: 45,
                       ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+                      ...(sponsor.logoScale && { transform: `scale(${sponsor.logoScale})` }),
                     }}
                   >
                     <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
