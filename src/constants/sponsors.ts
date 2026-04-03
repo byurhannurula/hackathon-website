@@ -28,7 +28,7 @@ export const SPONSORS: Sponsor[] = [
     name: "SumUp",
     label: "Технологичен партньор",
     logo: "/sponsors/sumup-logo-black.svg",
-    href: "https://www.sumup.com",
+    href: "https://www.sumup.com/bg-bg/",
     tier: "strategic",
   },
   {
