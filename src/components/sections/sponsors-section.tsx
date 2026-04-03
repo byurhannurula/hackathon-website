@@ -11,7 +11,7 @@ const TIER_ORDER: SponsorTier[] = ["general", "strategic", "partner", "supporter
 
 const TIER_GRID: Record<SponsorTier, string> = {
   general: "grid-cols-1",
-  strategic: "grid-cols-1 sm:grid-cols-2",
+  strategic: "grid-cols-1 sm:grid-cols-3",
   partner: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
   supporter: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
   media: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
