@@ -78,6 +78,14 @@ export function AdminDashboard() {
   const [regOpen, setRegOpen] = useState(true);
   const [regToggleLoading, setRegToggleLoading] = useState(false);
   const [regToggleStep, setRegToggleStep] = useState<0 | 1 | 2>(0); // 0=hidden, 1=first confirm, 2=final confirm
+  const [broadcastOpen, setBroadcastOpen] = useState(false);
+  const [broadcastSubject, setBroadcastSubject] = useState("");
+  const [broadcastBody, setBroadcastBody] = useState("");
+  const [broadcastFilter, setBroadcastFilter] = useState<
+    "all" | "approved" | "pending" | "rejected"
+  >("all");
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
+  const [broadcastConfirm, setBroadcastConfirm] = useState(false);
 
   // Fetch data
   const fetchData = useCallback(
@@ -132,7 +140,9 @@ export function AdminDashboard() {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        if (regToggleStep > 0) {
+        if (broadcastOpen) {
+          resetBroadcast();
+        } else if (regToggleStep > 0) {
           setRegToggleStep(0);
         } else if (confirmAction) {
           setConfirmAction(null);
@@ -143,7 +153,7 @@ export function AdminDashboard() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [confirmAction, regToggleStep]);
+  }, [confirmAction, regToggleStep, broadcastOpen]);
 
   // Debounced search
   function handleSearch(val: string) {
@@ -249,6 +259,43 @@ export function AdminDashboard() {
       showToast("Грешка при промяна", "error");
     } finally {
       setRegToggleLoading(false);
+    }
+  }
+
+  function resetBroadcast() {
+    setBroadcastOpen(false);
+    setBroadcastConfirm(false);
+    setBroadcastSubject("");
+    setBroadcastBody("");
+    setBroadcastFilter("all");
+  }
+
+  // Send broadcast email
+  async function sendBroadcast() {
+    setBroadcastLoading(true);
+    try {
+      const res = await fetch("/api/kcah-ia-esur/broadcast-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: broadcastSubject,
+          body: broadcastBody,
+          recipientFilter: broadcastFilter,
+        }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        showToast(`Изпратени: ${json.sent}/${json.total} имейла`, "ok");
+        resetBroadcast();
+      } else {
+        showToast(json.error || "Грешка при изпращане", "error");
+        setBroadcastConfirm(false);
+      }
+    } catch {
+      showToast("Грешка при изпращане", "error");
+      setBroadcastConfirm(false);
+    } finally {
+      setBroadcastLoading(false);
     }
   }
 
@@ -447,6 +494,212 @@ export function AdminDashboard() {
         </>
       )}
 
+      {/* Broadcast Email Modal */}
+      {broadcastOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-60 bg-black/80 backdrop-blur-[4px] animate-[fadeIn_0.15s_ease]"
+            onClick={resetBroadcast}
+          />
+          <div className="fixed inset-0 z-61 flex items-center justify-center p-4">
+            <div
+              role="dialog"
+              aria-labelledby="broadcast-dialog-title"
+              aria-modal="true"
+              className="bg-card border border-white/10 p-7 max-w-[560px] w-full animate-[fadeUp_0.2s_ease] shadow-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {!broadcastConfirm ? (
+                <>
+                  <div id="broadcast-dialog-title" className="font-display text-2xl mb-1 text-acid">
+                    ИЗПРАТИ СЪОБЩЕНИЕ
+                  </div>
+                  <p className="font-mono text-[13px] text-white/50 mb-6">
+                    Изпрати имейл до всички регистрирани потребители
+                  </p>
+
+                  {/* Recipient filter */}
+                  <div className="mb-4">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Получатели
+                    </label>
+                    <select
+                      value={broadcastFilter}
+                      onChange={(e) => setBroadcastFilter(e.target.value as typeof broadcastFilter)}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none cursor-pointer transition-colors focus:border-acid"
+                    >
+                      <option value="all" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Всички ({stats.total})
+                      </option>
+                      <option value="approved" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Одобрени ({stats.approved})
+                      </option>
+                      <option value="pending" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Изчакващи ({stats.pending})
+                      </option>
+                      <option value="rejected" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Отхвърлени ({stats.rejected})
+                      </option>
+                    </select>
+                  </div>
+
+                  {/* Subject */}
+                  <div className="mb-4">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Тема
+                    </label>
+                    <input
+                      type="text"
+                      value={broadcastSubject}
+                      onChange={(e) => setBroadcastSubject(e.target.value)}
+                      placeholder="Тема на имейла..."
+                      maxLength={200}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors focus:border-acid placeholder:text-white/30"
+                    />
+                  </div>
+
+                  {/* Body */}
+                  <div className="mb-6">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Съдържание
+                    </label>
+                    <textarea
+                      value={broadcastBody}
+                      onChange={(e) => setBroadcastBody(e.target.value)}
+                      placeholder="Текст на съобщението... (нов ред = нов параграф)"
+                      rows={6}
+                      maxLength={5000}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors focus:border-acid placeholder:text-white/30 resize-y leading-[1.8]"
+                    />
+                    <div className="font-mono text-[11px] text-white/25 mt-1 text-right">
+                      {broadcastBody.length}/5000
+                    </div>
+                  </div>
+
+                  {(() => {
+                    const count =
+                      broadcastFilter === "all"
+                        ? stats.total
+                        : broadcastFilter === "approved"
+                          ? stats.approved
+                          : broadcastFilter === "pending"
+                            ? stats.pending
+                            : stats.rejected;
+                    return count >= 80 ? (
+                      <div
+                        className={`font-mono text-[13px] p-3 mb-4 border ${
+                          count >= 100
+                            ? "bg-red-500/10 border-red-500/30 text-red-400"
+                            : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
+                        }`}
+                      >
+                        {count >= 100
+                          ? `⚠ ${count} получателя надвишава дневния лимит от 100 имейла в Resend. Част от имейлите няма да бъдат доставени.`
+                          : `⚠ ${count} получателя е близо до дневния лимит от 100 имейла в Resend.`}
+                      </div>
+                    ) : null;
+                  })()}
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={resetBroadcast}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
+                    >
+                      Отказ
+                    </button>
+                    <button
+                      onClick={() => setBroadcastConfirm(true)}
+                      disabled={!broadcastSubject.trim() || !broadcastBody.trim()}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/15 text-acid border border-acid/30 px-5 py-3 cursor-pointer transition-all hover:bg-acid/25 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Продължи →
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="font-display text-2xl mb-3 text-acid">ПОТВЪРЖДЕНИЕ</div>
+                  <div className="font-mono text-sm text-white/70 leading-[1.8] mb-2 space-y-2">
+                    <p>
+                      Ще изпратиш имейл до{" "}
+                      <span className="text-acid font-bold">
+                        {broadcastFilter === "all"
+                          ? stats.total
+                          : broadcastFilter === "approved"
+                            ? stats.approved
+                            : broadcastFilter === "pending"
+                              ? stats.pending
+                              : stats.rejected}
+                      </span>{" "}
+                      {broadcastFilter === "all"
+                        ? "потребителя"
+                        : broadcastFilter === "approved"
+                          ? "одобрени"
+                          : broadcastFilter === "pending"
+                            ? "изчакващи"
+                            : "отхвърлени"}
+                    </p>
+                  </div>
+
+                  <div className="bg-white/3 border border-white/8 p-4 mb-2">
+                    <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                      Тема
+                    </div>
+                    <div className="font-mono text-[14px] text-white/90">{broadcastSubject}</div>
+                  </div>
+
+                  <div className="bg-white/3 border border-white/8 p-4 mb-6">
+                    <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                      Съдържание
+                    </div>
+                    <div className="font-mono text-[13px] text-white/70 leading-[1.8] whitespace-pre-line">
+                      {broadcastBody}
+                    </div>
+                  </div>
+
+                  {(() => {
+                    const count =
+                      broadcastFilter === "all"
+                        ? stats.total
+                        : broadcastFilter === "approved"
+                          ? stats.approved
+                          : broadcastFilter === "pending"
+                            ? stats.pending
+                            : stats.rejected;
+                    return count >= 100 ? (
+                      <div className="font-mono text-[13px] p-3 mb-4 border bg-red-500/10 border-red-500/30 text-red-400">
+                        ⚠ {count} получателя надвишава дневния лимит от 100 имейла в Resend. Част от
+                        имейлите няма да бъдат доставени.
+                      </div>
+                    ) : null;
+                  })()}
+
+                  <p className="font-mono text-[13px] text-red-400/70 mb-6">
+                    Това действие не може да бъде отменено.
+                  </p>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setBroadcastConfirm(false)}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
+                    >
+                      ← Назад
+                    </button>
+                    <button
+                      onClick={sendBroadcast}
+                      disabled={broadcastLoading}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/20 text-acid border border-acid/40 px-5 py-3 cursor-pointer transition-all hover:bg-acid/30 font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {broadcastLoading ? "Изпращане..." : "ИЗПРАТИ"}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+
       {/* Header */}
       <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
         <Link href="/">
@@ -456,12 +709,6 @@ export function AdminDashboard() {
           <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">ADMIN</span>
         </Link>
         <div className="flex items-center gap-5">
-          <Link
-            href="/kcah-ia-esur/checkin"
-            className="font-mono text-[13px] tracking-[0.08em] uppercase text-acid/70 hover:text-acid transition-colors no-underline"
-          >
-            Check-in
-          </Link>
           <div className="flex items-center gap-2.5">
             <span className="font-mono text-[12px] tracking-[0.1em] text-white/50 uppercase">
               Регистрация
@@ -544,11 +791,25 @@ export function AdminDashboard() {
             onChange={(e) => setStatusFilter(e.target.value)}
             className="py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none cursor-pointer"
           >
-            <option value="all">Всички статуси</option>
-            <option value="pending">Изчакващи</option>
-            <option value="approved">Одобрени</option>
-            <option value="rejected">Отхвърлени</option>
+            <option value="all" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Всички статуси
+            </option>
+            <option value="pending" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Изчакващи
+            </option>
+            <option value="approved" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Одобрени
+            </option>
+            <option value="rejected" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Отхвърлени
+            </option>
           </select>
+          <button
+            onClick={() => setBroadcastOpen(true)}
+            className="py-3 px-5 text-sm bg-acid/5 border border-acid/20 text-acid/80 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/40 cursor-pointer whitespace-nowrap"
+          >
+            ✉ Съобщение
+          </button>
           <a
             href="/api/kcah-ia-esur/export-csv"
             download

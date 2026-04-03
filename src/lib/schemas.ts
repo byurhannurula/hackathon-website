@@ -68,3 +68,9 @@ export const sendEmailSchema = z.object({
   ticketNumber: z.number(),
   ticketId: z.string(),
 });
+
+export const broadcastEmailSchema = z.object({
+  subject: z.string().min(1, "Задължително поле").max(200, "Максимум 200 символа"),
+  body: z.string().min(1, "Задължително поле").max(5000, "Максимум 5000 символа"),
+  recipientFilter: z.enum(["all", "approved", "pending", "rejected"]),
+});
