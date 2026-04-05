@@ -4,6 +4,7 @@ import { Oswald, JetBrains_Mono, Playfair_Display, Manrope } from "next/font/goo
 import "./globals.css";
 
 import { cn } from "@/lib";
+import { siteConfig } from "@/constants";
 import { ScrollToTop } from "@/components/ui";
 import { AnalyticsScript } from "@/components/analytics";
 import { ConsoleGreeting } from "@/components/ui/console-greeting";
@@ -70,7 +71,7 @@ export const metadata: Metadata = {
         url: "/api/og",
         width: 1200,
         height: 630,
-        alt: "RUSE AI HACK '26 Hackathon",
+        alt: "RUSE AI HACK '26 Хакатон",
       },
     ],
   },
@@ -94,6 +95,48 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bg" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#feee04" />
+        {/* JSON-LD Event structured data — all values from static siteConfig, no user input */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Event",
+              name: `${siteConfig.event.name} ${siteConfig.event.year}`,
+              description: siteConfig.event.longDescription,
+              startDate: siteConfig.event.startDate,
+              endDate: siteConfig.event.endDate,
+              eventStatus: "https://schema.org/EventScheduled",
+              eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+              location: {
+                "@type": "Place",
+                name: siteConfig.event.locationBG,
+                address: {
+                  "@type": "PostalAddress",
+                  addressLocality: "Русе",
+                  addressCountry: "BG",
+                },
+              },
+              organizer: {
+                "@type": "Organization",
+                name: siteConfig.event.organizer,
+                url: siteConfig.contact.organizerUrl,
+              },
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "BGN",
+                availability: "https://schema.org/LimitedAvailability",
+                url: `${siteConfig.url}/register`,
+              },
+              image: `${siteConfig.url}/api/og`,
+              inLanguage: "bg",
+            }),
+          }}
+        />
+      </head>
       <body
         className={cn(
           oswald.variable,

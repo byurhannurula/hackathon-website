@@ -49,12 +49,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!data) {
     return {
-      title: `${ev.name} ${ev.year} Ticket`,
+      title: `${ev.name} ${ev.year} Билет`,
       description: `${ev.duration} AI хакатон в ${ev.locationBG}. Реални продукти, реални награди. ${ev.dateBG}.`,
     };
   }
 
-  const ticketTitle = `${data.name} — ${ev.name} ${ev.year} Ticket`;
+  const ticketTitle = `${data.name} — ${ev.name} ${ev.year} Билет`;
   const ticketDescription = `${data.name} участва в ${ev.name} ${ev.year} — ${ev.duration} AI хакатон в ${ev.locationBG}. Вземи и ти своя билет!`;
   const ogImage = `${base}/api/og?id=${slug}`;
 
