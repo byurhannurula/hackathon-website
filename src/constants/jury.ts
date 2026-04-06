@@ -46,7 +46,7 @@ export const MENTORS: Person[] = [
     name: "Стефан Атанасов",
     role: "Ментор",
     org: "Reward Gateway",
-    image: "",
+    image: "/avatars/stefan.png",
     linkedin: "https://www.linkedin.com/in/stefan-atanasov-95968a65/",
   },
   {
