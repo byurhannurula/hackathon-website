@@ -27,12 +27,12 @@ export const MENTORS: Person[] = [
     linkedin: "https://www.linkedin.com/in/stoyanov-veselin-8b083111/",
   },
   {
-    name: "Веселин Златев",
+    name: "Милко Янков",
     role: "Ментор",
     org: "Reward Gateway",
     image:
-      "https://media.licdn.com/dms/image/v2/C4D03AQGuSKSMVcMoLw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1563106292252?e=1776902400&v=beta&t=vU9DhPZ-epwxeTY_vpmDGBR7iIOwclPCAcYehV3rbw0",
-    linkedin: "https://www.linkedin.com/in/veselin-zlatev-bb87a8167/",
+      "https://media.licdn.com/dms/image/v2/D4D03AQFFsO3D8b_2iA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1698699852672?e=1776902400&v=beta&t=CpBPpghAQWHHwEgnSu56qa5i9j0UOLZZrQfXFi3J9QI",
+    linkedin: "https://www.linkedin.com/in/milkoyankov/ ",
   },
   {
     name: "Ангел Манчев",
