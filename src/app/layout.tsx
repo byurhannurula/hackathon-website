@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Oswald, JetBrains_Mono, Playfair_Display, Manrope } from "next/font/google";
 import "./globals.css";
@@ -34,6 +34,12 @@ const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
   variable: "--font-syne",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {

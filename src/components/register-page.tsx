@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,18 +58,21 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
   const form1 = useForm<Step1Data>({
     resolver: zodResolver(step1Schema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const form2 = useForm<Step2Data>({
     resolver: zodResolver(step2Schema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const form3 = useForm<Step3Data>({
     resolver: zodResolver(step3Schema),
-    mode: "onChange",
+    mode: "onSubmit",
   });
+
+  // Track whether user has attempted to submit each step (to show error hints)
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -87,20 +90,54 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   }, []);
 
   // Detect browser autofill: autofill doesn't trigger React onChange,
-  // so react-hook-form misses the values. Sync DOM values after a short delay.
+  // so react-hook-form misses the values. Sync DOM values after short delays.
+  const syncAutofill = useCallback(() => {
+    const fields = ["fullName", "email", "phone", "age", "organization"] as const;
+    fields.forEach((name) => {
+      const el = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+      if (el && el.value && !form1.getValues(name)) {
+        form1.setValue(name, el.value, {
+          shouldValidate: true,
+          shouldDirty: true,
+        });
+        if (name === "fullName") setFullName(el.value);
+      }
+    });
+  }, [form1]);
+
   useEffect(() => {
-    const syncAutofill = () => {
-      const fields = ["fullName", "email", "phone", "age"] as const;
-      fields.forEach((name) => {
-        const el = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-        if (el && el.value && !form1.getValues(name)) {
-          form1.setValue(name, el.value, { shouldValidate: true });
-        }
-      });
-    };
-    const timer = setTimeout(syncAutofill, 800);
-    return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const timers = [300, 800, 2000].map((ms) => setTimeout(syncAutofill, ms));
+    return () => timers.forEach(clearTimeout);
+  }, [syncAutofill]);
+
+  // Re-validate when fields become dirty without being touched (autofill signal)
+  const { dirtyFields: dirty1, touchedFields: touched1 } = form1.formState;
+  const { dirtyFields: dirty2, touchedFields: touched2 } = form2.formState;
+  const { dirtyFields: dirty3, touchedFields: touched3 } = form3.formState;
+
+  useEffect(() => {
+    const dirtyCount = Object.keys(dirty1).length;
+    const touchedCount = Object.keys(touched1).length;
+    if (dirtyCount > 0 && dirtyCount > touchedCount) {
+      form1.trigger();
+    }
+  }, [dirty1, touched1, form1]);
+
+  useEffect(() => {
+    const dirtyCount = Object.keys(dirty2).length;
+    const touchedCount = Object.keys(touched2).length;
+    if (dirtyCount > 0 && dirtyCount > touchedCount) {
+      form2.trigger();
+    }
+  }, [dirty2, touched2, form2]);
+
+  useEffect(() => {
+    const dirtyCount = Object.keys(dirty3).length;
+    const touchedCount = Object.keys(touched3).length;
+    if (dirtyCount > 0 && dirtyCount > touchedCount) {
+      form3.trigger();
+    }
+  }, [dirty3, touched3, form3]);
 
   const handleFetchAvatar = async () => {
     const handle = form1.getValues("handle")?.trim();
@@ -114,12 +151,14 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const onStep1Submit = (data: Step1Data) => {
     trackEvent("registration_step_complete", { step: 1 });
     setStep1Data(data);
+    setSubmitAttempted(false);
     setStep(2);
   };
 
   const onStep2Submit = (data: Step2Data) => {
     trackEvent("registration_step_complete", { step: 2 });
     setStep2Data(data);
+    setSubmitAttempted(false);
     setStep(3);
   };
 
@@ -194,7 +233,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   };
 
   const currentForm = step === 1 ? form1 : step === 2 ? form2 : form3;
-  const isValid = currentForm.formState.isValid;
+  const errorCount = Object.keys(currentForm.formState.errors).length;
 
   // ── LOADING STATUS CHECK ──
   if (regStatusLoading) {
@@ -329,7 +368,15 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
         {/* STEP 1: Personal & Professional */}
         {step === 1 && (
-          <form onSubmit={form1.handleSubmit(onStep1Submit)} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              setSubmitAttempted(true);
+              // Sync any autofilled values before validating
+              syncAutofill();
+              form1.handleSubmit(onStep1Submit)(e);
+            }}
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <FormLabel>Име и фамилия</FormLabel>
@@ -436,7 +483,13 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               </div>
             </div>
 
-            <FormButton type="submit" disabled={!isValid} size="md" className="w-full">
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mb-2">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
+            <FormButton type="submit" disabled={submitting} size="md" className="w-full">
               ПРОДЪЛЖИ →
             </FormButton>
           </form>
@@ -444,7 +497,13 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
         {/* STEP 2: AI & Motivation */}
         {step === 2 && (
-          <form onSubmit={form2.handleSubmit(onStep2Submit)} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              setSubmitAttempted(true);
+              form2.handleSubmit(onStep2Submit)(e);
+            }}
+            className="space-y-6"
+          >
             <div>
               <FormLabel>Опит от използване на AI за vibe coding</FormLabel>
               <FormSelect
@@ -491,23 +550,38 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div className="flex gap-3">
               <FormButton
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setSubmitAttempted(false);
+                  setStep(1);
+                }}
                 variant="outline"
                 size="md"
                 className="flex-1"
               >
                 ← НАЗАД
               </FormButton>
-              <FormButton type="submit" disabled={!isValid} size="md" className="flex-1">
+              <FormButton type="submit" disabled={submitting} size="md" className="flex-1">
                 ПРОДЪЛЖИ →
               </FormButton>
             </div>
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mt-3">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
           </form>
         )}
 
         {/* STEP 3: Project & Participation */}
         {step === 3 && (
-          <form onSubmit={form3.handleSubmit(onStep3Submit)} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              setSubmitAttempted(true);
+              form3.handleSubmit(onStep3Submit)(e);
+            }}
+            className="space-y-6"
+          >
             <div>
               <FormLabel>Имате ли избрана тема за разработка?</FormLabel>
               <FormSelect
@@ -628,22 +702,26 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div className="flex gap-3">
               <FormButton
                 type="button"
-                onClick={() => setStep(2)}
+                onClick={() => {
+                  setSubmitAttempted(false);
+                  setStep(2);
+                }}
                 variant="outline"
                 size="md"
                 className="flex-1"
               >
                 ← НАЗАД
               </FormButton>
-              <FormButton
-                type="submit"
-                disabled={!isValid || submitting}
-                size="md"
-                className="flex-1"
-              >
+              <FormButton type="submit" disabled={submitting} size="md" className="flex-1">
                 ВЗЕМИ БИЛЕТ ✦
               </FormButton>
             </div>
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mt-2">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
           </form>
         )}
       </div>
