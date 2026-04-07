@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { useInView } from "@/hooks";
 import type { SponsorTier } from "@/lib/types";
 
 const TIER_ORDER: SponsorTier[] = ["general", "strategic", "partner", "supporter"];
@@ -91,24 +91,7 @@ function SponsorCard({
 }
 
 export function SponsorsSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const { ref, inView } = useInView({ threshold: 0.15 });
 
   return (
     <section id="sponsors" className="px-6 py-25 md:px-12 bg-card border-t border-border">

@@ -14,12 +14,14 @@ const oswald = Oswald({
   weight: ["400", "700"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-bebas",
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "700"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-mono-google",
+  display: "swap",
 });
 
 const playfairDisplay = Playfair_Display({
@@ -27,12 +29,14 @@ const playfairDisplay = Playfair_Display({
   style: ["normal", "italic"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-serif-google",
+  display: "swap",
 });
 
 const manrope = Manrope({
   weight: ["500", "600", "700", "800"],
   subsets: ["latin", "cyrillic"],
   variable: "--font-syne",
+  display: "swap",
 });
 
 export const viewport: Viewport = {

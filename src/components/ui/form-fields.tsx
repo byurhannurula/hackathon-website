@@ -107,7 +107,6 @@ export const FormSelect = React.forwardRef<HTMLSelectElement, FormSelectProps>(
     <div>
       <select
         ref={ref}
-        defaultValue=""
         className={cn(
           "w-full bg-white/3 border border-white/12 text-white font-mono outline-none transition-all duration-200 focus:border-acid focus:shadow-[0_0_0_1px_rgba(254,238,4,0.15)] appearance-none cursor-pointer",
           error && "border-red-500/60 focus:border-red-500",

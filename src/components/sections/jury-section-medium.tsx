@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { User } from "lucide-react";
 
@@ -8,6 +7,7 @@ import type { Person, InfoCriterion } from "@/lib/types";
 import { MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import { LIIcon } from "@/components/ui";
+import { useInView } from "@/hooks";
 
 function PersonCard({
   person,
@@ -20,24 +20,7 @@ function PersonCard({
 }) {
   const hasImage = person.image.length > 0;
   const hasDetails = person.org.length > 0;
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const { ref: inViewRef, inView: visible } = useInView({ threshold: 0.15 });
 
   const Wrapper = person.linkedin ? "a" : "div";
   const linkProps = person.linkedin
@@ -51,7 +34,7 @@ function PersonCard({
   return (
     <Wrapper
       {...linkProps}
-      ref={ref as React.Ref<HTMLAnchorElement> & React.Ref<HTMLDivElement>}
+      ref={inViewRef as React.Ref<HTMLAnchorElement> & React.Ref<HTMLDivElement>}
       className="group block border border-white/7 bg-card transition-all duration-300 hover:border-acid/30 no-underline"
       style={{
         opacity: visible ? 1 : 0,
