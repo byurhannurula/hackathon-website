@@ -57,8 +57,8 @@ function PersonCard({
         )}
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-1.5">
-          <div className="font-body font-bold text-[13px] text-white leading-tight truncate">
+        <div className="flex items-center justify-between gap-1.5">
+          <div className="font-body font-bold text-[13px] text-white leading-tight ">
             {person.name}
           </div>
           {person.linkedin && (
@@ -88,7 +88,7 @@ function PersonGrid({ people, label }: { people: Person[]; label: string }) {
       <div className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase mb-5">
         {label}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {people.map((person: Person, i: number) => (
           <PersonCard key={person.name} person={person} index={i} priority={i < 6} />
         ))}

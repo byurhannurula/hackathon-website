@@ -58,12 +58,52 @@ export const MENTORS: Person[] = [
     linkedin: "https://www.linkedin.com/in/yuzdzhan-mehmedov-8b155569/",
   },
   {
+    name: "Иво Русев",
+    role: "Ментор",
+    org: "Graphwise",
+    image:
+      "https://media.licdn.com/dms/image/v2/C5603AQEYM6Yo8L_y0g/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1526035431129?e=1776902400&v=beta&t=nRBb4thqkVhVwU4lvuWeN9g3BxE7pmqw6134I5FmI84",
+    linkedin: "https://www.linkedin.com/in/ivo-rusev-b2bb149b/",
+  },
+  {
+    name: "Александър Кондов",
+    role: "Ментор",
+    org: "SumUp",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4D03AQHLMaILrEfrYg/profile-displayphoto-shrink_400_400/B4DZQw9WaUHwAg-/0/1735988177040?e=1776902400&v=beta&t=iIKFGTkJ6nzRBGEYxxK0cC1wJc4jiuLfj0RN24slrnc",
+    linkedin: "https://www.linkedin.com/in/alexander-kondov-2a8b25a9/",
+  },
+  {
     name: "Ивелин Белчев",
     role: "Ментор",
     org: "Freelance, Checkpoint",
     image:
       "https://media.licdn.com/dms/image/v2/D4D03AQFtwvuHJm_WGA/profile-displayphoto-scale_400_400/B4DZx6TrL6IYAk-/0/1771578508453?e=1776902400&v=beta&t=JxLEWscxJme9He-kq6xHYqUbfTQH26IkmAHO8r93pT4",
     linkedin: "https://www.linkedin.com/in/ivelin-belchev/",
+  },
+  {
+    name: "ас. Мартин Джуров",
+    role: "Ментор",
+    org: "Катедра ИИТ, РУ",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4D03AQHUtkpg9JBfWw/profile-displayphoto-shrink_800_800/B4DZWwfEUfHIAc-/0/1742422689559?e=1776902400&v=beta&t=j5DMCBgu_El9LjS8vG7DWNsdyTGb8EbiqsE21FDiNGo",
+    linkedin: "https://www.linkedin.com/in/martin-s-dzhurov/",
+  },
+  {
+    name: "ас. Кристиан Спасов",
+    role: "Ментор",
+    org: "Катедра ИИТ, РУ",
+    image: "",
+    linkedin:
+      "https://www.linkedin.com/in/%D0%BA%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%B0%D0%BD-%D1%81-744985121/",
+  },
+  {
+    name: "Серкан Садулов",
+    role: "Ментор",
+    org: "Катедра ИИТ, РУ",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4D03AQEXyZ7zeYtDLA/profile-displayphoto-crop_800_800/B4DZzS3A86HYAI-/0/1773064163570?e=1776902400&v=beta&t=97oO_ofDbAidwzh4gY63HkH1ZKkeR8p8IlcYoNpWIQk",
+    linkedin: "https://www.linkedin.com/in/serkan-sadulov/",
   },
   {
     name: "Ивелин Павлов",
@@ -73,14 +113,7 @@ export const MENTORS: Person[] = [
       "https://media.licdn.com/dms/image/v2/C4E03AQGg19taw_rk8g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1633468424878?e=1776902400&v=beta&t=LiOwDZ9cspyLV-sItYz1J4WuIJ-dI_9j3F8iKyFgGAs",
     linkedin: "https://www.linkedin.com/in/ibpavlov/",
   },
-  {
-    name: "Александър Кондов",
-    role: "Ментор",
-    org: "-",
-    image:
-      "https://media.licdn.com/dms/image/v2/D4D03AQHLMaILrEfrYg/profile-displayphoto-shrink_400_400/B4DZQw9WaUHwAg-/0/1735988177040?e=1776902400&v=beta&t=iIKFGTkJ6nzRBGEYxxK0cC1wJc4jiuLfj0RN24slrnc",
-    linkedin: "https://www.linkedin.com/in/alexander-kondov-2a8b25a9/",
-  },
+
   {
     name: "Искрен Балчев",
     role: "Ментор",
@@ -96,6 +129,15 @@ export const MENTORS: Person[] = [
     image:
       "https://media.licdn.com/dms/image/v2/C4D03AQFwY838MFiNWA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1635674299913?e=1776902400&v=beta&t=loxH5_QVFtbRrbdsAsGeVY5y0AXm7_NTQk_7Qq41YR0",
     linkedin: "https://www.linkedin.com/in/elisey-yordanov-19625a1a0/",
+  },
+
+  {
+    name: "Борислав Копрински",
+    role: "Ментор",
+    org: "-",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4D03AQHYP2N9k9AnVQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1730235818014?e=1776902400&v=beta&t=StT6qIMdkL1IfGYZfBRGZZffiprJGWxmkVXqPu2GqgI",
+    linkedin: "https://www.linkedin.com/in/borislav-koprinski/",
   },
 ];
 
