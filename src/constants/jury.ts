@@ -52,7 +52,7 @@ export const MENTORS: Person[] = [
   {
     name: "Юзджан Мехмедов",
     role: "Ментор",
-    org: "Jethost",
+    org: "JetHost",
     image:
       "https://media.licdn.com/dms/image/v2/D4D03AQGYoDe8dIDgeg/profile-displayphoto-shrink_400_400/B4DZOnHfJgHgAg-/0/1733675578776?e=1776902400&v=beta&t=-qQtSDGu-QvdjzTICQVNRuHVfqz-dX1dmvu_o_BTgo4",
     linkedin: "https://www.linkedin.com/in/yuzdzhan-mehmedov-8b155569/",
