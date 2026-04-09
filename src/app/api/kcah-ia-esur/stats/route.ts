@@ -11,7 +11,8 @@ export async function GET() {
     );
 
   if (error) {
-    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+    console.error("Stats fetch error:", error.code);
+    return NextResponse.json({ ok: false, error: "Failed to fetch stats" }, { status: 500 });
   }
 
   const registrations = data ?? [];
@@ -119,9 +120,9 @@ function normalizeTool(raw: string): string {
   if (t.includes("chatgpt") || t.includes("chat gpt") || t === "gpt" || t.includes("openai"))
     return "ChatGPT";
 
-  // Claude variants
-  if (t.includes("claude") && !t.includes("code")) return "Claude";
-  if (t.includes("claude code")) return "Claude Code";
+  // Claude variants (check "claude code" before generic "claude")
+  if (t.includes("claude code") || t.includes("claude-code")) return "Claude Code";
+  if (t.includes("claude")) return "Claude";
 
   // Copilot
   if (t.includes("copilot") || t.includes("co-pilot")) return "GitHub Copilot";

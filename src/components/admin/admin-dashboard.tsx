@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
+import { X, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 import type { Registration, RegistrationStatus, UserAnalytics } from "@/lib/types";
@@ -865,6 +865,7 @@ export function AdminDashboard() {
                         label: "Статус",
                       },
                       { field: "created_at" as SortField, label: "Дата" },
+                      { field: null, label: "" },
                     ].map((col, i) => (
                       <th
                         key={i}
@@ -902,6 +903,18 @@ export function AdminDashboard() {
                       <td className="px-4 py-4 font-mono text-[13px] text-white/45">
                         {fmtDate(reg.created_at)}
                       </td>
+                      <td className="px-4 py-4">
+                        <a
+                          href={`/tickets/${reg.ticket_id}?admin`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center justify-center w-8 h-8 text-white/30 hover:text-acid transition-colors"
+                          title="Отвори билета"
+                        >
+                          <ExternalLink size={15} />
+                        </a>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -930,10 +943,22 @@ export function AdminDashboard() {
                       </div>
                       <StatusBadge status={reg.registration_status} />
                     </div>
-                    <div className="flex items-center gap-3 mt-2 font-mono text-[13px] text-white/45">
-                      <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
-                      <span>{reg.role}</span>
-                      <span>{fmtDate(reg.created_at)}</span>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-3 font-mono text-[13px] text-white/45">
+                        <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
+                        <span>{reg.role}</span>
+                        <span>{fmtDate(reg.created_at)}</span>
+                      </div>
+                      <a
+                        href={`/tickets/${reg.ticket_id}?admin`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center justify-center w-8 h-8 text-white/30 hover:text-acid transition-colors"
+                        title="Отвори билета"
+                      >
+                        <ExternalLink size={15} />
+                      </a>
                     </div>
                   </div>
                 </div>
