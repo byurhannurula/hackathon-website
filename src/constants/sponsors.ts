@@ -96,6 +96,14 @@ export const SPONSORS: Sponsor[] = [
     tier: "media",
     logoScale: 1.35,
   },
+  {
+    name: "Шлаагер",
+    logo: "/sponsors/shlager.png",
+    href: "https://www.facebook.com/p/%D0%A8%D0%BB%D0%B0%D0%B3%D0%B5%D1%80-%D0%A0%D0%B0%D0%B4%D0%B8%D0%BE-905-FM-100063981518027/",
+    tier: "media",
+    invertLogo: false,
+    logoScale: 1.25,
+  },
 ];
 
 // Just names for ticker scroll

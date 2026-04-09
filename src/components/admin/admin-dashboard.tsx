@@ -702,12 +702,30 @@ export function AdminDashboard() {
 
       {/* Header */}
       <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
-        <Link href="/">
-          <span className="font-display text-xl">
-            <span className="text-acid">RUSE</span> AI HACK
-          </span>
-          <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">ADMIN</span>
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link href="/">
+            <span className="font-display text-xl">
+              <span className="text-acid">RUSE</span> AI HACK
+            </span>
+            <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">
+              ADMIN
+            </span>
+          </Link>
+          <nav className="flex gap-1">
+            <Link
+              href="/kcah-ia-esur"
+              className="font-mono text-[13px] tracking-[0.08em] text-acid px-3 py-1.5 border-b-2 border-acid"
+            >
+              Регистрации
+            </Link>
+            <Link
+              href="/kcah-ia-esur/stats"
+              className="font-mono text-[13px] tracking-[0.08em] text-white/50 hover:text-white transition-colors px-3 py-1.5"
+            >
+              Статистика
+            </Link>
+          </nav>
+        </div>
         <div className="flex items-center gap-5">
           <div className="flex items-center gap-2.5">
             <span className="font-mono text-[12px] tracking-[0.1em] text-white/50 uppercase">

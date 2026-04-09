@@ -93,7 +93,7 @@ export const MENTORS: Person[] = [
     name: "ас. Кристиан Спасов",
     role: "Ментор",
     org: "Катедра ИИТ, РУ",
-    image: "",
+    image: "/avatars/kristian.png",
     linkedin:
       "https://www.linkedin.com/in/%D0%BA%D1%80%D0%B8%D1%81%D1%82%D0%B8%D0%B0%D0%BD-%D1%81-744985121/",
   },
