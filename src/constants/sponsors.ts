@@ -75,6 +75,14 @@ export const SPONSORS: Sponsor[] = [
     href: "https://www.ocean.investments/",
     tier: "supporter",
   },
+
+  {
+    name: "SoftServe",
+    logo: "/sponsors/softserve-logo-white.svg",
+    href: "https://www.softserveinc.com/en-us",
+    tier: "supporter",
+    logoScale: 1.25,
+  },
   {
     name: "CheckPoint",
     logo: "/sponsors/cp-logo-text.svg",
@@ -107,4 +115,4 @@ export const SPONSORS: Sponsor[] = [
 ];
 
 // Just names for ticker scroll
-export const SPONSOR_NAMES = SPONSORS.map((s) => s.name);
+export const SPONSOR_NAMES = SPONSORS.filter((s) => s.tier !== "media").map((s) => s.name);
