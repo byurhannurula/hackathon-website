@@ -6,10 +6,14 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { open } = await req.json();
-  if (typeof open !== "boolean") {
-    return NextResponse.json({ ok: false, error: "Invalid value" }, { status: 400 });
+  try {
+    const { open } = await req.json();
+    if (typeof open !== "boolean") {
+      return NextResponse.json({ ok: false, error: "Invalid value" }, { status: 400 });
+    }
+    await setRegistrationOpen(open);
+    return NextResponse.json({ ok: true, open: await isRegistrationOpen() });
+  } catch {
+    return NextResponse.json({ ok: false, error: "Invalid request" }, { status: 400 });
   }
-  await setRegistrationOpen(open);
-  return NextResponse.json({ ok: true, open: await isRegistrationOpen() });
 }

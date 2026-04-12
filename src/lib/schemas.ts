@@ -85,22 +85,30 @@ export const adminLoginSchema = z.object({
   password: z.string().min(1),
 });
 
-export const updateStatusSchema = z.object({
-  registration_status: z.enum(["pending", "approved", "rejected"]).optional(),
-  notes: z.string().max(2000).optional(),
-});
+export const updateStatusSchema = z
+  .object({
+    registration_status: z.enum(["pending", "approved", "rejected"]).optional(),
+    notes: z.string().max(2000).optional(),
+  })
+  .refine((data) => data.registration_status !== undefined || data.notes !== undefined, {
+    message: "At least one field is required",
+  });
 
 export const sendEmailSchema = z.object({
   registrationId: z.uuid(),
   email: z.email(),
-  fullName: z.string(),
+  fullName: z.string().trim().min(1).max(100),
   status: z.enum(["approved", "rejected"]),
   ticketNumber: z.number(),
   ticketId: z.string(),
 });
 
 export const broadcastEmailSchema = z.object({
-  subject: z.string().min(1, "Задължително поле").max(200, "Максимум 200 символа"),
+  subject: z
+    .string()
+    .min(1, "Задължително поле")
+    .max(200, "Максимум 200 символа")
+    .transform((v) => v.replace(/[\r\n\t]/g, " ")),
   body: z.string().min(1, "Задължително поле").max(5000, "Максимум 5000 символа"),
   recipientFilter: z.enum(["all", "approved", "pending", "rejected"]),
 });

@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { X, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { X, ExternalLink, AlertTriangle } from "lucide-react";
 
 import type { Registration, RegistrationStatus, UserAnalytics } from "@/lib/types";
+import { cn } from "@/lib";
+import { StatCard } from "./stat-card";
 
 // ─── Types ──────────────────────────────────────────────────
 
@@ -47,7 +47,6 @@ const STATUS_COLORS: Record<RegistrationStatus, string> = {
 // ─── Main Component ─────────────────────────────────────────
 
 export function AdminDashboard() {
-  const router = useRouter();
   const [data, setData] = useState<Registration[]>([]);
   const [stats, setStats] = useState<Stats>({
     total: 0,
@@ -299,12 +298,6 @@ export function AdminDashboard() {
     }
   }
 
-  // Logout
-  async function handleLogout() {
-    await fetch("/api/kcah-ia-esur/auth", { method: "DELETE" });
-    router.push("/kcah-ia-esur/login");
-  }
-
   // Format date
   function fmtDate(iso: string) {
     return new Date(iso).toLocaleDateString("bg-BG", {
@@ -317,7 +310,7 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-bg text-white">
+    <>
       {/* Toast */}
       {toast && (
         <div
@@ -700,99 +693,13 @@ export function AdminDashboard() {
         </>
       )}
 
-      {/* Header */}
-      <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/">
-            <span className="font-display text-xl">
-              <span className="text-acid">RUSE</span> AI HACK
-            </span>
-            <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">
-              ADMIN
-            </span>
-          </Link>
-          <nav className="flex gap-1">
-            <Link
-              href="/kcah-ia-esur"
-              className="font-mono text-[13px] tracking-[0.08em] text-acid px-3 py-1.5 border-b-2 border-acid"
-            >
-              Регистрации
-            </Link>
-            <Link
-              href="/kcah-ia-esur/stats"
-              className="font-mono text-[13px] tracking-[0.08em] text-white/50 hover:text-white transition-colors px-3 py-1.5"
-            >
-              Статистика
-            </Link>
-          </nav>
-        </div>
-        <div className="flex items-center gap-5">
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[12px] tracking-[0.1em] text-white/50 uppercase">
-              Регистрация
-            </span>
-            <button
-              onClick={() => setRegToggleStep(1)}
-              disabled={regToggleLoading}
-              className={`relative w-11 h-6 rounded-full border transition-colors duration-200 cursor-pointer disabled:opacity-50 ${
-                regOpen
-                  ? "bg-emerald-500/20 border-emerald-500/40"
-                  : "bg-red-500/15 border-red-500/30"
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-200 ${
-                  regOpen ? "translate-x-5 bg-emerald-400" : "translate-x-0 bg-red-400"
-                }`}
-              />
-            </button>
-            <span
-              className={`font-mono text-[12px] tracking-widest uppercase font-bold ${
-                regOpen ? "text-emerald-400" : "text-red-400"
-              }`}
-            >
-              {regOpen ? "ON" : "OFF"}
-            </span>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="font-mono text-[13px] text-white/50 hover:text-white transition-colors cursor-pointer"
-          >
-            Изход
-          </button>
-        </div>
-      </header>
-
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {(
-            [
-              { label: "Общо", value: stats.total, cls: "text-white" },
-              {
-                label: "Изчакващи",
-                value: stats.pending,
-                cls: "text-white/70",
-              },
-              {
-                label: "Одобрени",
-                value: stats.approved,
-                cls: "text-emerald-400",
-              },
-              {
-                label: "Отхвърлени",
-                value: stats.rejected,
-                cls: "text-red-400",
-              },
-            ] as const
-          ).map((s) => (
-            <div key={s.label} className="border border-white/10 bg-card p-5">
-              <div className="font-mono text-[12px] tracking-[0.14em] text-white/55 uppercase">
-                {s.label}
-              </div>
-              <div className={`font-display text-4xl mt-1 ${s.cls}`}>{s.value}</div>
-            </div>
-          ))}
+          <StatCard label="Общо" value={stats.total} />
+          <StatCard label="Изчакващи" value={stats.pending} className="text-white/70" />
+          <StatCard label="Одобрени" value={stats.approved} className="text-emerald-400" />
+          <StatCard label="Отхвърлени" value={stats.rejected} className="text-red-400" />
         </div>
 
         {/* Controls */}
@@ -1005,6 +912,52 @@ export function AdminDashboard() {
             )}
           </>
         )}
+
+        {/* ─── Registration Toggle Card ─────────────────────── */}
+        <div className="mt-12 mb-4 border border-white/7 bg-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-display text-lg tracking-wide">РЕГИСТРАЦИЯ</h3>
+              <p className="font-mono text-[13px] text-white/40 mt-1">
+                Контрол на формата за регистрация
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span
+                className={cn(
+                  "font-mono text-[12px] tracking-widest uppercase font-bold",
+                  regOpen ? "text-emerald-400" : "text-red-400"
+                )}
+              >
+                {regOpen ? "ОТВОРЕНА" : "ЗАТВОРЕНА"}
+              </span>
+              <button
+                onClick={() => setRegToggleStep(1)}
+                disabled={regToggleLoading}
+                className={cn(
+                  "relative w-11 h-6 rounded-full border transition-colors duration-200 cursor-pointer disabled:opacity-50",
+                  regOpen
+                    ? "bg-emerald-500/20 border-emerald-500/40"
+                    : "bg-red-500/15 border-red-500/30"
+                )}
+              >
+                <span
+                  className={cn(
+                    "absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-200",
+                    regOpen ? "translate-x-5 bg-emerald-400" : "translate-x-0 bg-red-400"
+                  )}
+                />
+              </button>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5 bg-white/3 border border-white/5 p-3.5">
+            <AlertTriangle size={15} className="text-amber-400/70 mt-0.5 shrink-0" />
+            <p className="font-mono text-[12px] text-white/45 leading-[1.7]">
+              Превключването минава през двойно потвърждение. Промяната влиза в сила веднага —
+              формата, бутоните и API-то се обновяват за всички потребители.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Sheet overlay + panel */}
@@ -1031,7 +984,7 @@ export function AdminDashboard() {
           </aside>
         </>
       )}
-    </div>
+    </>
   );
 }
 
@@ -1259,10 +1212,10 @@ function SheetContent({
               </div>
             ) : analytics ? (
               <div className="grid grid-cols-2 gap-3">
-                <AnalyticCard label="Преглеждания" value={analytics.pageViews} />
-                <AnalyticCard label="Споделяния" value={analytics.shares} />
-                <AnalyticCard label="Изтегляния" value={analytics.downloads} />
-                <AnalyticCard
+                <StatCard label="Преглеждания" value={analytics.pageViews} />
+                <StatCard label="Споделяния" value={analytics.shares} />
+                <StatCard label="Изтегляния" value={analytics.downloads} />
+                <StatCard
                   label="Easter Eggs"
                   value={
                     [analytics.consoleSecret && "Конзола", analytics.konamiCode && "Konami"]
@@ -1299,17 +1252,6 @@ function SheetContent({
           </button>
         )}
       </div>
-    </div>
-  );
-}
-
-// ─── Analytic Card ──────────────────────────────────────────
-
-function AnalyticCard({ label, value }: { label: string; value: number | string }) {
-  return (
-    <div className="border border-white/10 bg-white/3 p-4">
-      <div className="font-mono text-[11px] tracking-[0.14em] text-white/55 uppercase">{label}</div>
-      <div className="font-display text-2xl mt-1 text-white/90">{value}</div>
     </div>
   );
 }

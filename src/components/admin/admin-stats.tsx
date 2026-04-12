@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+
+import { useAdminAuth } from "@/hooks";
 
 interface StatsData {
   status: Record<string, number>;
@@ -19,21 +19,15 @@ interface StatsData {
 }
 
 export function AdminStats() {
-  const router = useRouter();
+  const { adminFetch } = useAdminAuth();
   const [stats, setStats] = useState<StatsData | null>(null);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/kcah-ia-esur/stats")
-      .then((r) => {
-        if (r.status === 401) {
-          router.push("/kcah-ia-esur/login");
-          return null;
-        }
-        return r.json();
-      })
+    adminFetch("/api/kcah-ia-esur/stats")
+      .then((r) => r?.json())
       .then((json) => {
         if (!json) return;
         if (json.ok) {
@@ -45,23 +39,15 @@ export function AdminStats() {
       })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, [router]);
-
-  async function handleLogout() {
-    await fetch("/api/kcah-ia-esur/auth", { method: "DELETE" });
-    router.push("/kcah-ia-esur/login");
-  }
+  }, [adminFetch]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg text-white">
-        <Header onLogout={handleLogout} />
-        <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-[260px] bg-white/2 border border-white/5 animate-pulse" />
-            ))}
-          </div>
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-[260px] bg-white/2 border border-white/5 animate-pulse" />
+          ))}
         </div>
       </div>
     );
@@ -69,91 +55,47 @@ export function AdminStats() {
 
   if (error || !stats) {
     return (
-      <div className="min-h-screen bg-bg text-white">
-        <Header onLogout={handleLogout} />
-        <div className="flex items-center justify-center h-[60vh] font-mono text-white/40">
-          Грешка при зареждане на статистиката
-        </div>
+      <div className="flex items-center justify-center h-[60vh] font-mono text-white/40">
+        Грешка при зареждане на статистиката
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-bg text-white">
-      <Header onLogout={handleLogout} />
-
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
-        {/* Total */}
-        <div className="mb-8 border border-white/10 bg-card p-6">
-          <div className="font-mono text-[12px] tracking-[0.14em] text-white/55 uppercase">
-            Общо регистрации
-          </div>
-          <div className="font-display text-5xl mt-1 text-white">{total}</div>
-          <div className="flex gap-4 mt-3 font-mono text-[13px]">
-            <span className="text-emerald-400">{stats.status.approved || 0} одобрени</span>
-            <span className="text-white/60">{stats.status.pending || 0} изчакващи</span>
-            <span className="text-red-400">{stats.status.rejected || 0} отхвърлени</span>
-          </div>
+    <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
+      {/* Total */}
+      <div className="mb-8 border border-white/10 bg-card p-6">
+        <div className="font-mono text-[12px] tracking-[0.14em] text-white/55 uppercase">
+          Общо регистрации
         </div>
+        <div className="font-display text-5xl mt-1 text-white">{total}</div>
+        <div className="flex gap-4 mt-3 font-mono text-[13px]">
+          <span className="text-emerald-400">{stats.status.approved || 0} одобрени</span>
+          <span className="text-white/60">{stats.status.pending || 0} изчакващи</span>
+          <span className="text-red-400">{stats.status.rejected || 0} отхвърлени</span>
+        </div>
+      </div>
 
-        {/* Charts grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <BarChart title="Роля" data={stats.role} total={total} />
-          <BarChart title="Dev опит" data={stats.devExperience} total={total} ordered />
-          <BarChart title="AI опит" data={stats.aiExperience} total={total} ordered />
-          <BarChart title="Топ AI инструменти" data={stats.aiTools} total={total} color="acid" />
-          <BarChart title="Възрастова група" data={stats.age} total={total} ordered />
-          <div className="grid grid-rows-2 gap-6">
-            <BarChart title="Има отбор" data={stats.hasTeam} total={total} />
-            <BarChart title="Има идея/тема" data={stats.hasTheme} total={total} />
-          </div>
-          <BarChart title="Иска предизвикателство" data={stats.wantChallenge} total={total} />
-          <BarChart title="Доброволец за организация" data={stats.volunteerHelp} total={total} />
+      {/* Charts grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <BarChart title="Роля" data={stats.role} total={total} />
+        <BarChart title="Dev опит" data={stats.devExperience} total={total} ordered />
+        <BarChart title="AI опит" data={stats.aiExperience} total={total} ordered />
+        <BarChart title="Топ AI инструменти" data={stats.aiTools} total={total} color="acid" />
+        <BarChart title="Възрастова група" data={stats.age} total={total} ordered />
+        <div className="grid grid-rows-2 gap-6">
+          <BarChart title="Има отбор" data={stats.hasTeam} total={total} />
+          <BarChart title="Има идея/тема" data={stats.hasTheme} total={total} />
+        </div>
+        <BarChart title="Иска предизвикателство" data={stats.wantChallenge} total={total} />
+        <BarChart title="Доброволец за организация" data={stats.volunteerHelp} total={total} />
 
-          {/* Timeline - full width */}
-          <div className="md:col-span-2">
-            <TimelineChart title="Регистрации по дни" data={stats.timeline} />
-          </div>
+        {/* Timeline - full width */}
+        <div className="md:col-span-2">
+          <TimelineChart title="Регистрации по дни" data={stats.timeline} />
         </div>
       </div>
     </div>
-  );
-}
-
-// ─── Header ──────────────────────────────────────────────────
-
-function Header({ onLogout }: { onLogout: () => void }) {
-  return (
-    <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
-      <div className="flex items-center gap-6">
-        <Link href="/">
-          <span className="font-display text-xl">
-            <span className="text-acid">RUSE</span> AI HACK
-          </span>
-          <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">ADMIN</span>
-        </Link>
-        <nav className="flex gap-1">
-          <Link
-            href="/kcah-ia-esur"
-            className="font-mono text-[13px] tracking-[0.08em] text-white/50 hover:text-white transition-colors px-3 py-1.5"
-          >
-            Регистрации
-          </Link>
-          <Link
-            href="/kcah-ia-esur/stats"
-            className="font-mono text-[13px] tracking-[0.08em] text-acid px-3 py-1.5 border-b-2 border-acid"
-          >
-            Статистика
-          </Link>
-        </nav>
-      </div>
-      <button
-        onClick={onLogout}
-        className="font-mono text-[13px] text-white/50 hover:text-white transition-colors cursor-pointer"
-      >
-        Изход
-      </button>
-    </header>
   );
 }
 
