@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ExternalLink, Users, User, Lightbulb, Sparkles } from "lucide-react";
+import { Users, User, Lightbulb, Sparkles, Clock } from "lucide-react";
 
 import { cn } from "@/lib";
 import { useAdminAuth } from "@/hooks";
@@ -23,6 +23,7 @@ interface Member {
   avatar_url: string | null;
   ticket_number: number;
   ticket_id: string;
+  registration_status: string;
 }
 
 interface Team {
@@ -40,6 +41,7 @@ interface Summary {
   formedTeams: number;
   soloCount: number;
   solosWithIdea: number;
+  pendingCount: number;
 }
 
 // ─── Helpers ────────────────────────────────────────────────
@@ -125,8 +127,9 @@ export function AdminTeams() {
   return (
     <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
       {/* Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-        <StatCard label="Одобрени" value={summary.totalApproved} />
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-8">
+        <StatCard label="Общо" value={summary.totalApproved} />
+        <StatCard label="Чакащи" value={summary.pendingCount} className="text-amber-400" />
         <StatCard label="Отбори" value={summary.formedTeams} className="text-emerald-400" />
         <StatCard label="Без отбор" value={summary.soloCount} className="text-white/70" />
         <StatCard label="Соло с идея" value={summary.solosWithIdea} className="text-acid" />
@@ -339,18 +342,14 @@ function MemberRow({ member, expanded = false }: { member: Member; expanded?: bo
   return (
     <div className="flex items-start justify-between gap-2">
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-body text-[14px] font-bold text-white/90 truncate">
-            {member.full_name}
-          </span>
+        <div className="flex items-center gap-2 flex-wrap">
           <a
             href={`/tickets/${member.ticket_id}?admin`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white/20 hover:text-acid transition-colors shrink-0"
-            title="Виж билета"
+            className="font-body text-[14px] font-bold text-white/90 hover:text-acid transition-colors break-words"
           >
-            <ExternalLink size={12} />
+            {member.full_name}
           </a>
         </div>
         <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -372,24 +371,44 @@ function MemberRow({ member, expanded = false }: { member: Member; expanded?: bo
         )}
       </div>
       <div className="flex items-center gap-1.5 shrink-0">
-        <span
-          className={cn("font-mono text-[10px] px-1.5 py-0.5", devColor)}
-          title={`Dev: ${member.dev_experience}`}
-        >
-          DEV {devShort}
-        </span>
-        <span
-          className="font-mono text-[10px] px-1.5 py-0.5 bg-white/8 text-white/45"
-          title={`AI: ${member.ai_experience}`}
-        >
-          AI {aiShort}
-        </span>
-        {member.has_theme === "Да" && (
-          <span title="Има идея">
-            <Lightbulb size={12} className="text-acid/50" />
+        <Tip label={`Опит в програмирането: ${member.dev_experience}`}>
+          <span className={cn("font-mono text-[10px] px-1.5 py-0.5", devColor)}>
+            DEV {devShort}
           </span>
+        </Tip>
+        <Tip label={`Опит с AI: ${member.ai_experience}`}>
+          <span className="font-mono text-[10px] px-1.5 py-0.5 bg-white/8 text-white/45">
+            AI {aiShort}
+          </span>
+        </Tip>
+        {member.registration_status === "pending" && (
+          <Tip label="Потребителят очаква одобрение от администратор">
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] px-1.5 py-0.5 bg-amber-500/15 text-amber-400 shrink-0">
+              <Clock size={10} />
+            </span>
+          </Tip>
+        )}
+        {member.has_theme === "Да" && (
+          <Tip
+            label={`Има идея за проект${member.theme_description ? `: ${member.theme_description}` : ""}`}
+          >
+            <Lightbulb size={12} className="text-acid/50" />
+          </Tip>
         )}
       </div>
     </div>
+  );
+}
+
+// ─── Tooltip ───────────────────────────────────────────────
+
+function Tip({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <span className="relative group/tip cursor-help" aria-label={label}>
+      {children}
+      <span className="pointer-events-none absolute bottom-full right-0 mb-1.5 px-2.5 py-1.5 bg-neutral-900 border border-white/10 text-white/80 font-mono text-[11px] leading-relaxed whitespace-normal opacity-0 group-hover/tip:opacity-100 transition-opacity duration-150 z-50 w-max max-w-[280px]">
+        {label}
+      </span>
+    </span>
   );
 }

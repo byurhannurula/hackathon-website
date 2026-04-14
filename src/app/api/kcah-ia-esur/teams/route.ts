@@ -15,6 +15,7 @@ interface Member {
   avatar_url: string | null;
   ticket_number: number;
   ticket_id: string;
+  registration_status: string;
 }
 
 const DEV_LEVEL: Record<string, number> = {
@@ -26,7 +27,7 @@ const DEV_LEVEL: Record<string, number> = {
 };
 
 const SELECT_FIELDS =
-  "id, full_name, role, dev_experience, ai_experience, ai_tools, has_theme, theme_description, organization, github_handle, avatar_url, ticket_number, ticket_id, has_team, team_name";
+  "id, full_name, role, dev_experience, ai_experience, ai_tools, has_theme, theme_description, organization, github_handle, avatar_url, ticket_number, ticket_id, has_team, team_name, registration_status";
 
 export async function GET() {
   const supabase = createAdminClient();
@@ -34,7 +35,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("registrations")
     .select(SELECT_FIELDS)
-    .eq("registration_status", "approved");
+    .neq("registration_status", "rejected");
 
   if (error) {
     console.error("Teams fetch error:", error.code);
@@ -62,6 +63,7 @@ export async function GET() {
       avatar_url: reg.avatar_url,
       ticket_number: reg.ticket_number,
       ticket_id: reg.ticket_id,
+      registration_status: reg.registration_status,
     };
 
     if (reg.has_team === "Да" && reg.team_name) {
@@ -74,7 +76,8 @@ export async function GET() {
         .toLowerCase();
       if (!teamMap.has(key)) teamMap.set(key, { display: raw, members: [] });
       teamMap.get(key)!.members.push(member);
-    } else {
+    } else if (reg.registration_status === "approved") {
+      // Only approved solos go into potential teams / suggestions
       solos.push(member);
     }
   }
@@ -97,6 +100,7 @@ export async function GET() {
       formedTeams: teams.length,
       soloCount: solos.length,
       solosWithIdea: solos.filter((s) => s.has_theme === "Да").length,
+      pendingCount: registrations.filter((r) => r.registration_status === "pending").length,
     },
   });
 }
