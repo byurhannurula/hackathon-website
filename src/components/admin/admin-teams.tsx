@@ -244,10 +244,10 @@ function TeamCard({ team }: { team: Team }) {
           <MemberRow key={m.id} member={m} />
         ))}
       </div>
-      <IdeaBlock
+      {/* <IdeaBlock
         ideas={team.members.filter((m) => m.has_theme === "Да" && m.theme_description)}
         borderColor="border-white/5"
-      />
+      /> */}
     </div>
   );
 }
