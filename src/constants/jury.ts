@@ -50,6 +50,14 @@ export const MENTORS: Person[] = [
     linkedin: "https://www.linkedin.com/in/stefan-atanasov-95968a65/",
   },
   {
+    name: "Петър Стоянов",
+    role: "Ментор",
+    org: "Reward Gateway",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4D03AQEMD0B2RMx_0g/profile-displayphoto-crop_800_800/B4DZhvRk4oHsAM-/0/1754213540360?e=1778112000&v=beta&t=ezZ2acOLEKf7UmynuIgcvUj8xje6Ng7wY02TL-9AhgM",
+    linkedin: "https://www.linkedin.com/in/peterstoyanov1/",
+  },
+  {
     name: "Юзджан Мехмедов",
     role: "Ментор",
     org: "JetHost",
