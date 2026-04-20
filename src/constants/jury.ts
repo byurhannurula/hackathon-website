@@ -121,7 +121,6 @@ export const MENTORS: Person[] = [
       "https://media.licdn.com/dms/image/v2/C4E03AQGg19taw_rk8g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1633468424878?e=1776902400&v=beta&t=LiOwDZ9cspyLV-sItYz1J4WuIJ-dI_9j3F8iKyFgGAs",
     linkedin: "https://www.linkedin.com/in/ibpavlov/",
   },
-
   {
     name: "Искрен Балчев",
     role: "Ментор",
@@ -138,7 +137,6 @@ export const MENTORS: Person[] = [
       "https://media.licdn.com/dms/image/v2/C4D03AQFwY838MFiNWA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1635674299913?e=1776902400&v=beta&t=loxH5_QVFtbRrbdsAsGeVY5y0AXm7_NTQk_7Qq41YR0",
     linkedin: "https://www.linkedin.com/in/elisey-yordanov-19625a1a0/",
   },
-
   {
     name: "Борислав Копрински",
     role: "Ментор",
@@ -146,6 +144,14 @@ export const MENTORS: Person[] = [
     image:
       "https://media.licdn.com/dms/image/v2/D4D03AQHYP2N9k9AnVQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1730235818014?e=1776902400&v=beta&t=StT6qIMdkL1IfGYZfBRGZZffiprJGWxmkVXqPu2GqgI",
     linkedin: "https://www.linkedin.com/in/borislav-koprinski/",
+  },
+  {
+    name: "Николай Нинов",
+    role: "Ментор",
+    org: "-",
+    image:
+      "https://media.licdn.com/dms/image/v2/D4E03AQGrdm0R_rTIZw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1727696636397?e=1778112000&v=beta&t=SFES_OucfIGVG-vcEhyCCBoh5WDGpqqE7Hxl0Jv1ob4",
+    linkedin: "https://www.linkedin.com/in/nick-ninov/",
   },
 ];
 
