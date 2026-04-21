@@ -92,7 +92,7 @@ export const SPONSORS: Sponsor[] = [
   {
     name: "Logos",
     logo: "/sponsors/logos.png",
-    href: "#",
+    href: "https://github.com/logos-circle-ruse",
     tier: "supporter",
     logoScale: 1.5,
   },
