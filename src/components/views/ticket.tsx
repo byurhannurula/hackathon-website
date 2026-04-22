@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-
 import { type TicketData } from "@/lib";
 import { siteConfig } from "@/constants";
 import { useTicketDownload } from "@/hooks";
+import { Link } from "@/components/ui";
 import { TicketVisual } from "@/components/ticket";
 import { useAnalytics } from "@/components/analytics";
 import { ShareButtons } from "@/components/share-buttons";
@@ -118,10 +117,7 @@ export function TicketPage({ data }: TicketPageProps) {
         {(isOwner || isAdmin) && data?.ticketId ? (
           <ShareButtons ticketId={data.ticketId} downloading={downloading} onDownload={download} />
         ) : (
-          <Link
-            href="/register"
-            className="font-display text-lg tracking-[0.08em] bg-acid text-black border-none py-4 px-11 no-underline cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5"
-          >
+          <Link href="/register" variant="primary" className="text-lg py-4 px-11">
             ВЗЕМИ БИЛЕТ &rarr;
           </Link>
         )}

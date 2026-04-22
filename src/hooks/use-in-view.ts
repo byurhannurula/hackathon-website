@@ -5,10 +5,15 @@ import { useEffect, useRef, useState } from "react";
 interface UseInViewOptions {
   threshold?: number;
   once?: boolean;
+  rootMargin?: string;
 }
 
-export function useInView({ threshold = 0.15, once = true }: UseInViewOptions = {}) {
-  const ref = useRef<HTMLDivElement>(null);
+export function useInView<T extends Element = HTMLDivElement>({
+  threshold = 0.15,
+  once = true,
+  rootMargin,
+}: UseInViewOptions = {}) {
+  const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -24,11 +29,11 @@ export function useInView({ threshold = 0.15, once = true }: UseInViewOptions = 
           setInView(false);
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     );
     obs.observe(el);
     return () => obs.disconnect();
-  }, [threshold, once]);
+  }, [threshold, once, rootMargin]);
 
   return { ref, inView };
 }

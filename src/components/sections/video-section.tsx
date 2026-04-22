@@ -9,9 +9,15 @@ import { useInView } from "@/hooks";
 
 interface VideoSectionProps {
   videoId: string;
+  label?: string;
+  title?: string;
 }
 
-export function VideoSection({ videoId }: VideoSectionProps) {
+export function VideoSection({
+  videoId,
+  label = "Виж повече",
+  title = "Какво те очаква",
+}: VideoSectionProps) {
   const { ref, inView } = useInView({ threshold: 0.2 });
   const [playing, setPlaying] = useState(false);
 
@@ -19,7 +25,7 @@ export function VideoSection({ videoId }: VideoSectionProps) {
     <section id="video" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto" ref={ref}>
         <div className="mb-12">
-          <SectionHeader label="Виж повече" title="Какво те очаква" />
+          <SectionHeader label={label} title={title} />
         </div>
 
         {/* Video container */}

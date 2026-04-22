@@ -1,18 +1,42 @@
 "use client";
 
-import Link from "next/link";
 import { Instagram, Facebook, Mail, Linkedin } from "lucide-react";
+
+import { Link } from "@/components/ui";
 import { siteConfig } from "@/constants";
+import { IS_SHOWCASE_MODE } from "@/lib";
 import { useRegistrationOpen } from "@/hooks";
+
+const socialIconCls =
+  "w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all";
+const navLinkCls = "text-white/45";
+
+const EVENT_SECTION_LINKS = [
+  { label: "За нас", href: "/#about" },
+  { label: "Спонсори", href: "/#sponsors" },
+  { label: "Програма", href: "/#agenda" },
+  { label: "Награди", href: "/#prizes" },
+  { label: "FAQ", href: "/#faq" },
+];
+
+const SHOWCASE_SECTION_LINKS = [
+  { label: "Галерия", href: "/showcase/gallery" },
+  { label: "Победители", href: "/showcase#winners" },
+  { label: "Спонсори", href: "/showcase#sponsors" },
+];
 
 export function Footer() {
   const regOpen = useRegistrationOpen();
 
+  const sectionLinks = IS_SHOWCASE_MODE ? SHOWCASE_SECTION_LINKS : EVENT_SECTION_LINKS;
+
   const pageLinks = [
     { label: "Информация", href: "/info" },
     { label: "Правила", href: "/rules" },
-    ...(regOpen ? [{ label: "Регистрация", href: "/register" }] : []),
+    ...(regOpen && !IS_SHOWCASE_MODE ? [{ label: "Регистрация", href: "/register" }] : []),
   ];
+
+  const showRegisterLink = regOpen && !IS_SHOWCASE_MODE;
 
   return (
     <footer className="border-t border-border bg-card">
@@ -31,40 +55,34 @@ export function Footer() {
               {siteConfig.event.shortDescription}
             </p>
             <div className="flex gap-3 mt-4">
-              <a
+              <Link
                 href={siteConfig.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
+                className={socialIconCls}
                 aria-label="Instagram"
               >
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href={siteConfig.social.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
+                className={socialIconCls}
                 aria-label="Facebook"
               >
                 <Facebook className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href={siteConfig.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
+                className={socialIconCls}
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href={`mailto:${siteConfig.contact.sponsorEmail}`}
-                className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/55 hover:border-acid/50 hover:text-acid transition-all"
+                className={socialIconCls}
                 aria-label="Email"
               >
                 <Mail className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -76,18 +94,8 @@ export function Footer() {
                 Секции
               </div>
               <div className="flex flex-col gap-2">
-                {[
-                  { label: "За нас", href: "/#about" },
-                  { label: "Спонсори", href: "/#sponsors" },
-                  { label: "Програма", href: "/#agenda" },
-                  { label: "Награди", href: "/#prizes" },
-                  { label: "FAQ", href: "/#faq" },
-                ].map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
-                  >
+                {sectionLinks.map((link) => (
+                  <Link key={link.href} href={link.href} size="sm" className={navLinkCls}>
                     {link.label}
                   </Link>
                 ))}
@@ -101,11 +109,7 @@ export function Footer() {
               </div>
               <div className="flex flex-col gap-2">
                 {pageLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
-                  >
+                  <Link key={link.href} href={link.href} size="sm" className={navLinkCls}>
                     {link.label}
                   </Link>
                 ))}
@@ -118,17 +122,15 @@ export function Footer() {
                 Контакт
               </div>
               <div className="flex flex-col gap-2">
-                <a
+                <Link
                   href={`mailto:${siteConfig.contact.sponsorEmail}`}
-                  className="font-mono text-[11px] text-white/45 no-underline hover:text-acid transition-colors"
+                  size="sm"
+                  className={navLinkCls}
                 >
                   {siteConfig.contact.sponsorEmail}
-                </a>
-                {regOpen && (
-                  <Link
-                    href="/register"
-                    className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
-                  >
+                </Link>
+                {showRegisterLink && (
+                  <Link href="/register" size="sm" className="text-acid/70">
                     Регистрация →
                   </Link>
                 )}
@@ -142,32 +144,24 @@ export function Footer() {
       <div className="border-t border-border px-6 py-4 md:px-12 flex justify-between items-center flex-wrap gap-3 max-w-[1100px] mx-auto">
         <span className="font-mono text-[10px] text-white/45 tracking-widest">
           &copy; {new Date().getFullYear()}{" "}
-          <a
-            href={siteConfig.contact.organizerUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/55 hover:text-teal no-underline"
-          >
+          <Link href={siteConfig.contact.organizerUrl} className="text-white/55 hover:text-teal">
             {siteConfig.event.organizer}
-          </a>{" "}
+          </Link>{" "}
           &middot; {siteConfig.event.name} {siteConfig.event.year}. Всички права запазени.
         </span>
         <span className="font-mono text-[10px] text-white/50 tracking-widest">
           Разработено с много вайб от{" "}
-          <a
+          <Link
             href="https://linkedin.com/in/byurhannurula"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/55 hover:text-teal no-underline"
+            className="text-white/55 hover:text-teal"
           >
             @byurhannurula
-          </a>
+          </Link>
         </span>
       </div>
 
       {/* Large outlined text — bottom of page, gradient fade to bg */}
       <div className="hidden md:block relative overflow-hidden h-[clamp(100px,18vw,220px)]">
-        {/* Gradient mask: visible at top, fades to bg at bottom */}
         <div
           className="absolute inset-0 z-10 pointer-events-none"
           style={{

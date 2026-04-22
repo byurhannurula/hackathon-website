@@ -1,26 +1,14 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import {
+  buttonSizes as sizes,
+  buttonVariants,
+  buttonBase,
+  type ButtonSize,
+  type ButtonVariant,
+} from "./button-styles";
 
-// ─── SIZES ──────────────────────────────────────────────────────────────────
-const sizes = {
-  sm: {
-    input: "py-2.5 px-3.5 text-xs",
-    label: "text-[9px] mb-1.5",
-    button: "py-2.5 px-5 text-sm",
-  },
-  md: {
-    input: "py-3 px-4 text-sm",
-    label: "text-[10px] mb-2",
-    button: "py-3.5 px-7 text-base",
-  },
-  lg: {
-    input: "py-4 px-5 text-sm",
-    label: "text-[10px] mb-2",
-    button: "py-5 px-9 text-[22px]",
-  },
-} as const;
-
-export type FieldSize = keyof typeof sizes;
+export type FieldSize = ButtonSize;
 
 // ─── LABEL ──────────────────────────────────────────────────────────────────
 interface FormLabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
@@ -161,32 +149,16 @@ export const FormCheckbox = React.forwardRef<HTMLInputElement, FormCheckboxProps
 FormCheckbox.displayName = "FormCheckbox";
 
 // ─── BUTTON ─────────────────────────────────────────────────────────────────
-type ButtonVariant = "primary" | "secondary" | "ghost" | "outline";
-
 interface FormButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: FieldSize;
   variant?: ButtonVariant;
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary:
-    "bg-acid text-black border-none hover:bg-white hover:scale-[1.02] hover:-translate-y-px active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-acid disabled:hover:scale-100 disabled:hover:translate-y-0",
-  secondary:
-    "bg-white/5 text-white border border-white/15 hover:bg-white/10 hover:border-acid hover:text-acid",
-  ghost: "bg-transparent text-muted border border-white/15 hover:border-white/30 hover:text-white",
-  outline: "bg-transparent text-acid border border-acid/30 hover:bg-acid/7",
-};
-
 export const FormButton = React.forwardRef<HTMLButtonElement, FormButtonProps>(
   ({ className, size = "md", variant = "primary", children, ...props }, ref) => (
     <button
       ref={ref}
-      className={cn(
-        "flex items-center gap-x-2 font-display tracking-[0.08em] cursor-pointer transition-all duration-200",
-        sizes[size].button,
-        variantStyles[variant],
-        className
-      )}
+      className={cn(buttonBase, sizes[size].button, buttonVariants[variant], className)}
       {...props}
     >
       {children}

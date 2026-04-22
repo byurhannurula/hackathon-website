@@ -14,10 +14,10 @@ describe("useRegistrationOpen", () => {
     );
   });
 
-  it("defaults to true before fetch completes", async () => {
+  it("defaults to false before fetch completes", async () => {
     const { useRegistrationOpen } = await import("@/hooks/use-registration-open");
     const { result } = renderHook(() => useRegistrationOpen());
-    expect(result.current).toBe(true);
+    expect(result.current).toBe(false);
   });
 
   it("fetches from /api/registration-status on mount", async () => {
@@ -57,7 +57,7 @@ describe("useRegistrationOpen", () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("Network error")));
     const { useRegistrationOpen } = await import("@/hooks/use-registration-open");
     const { result } = renderHook(() => useRegistrationOpen());
-    // Should stay at default (true) even after error
-    expect(result.current).toBe(true);
+    // Should stay at default (false) even after error
+    expect(result.current).toBe(false);
   });
 });

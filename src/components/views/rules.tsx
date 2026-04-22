@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { Link } from "@/components/ui";
 import { JUDGING_CRITERIA } from "@/constants";
 
 const sectionCls = "py-16 px-6 md:px-12 border-b border-border";
@@ -447,10 +446,7 @@ export function Rules() {
           <p className="font-mono text-sm text-white/50 mb-8 max-w-[480px] mx-auto leading-[1.8]">
             С регистрацията си приемате всички правила и условия описани на тази страница.
           </p>
-          <Link
-            href="/register"
-            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-12 no-underline cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 mt-4"
-          >
+          <Link href="/register" variant="primary" className="text-xl py-5 px-12 mt-4">
             ВЗЕМИ БИЛЕТ &rarr;
           </Link>
         </div>

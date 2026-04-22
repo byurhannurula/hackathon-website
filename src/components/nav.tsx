@@ -1,27 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { Menu, X } from "lucide-react";
 
-import { cn } from "@/lib";
+import { cn, IS_SHOWCASE_MODE } from "@/lib";
 import { siteConfig } from "@/constants";
+import { Link } from "@/components/ui";
 import { useRegistrationOpen } from "@/hooks";
 
 export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const regOpen = useRegistrationOpen();
 
-  const navItems = [
-    { key: "about", label: "За нас", href: "/#about" },
-    { key: "sponsors", label: "Спонсори", href: "/#sponsors" },
-    { key: "agenda", label: "Програма", href: "/#agenda" },
-    { key: "jury", label: "Жури", href: "/#jury" },
-    { key: "prizes", label: "Награди", href: "/#prizes" },
-    { key: "faq", label: "Въпроси", href: "/#faq" },
-    { key: "info", label: "Инфо", href: "/info" },
-    { key: "rules", label: "Правила", href: "/rules" },
-  ];
+  const navItems = IS_SHOWCASE_MODE
+    ? [
+        { key: "home", label: "Начало", href: "/" },
+        { key: "gallery", label: "Галерия", href: "/showcase/gallery" },
+      ]
+    : [
+        { key: "about", label: "За нас", href: "/#about" },
+        { key: "sponsors", label: "Спонсори", href: "/#sponsors" },
+        { key: "agenda", label: "Програма", href: "/#agenda" },
+        { key: "jury", label: "Жури", href: "/#jury" },
+        { key: "prizes", label: "Награди", href: "/#prizes" },
+        { key: "faq", label: "Въпроси", href: "/#faq" },
+        { key: "info", label: "Информация", href: "/info" },
+        { key: "rules", label: "Правила", href: "/rules" },
+      ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, key: string) => {
     if (href.startsWith("/#")) {
@@ -54,7 +59,7 @@ export function Nav() {
           <Link
             key={item.key}
             href={item.href}
-            className="font-mono text-[10px] tracking-[0.14em] text-white/50 cursor-pointer uppercase transition-colors duration-200 hover:text-acid no-underline"
+            className="font-mono text-[10px] tracking-[0.14em] text-white/50 cursor-pointer uppercase transition-colors duration-200 hover:text-acid"
             onClick={(e) => handleNavClick(e, item.href, item.key)}
           >
             {item.label}
@@ -63,7 +68,7 @@ export function Nav() {
         {regOpen && (
           <Link
             href="/register"
-            className="font-mono text-[10px] font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black border-none py-2 px-[22px] cursor-pointer transition-colors duration-200 hover:bg-white"
+            className="font-mono text-[10px] font-bold tracking-[0.14em] uppercase bg-acid text-black border-none py-2 px-[22px] cursor-pointer transition-colors duration-200 hover:bg-white"
           >
             Регистрация &rarr;
           </Link>
@@ -92,7 +97,7 @@ export function Nav() {
                 <Link
                   key={item.key}
                   href={item.href}
-                  className="font-mono text-sm tracking-[0.14em] text-white/70 uppercase transition-colors duration-200 hover:text-acid no-underline animate-reveal-up"
+                  className="font-mono text-sm tracking-[0.14em] text-white/70 uppercase transition-colors duration-200 hover:text-acid animate-reveal-up"
                   style={{ animationDelay: `${i * 40}ms` }}
                   onClick={(e) => handleNavClick(e, item.href, item.key)}
                 >
@@ -112,7 +117,7 @@ export function Nav() {
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="mt-6 inline-flex items-center justify-center font-mono text-sm font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black py-3 px-8 transition-colors duration-200 hover:bg-white animate-reveal-up"
+                  className="mt-6 inline-flex items-center justify-center font-mono text-sm font-bold tracking-[0.14em] uppercase bg-acid text-black py-3 px-8 transition-colors duration-200 hover:bg-white animate-reveal-up"
                   style={{ animationDelay: "320ms" }}
                 >
                   Регистрация &rarr;

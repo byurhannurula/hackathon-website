@@ -4,6 +4,7 @@ import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { Link } from "@/components/ui";
 import { useInView } from "@/hooks";
 import type { SponsorTier } from "@/lib/types";
 
@@ -90,7 +91,7 @@ function SponsorCard({
   );
 }
 
-export function SponsorsSection() {
+export function SponsorsSection({ hideCTA = false }: { hideCTA?: boolean } = {}) {
   const { ref, inView } = useInView({ threshold: 0.15 });
 
   return (
@@ -130,25 +131,28 @@ export function SponsorsSection() {
         })}
 
         {/* Sponsor CTA */}
-        <div
-          className={cn(
-            "mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5 transition-all duration-700 ease-out",
-            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          )}
-          style={{
-            transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms",
-          }}
-        >
-          <div>
-            <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>
-          </div>
-          <a
-            href={`mailto:${siteConfig.contact.sponsorEmail}`}
-            className="font-display text-[15px] tracking-[0.08em] bg-transparent text-acid border border-acid/30 py-3 px-7 cursor-pointer transition-all duration-200 whitespace-nowrap hover:bg-acid/7 no-underline"
+        {!hideCTA && (
+          <div
+            className={cn(
+              "mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5 transition-all duration-700 ease-out",
+              inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            )}
+            style={{
+              transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms",
+            }}
           >
-            СТАНИ СПОНСОР &rarr;
-          </a>
-        </div>
+            <div>
+              <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>
+            </div>
+            <Link
+              href={`mailto:${siteConfig.contact.sponsorEmail}`}
+              variant="outline"
+              className="text-[15px] py-3 px-7 whitespace-nowrap"
+            >
+              СТАНИ СПОНСОР &rarr;
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

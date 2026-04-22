@@ -84,3 +84,52 @@ export interface Sponsor {
   invertLogo?: boolean;
   logoScale?: number;
 }
+
+export interface ShowcaseStat {
+  value: string;
+  label: string;
+}
+
+export interface ShowcaseWinner {
+  place: 1 | 2 | 3;
+  teamName: string;
+  projectName: string;
+  pitch: string;
+  members: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  imageUrl?: string;
+  prize?: string;
+}
+
+export interface ShowcasePhoto {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  featured?: boolean;
+  span?: "wide" | "tall" | "large";
+}
+
+export interface ShowcaseProject {
+  teamName: string;
+  projectName: string;
+  description: string;
+  tech?: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  imageUrl?: string;
+}
+
+export interface ShowcaseTestimonial {
+  quote: string;
+  name: string;
+  role: string;
+  avatarUrl?: string;
+}
+
+export interface ShowcaseFunCounter {
+  value: string;
+  label: string;
+  hint?: string;
+}

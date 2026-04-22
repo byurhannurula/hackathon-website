@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -22,6 +21,7 @@ import {
   AvatarCircle,
   TextShimmer,
   TicketUnlockSequence,
+  Link,
 } from "@/components/ui";
 import { useAnalytics } from "@/components/analytics";
 import { useStep1Form } from "@/hooks";
@@ -170,7 +170,10 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             if (!res.ok) return { ok: false, ...json };
             return json;
           })
-          .catch(() => ({ ok: false, error: "Грешка в мрежата. Моля, опитайте отново." })),
+          .catch(() => ({
+            ok: false,
+            error: "Грешка в мрежата. Моля, опитайте отново.",
+          })),
         new Promise((resolve) => setTimeout(resolve, 1500)),
       ]);
 
@@ -248,10 +251,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
           <p className="font-mono text-sm text-white/50 leading-relaxed mb-8">
             Благодарим за интереса! Регистрацията за RUSE AI HACK &apos;26 приключи.
           </p>
-          <Link
-            href="/"
-            className="inline-block font-display text-[14px] tracking-[0.08em] border border-acid/30 text-acid px-8 py-3 no-underline transition-all duration-200 hover:bg-acid/7"
-          >
+          <Link href="/" variant="outline" className="text-[14px] px-8 py-3">
             ← КЪМ НАЧАЛОТО
           </Link>
         </div>

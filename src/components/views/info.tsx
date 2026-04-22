@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { Link } from "@/components/ui";
 import { JUDGING_CRITERIA } from "@/constants";
 
 const sectionCls = "py-16 px-6 md:px-12 border-b border-border";
@@ -227,10 +226,7 @@ export function Info() {
           <h2 className="font-display text-[clamp(36px,6vw,56px)] leading-[0.95] mb-6">
             ГОТОВ ЛИ СИ? <span className="text-acid">РЕГИСТРИРАЙ СЕ</span>
           </h2>
-          <Link
-            href="/register"
-            className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-12 no-underline cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 mt-4"
-          >
+          <Link href="/register" variant="primary" className="text-xl py-5 px-12 mt-4">
             ВЗЕМИ БИЛЕТ →
           </Link>
         </div>

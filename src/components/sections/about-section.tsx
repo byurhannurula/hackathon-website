@@ -1,7 +1,5 @@
-"use client";
-
 import { ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Cpu, Users, Calendar, Rocket, Target } from "lucide-react";
 
 import { cn } from "@/lib";
@@ -45,8 +43,6 @@ const GridItem = ({ className, icon, title, description, extra }: GridItemProps)
 };
 
 export function AboutSection() {
-  const router = useRouter();
-
   return (
     <section id="about" className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto">
@@ -96,9 +92,11 @@ export function AboutSection() {
         </ul>
 
         <div className="flex items-center justify-center">
-          <FormButton type="button" size="sm" onClick={() => router.push("/info")} className="mt-8">
-            Повече информация & правила
-          </FormButton>
+          <Link href="/info">
+            <FormButton type="button" size="sm" className="mt-8">
+              Повече информация & правила
+            </FormButton>
+          </Link>
         </div>
       </div>
     </section>
