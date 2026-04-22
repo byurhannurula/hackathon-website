@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Instagram, Facebook, Mail, Linkedin } from "lucide-react";
 import { siteConfig } from "@/constants";
+import { IS_SHOWCASE_MODE } from "@/lib";
 import { FooterRegisterLink } from "@/components/footer-register-link";
 
 export function Footer() {
@@ -29,14 +30,20 @@ export function Footer() {
                 Навигация
               </div>
               <div className="flex flex-col gap-2">
-                {[
-                  { label: "За нас", href: "/#about" },
-                  { label: "Програма", href: "/#agenda" },
-                  { label: "Награди", href: "/#prizes" },
-                  { label: "Информация", href: "/info" },
-                  { label: "Правила", href: "/rules" },
-                  { label: "Галерия", href: "/showcase" },
-                ].map((link) => (
+                {(IS_SHOWCASE_MODE
+                  ? [
+                      { label: "Галерия", href: "/showcase/gallery" },
+                      { label: "Информация", href: "/info" },
+                      { label: "Правила", href: "/rules" },
+                    ]
+                  : [
+                      { label: "За нас", href: "/#about" },
+                      { label: "Програма", href: "/#agenda" },
+                      { label: "Награди", href: "/#prizes" },
+                      { label: "Информация", href: "/info" },
+                      { label: "Правила", href: "/rules" },
+                    ]
+                ).map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}

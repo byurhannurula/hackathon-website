@@ -12,6 +12,41 @@ export interface ShowcaseStat {
   label: string;
 }
 
+export interface ShowcaseWinner {
+  place: 1 | 2 | 3;
+  teamName: string;
+  projectName: string;
+  pitch: string;
+  members: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  imageUrl?: string;
+  prize?: string;
+}
+
+export interface ShowcaseProject {
+  teamName: string;
+  projectName: string;
+  description: string;
+  tech?: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  imageUrl?: string;
+}
+
+export interface ShowcaseTestimonial {
+  quote: string;
+  name: string;
+  role: string;
+  avatarUrl?: string;
+}
+
+export interface ShowcaseFunCounter {
+  value: string;
+  label: string;
+  hint?: string;
+}
+
 export const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
   // ── Featured (shown on /showcase) ──
   {
@@ -307,4 +342,166 @@ export const SHOWCASE_STATS: ShowcaseStat[] = [
   { value: "€2,900", label: "Награден фонд" },
 ];
 
-export const SHOWCASE_VIDEO_ID = "QTPSSerVZsc";
+export const SHOWCASE_VIDEO_ID = process.env.NEXT_PUBLIC_SHOWCASE_VIDEO_ID ?? "";
+
+// ── Post-event content ─────────────────────────────────────────────────────
+// Populate these after the event; sections auto-hide while arrays are empty.
+
+export const SHOWCASE_WINNERS: ShowcaseWinner[] = [
+  {
+    place: 1,
+    teamName: "Team Neural",
+    projectName: "VibeCheck AI",
+    pitch:
+      "AI асистент, който анализира настроението в класната стая в реално време и помага на учителите да адаптират урока.",
+    members: ["Иван Петров", "Мария Георгиева", "Алекс Димитров", "Николай Стоянов"],
+    prize: "€1,500 + менторство",
+    repoUrl: "https://github.com",
+    demoUrl: "https://example.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1551434678-e076c223a692?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    place: 2,
+    teamName: "Prompt Masters",
+    projectName: "StudyBuddy",
+    pitch:
+      "Персонализиран AI тютор, който превръща учебниците в интерактивни куизове и обяснения на прост език.",
+    members: ["Виктория Иванова", "Георги Тодоров", "Петър Колев"],
+    prize: "€800",
+    repoUrl: "https://github.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    place: 3,
+    teamName: "Caffeine Overflow",
+    projectName: "RouteSense",
+    pitch:
+      "Агент, който планира най-краткия маршрут из Русе, включително градски транспорт и време за ходене пеша.",
+    members: ["Димитър Ангелов", "София Христова", "Мартин Николов"],
+    prize: "€400",
+    demoUrl: "https://example.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop&q=80",
+  },
+];
+
+export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
+  {
+    teamName: "Byte Builders",
+    projectName: "ChefGPT",
+    description:
+      "Снимай какво имаш в хладилника — AI предлага 3 рецепти с оценка за време и трудност.",
+    tech: ["Next.js", "OpenAI", "Supabase"],
+    repoUrl: "https://github.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    teamName: "Team Echo",
+    projectName: "PodcastMind",
+    description:
+      "Качи подкаст епизод и получаваш резюме, глави и ключови цитати за по-малко от минута.",
+    tech: ["Python", "Whisper", "Claude"],
+    demoUrl: "https://example.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    teamName: "Pixel Pirates",
+    projectName: "DressCode",
+    description: "AI стилист, който комбинира дрехи от гардероба ти на база времето и случая.",
+    tech: ["React Native", "Gemini Vision"],
+    imageUrl:
+      "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    teamName: "Null Pointer",
+    projectName: "BugHunter",
+    description:
+      "Copilot разширение, което открива security bugs, преди да ги commit-неш в main branch.",
+    tech: ["TypeScript", "LLM", "VSCode API"],
+    repoUrl: "https://github.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    teamName: "Quantum Leap",
+    projectName: "GreenRoute",
+    description: "Логистичен агент, който оптимизира доставки спрямо CO2 отпечатък.",
+    tech: ["Go", "LangChain"],
+    imageUrl:
+      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=800&fit=crop&q=80",
+  },
+  {
+    teamName: "Syntax Error",
+    projectName: "Memoria",
+    description:
+      "Приложение, което помага на възрастни хора да си спомнят имена и лица чрез AI flashcards.",
+    tech: ["Flutter", "Firebase", "Gemini"],
+    demoUrl: "https://example.com",
+    imageUrl:
+      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=1200&h=800&fit=crop&q=80",
+  },
+];
+
+export const SHOWCASE_TESTIMONIALS: ShowcaseTestimonial[] = [
+  {
+    quote:
+      "Никога не съм мислила, че за 48 часа можеш да построиш нещо работещо с AI. Сега вече съм сигурна, че мога.",
+    name: "Мария Георгиева",
+    role: "Студент · ТУ-Варна",
+  },
+  {
+    quote:
+      "Атмосферата беше електрическа. Обмен на идеи, безплатна пица и ментори, които реално искаха да ти помогнат.",
+    name: "Иван Петров",
+    role: "11 клас · МГ Русе",
+  },
+  {
+    quote:
+      "Организация на най-високо ниво. Първият хакатон, на който всичко започна точно навреме — и свърши навреме.",
+    name: "Алекс Димитров",
+    role: "Ментор · Senior Engineer",
+  },
+  {
+    quote:
+      "Отборът ми се събра буквално часове преди старта. Излязохме с приятели за цял живот и работещ MVP.",
+    name: "Виктория Иванова",
+    role: "Участник",
+  },
+];
+
+export const SHOWCASE_FUN_COUNTERS: ShowcaseFunCounter[] = [
+  {
+    value: "14,823",
+    label: "Чаши кафе",
+    hint: "Средно по 148 на участник. Някой брои ли?",
+  },
+  {
+    value: "72%",
+    label: "Ученици и студенти",
+    hint: "Остатъкът — ментори, жури и смели първокурсници.",
+  },
+  {
+    value: "92",
+    label: "Git commits в последния час",
+    hint: "Последната минута преди deadline беше особено бурна.",
+  },
+  {
+    value: "6",
+    label: "Часа сън средно",
+    hint: "Общо. Не на нощ.",
+  },
+  {
+    value: "312",
+    label: "Пица резена",
+    hint: "Маргарита води с пепперони на близка втора позиция.",
+  },
+  {
+    value: "1.2M",
+    label: "AI токена изгорени",
+    hint: "Благодарим на всички API лимити, които издържаха.",
+  },
+];

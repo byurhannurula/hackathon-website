@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
+import { IS_SHOWCASE_MODE } from "@/lib";
 import { ShowcasePageContent } from "@/components/showcase-page-content";
 
 export const metadata: Metadata = {
@@ -14,5 +16,6 @@ export const metadata: Metadata = {
 };
 
 export default function ShowcasePage() {
+  if (!IS_SHOWCASE_MODE) notFound();
   return <ShowcasePageContent />;
 }

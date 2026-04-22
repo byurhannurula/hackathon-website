@@ -11,3 +11,7 @@ export { VideoSection } from "./video-section";
 export { MediaPartnersSection } from "./media-partners-section";
 export { PhotoGallerySection } from "./photo-gallery-section";
 export { ShowcaseStatsSection } from "./showcase-stats-section";
+export { WinnersSection } from "./winners-section";
+export { ProjectsGallerySection } from "./projects-gallery-section";
+export { TestimonialsSection } from "./testimonials-section";
+export { FunCountersSection } from "./fun-counters-section";

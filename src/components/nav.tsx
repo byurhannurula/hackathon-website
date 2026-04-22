@@ -2,27 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
-import { cn } from "@/lib";
+import { cn, IS_SHOWCASE_MODE } from "@/lib";
 import { siteConfig } from "@/constants";
 import { useRegistrationOpen } from "@/hooks";
 
 export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const regOpen = useRegistrationOpen();
+  const pathname = usePathname();
+  const onGalleryPage = pathname?.startsWith("/showcase/gallery");
 
-  const navItems = [
-    { key: "about", label: "За нас", href: "/#about" },
-    { key: "sponsors", label: "Спонсори", href: "/#sponsors" },
-    { key: "agenda", label: "Програма", href: "/#agenda" },
-    { key: "jury", label: "Жури", href: "/#jury" },
-    { key: "prizes", label: "Награди", href: "/#prizes" },
-    { key: "faq", label: "Въпроси", href: "/#faq" },
-    { key: "info", label: "Инфо", href: "/info" },
-    { key: "rules", label: "Правила", href: "/rules" },
-    { key: "showcase", label: "Галерия", href: "/showcase" },
-  ];
+  const navItems = IS_SHOWCASE_MODE
+    ? onGalleryPage
+      ? [{ key: "home", label: "Начало", href: "/" }]
+      : [{ key: "gallery", label: "Галерия", href: "/showcase/gallery" }]
+    : [
+        { key: "about", label: "За нас", href: "/#about" },
+        { key: "sponsors", label: "Спонсори", href: "/#sponsors" },
+        { key: "agenda", label: "Програма", href: "/#agenda" },
+        { key: "jury", label: "Жури", href: "/#jury" },
+        { key: "prizes", label: "Награди", href: "/#prizes" },
+        { key: "faq", label: "Въпроси", href: "/#faq" },
+      ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string, key: string) => {
     if (href.startsWith("/#")) {

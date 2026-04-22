@@ -1,10 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import dynamic from "next/dynamic";
+import { Instagram, Linkedin, Send } from "lucide-react";
+
+const DottedSurface = dynamic(
+  () => import("@/components/ui/dotted-surface").then((m) => m.DottedSurface),
+  { ssr: false }
+);
 
 import { cn } from "@/lib";
-import { SHOWCASE_PHOTOS, SHOWCASE_STATS, SHOWCASE_VIDEO_ID } from "@/constants";
+import {
+  SHOWCASE_PHOTOS,
+  SHOWCASE_STATS,
+  SHOWCASE_VIDEO_ID,
+  SHOWCASE_WINNERS,
+  SHOWCASE_PROJECTS,
+  SHOWCASE_TESTIMONIALS,
+  SHOWCASE_FUN_COUNTERS,
+  siteConfig,
+} from "@/constants";
 import { Nav } from "@/components/nav";
 import { Footer } from "@/components/footer";
 import {
@@ -13,6 +28,10 @@ import {
   VideoSection,
   SponsorsSection,
   JurySection,
+  WinnersSection,
+  ProjectsGallerySection,
+  TestimonialsSection,
+  FunCountersSection,
 } from "@/components/sections";
 import { useEffect, useRef, useState } from "react";
 
@@ -43,41 +62,49 @@ export function ShowcasePageContent() {
       <Nav />
 
       {/* Hero */}
-      <section ref={heroRef} className="pt-[140px] pb-16 px-6 md:px-12">
-        <div className="max-w-[1100px] mx-auto">
-          <Link
-            href="/"
+      <section
+        ref={heroRef}
+        className="relative min-h-[70vh] flex items-center overflow-hidden pt-[140px] pb-20 px-6 md:px-12"
+      >
+        <DottedSurface className="absolute inset-0 z-0" />
+        <div className="absolute inset-0 pointer-events-none z-0 bg-[radial-gradient(circle,rgba(var(--acid-rgb),0.08)_1px,transparent_1px)] bg-size-[60px_60px]" />
+        <div className="absolute inset-0 pointer-events-none z-1 bg-[radial-gradient(ellipse_90%_70%_at_50%_50%,transparent_30%,rgba(5,5,5,0.75)_70%,rgba(5,5,5,0.98)_100%)]" />
+
+        <div className="relative z-2 w-full max-w-[1100px] mx-auto text-center">
+          <div
             className={cn(
-              "inline-flex items-center gap-2 font-mono text-[12px] tracking-[0.14em] text-white/50 hover:text-acid uppercase no-underline transition-all duration-700 mb-8",
+              "font-mono text-[13px] tracking-[0.22em] text-acid uppercase mb-6 transition-all duration-700",
               heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
-            <ArrowLeft className="w-4 h-4" />
-            Към Началото
-          </Link>
+            {siteConfig.event.name} {siteConfig.event.year} · Архив
+          </div>
 
           <h1
             className={cn(
-              "font-display text-[clamp(52px,9vw,80px)] leading-[1.05] transition-all duration-700 delay-100",
+              "font-display text-[clamp(64px,11vw,120px)] leading-[1.02] transition-all duration-700 delay-100",
               heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             )}
           >
-            СЛЕД <span className="text-acid">СЪБИТИЕТО</span>
+            След <span className="text-acid">събитието</span>
           </h1>
 
           <p
             className={cn(
-              "max-w-[600px] font-mono text-[13px] text-white/50 leading-[1.8] mt-6 transition-all duration-700 delay-200",
+              "max-w-[640px] mx-auto font-mono text-[15px] md:text-[16px] text-white/75 leading-[1.9] mt-8 transition-all duration-700 delay-200",
               heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             )}
           >
-            48 часа код, креативност и AI. Разгледайте най-добрите моменти от RUSE AI HACK &apos;26
-            — от първия ред код до финалното представяне.
+            48 часа код, креативност и AI. Разгледайте най-добрите моменти от{" "}
+            {siteConfig.event.name} {siteConfig.event.year} — от първия ред код до финалното
+            представяне.
           </p>
         </div>
       </section>
 
       <ShowcaseStatsSection stats={SHOWCASE_STATS} />
+
+      <WinnersSection winners={SHOWCASE_WINNERS} />
 
       <PhotoGallerySection photos={featuredPhotos} showViewAll />
 
@@ -85,28 +112,71 @@ export function ShowcasePageContent() {
         <VideoSection videoId={SHOWCASE_VIDEO_ID} label="Акценти" title="Видео от събитието" />
       )}
 
+      <ProjectsGallerySection projects={SHOWCASE_PROJECTS} />
+
+      <TestimonialsSection testimonials={SHOWCASE_TESTIMONIALS} />
+
+      <FunCountersSection counters={SHOWCASE_FUN_COUNTERS} />
+
       <SponsorsSection hideCTA />
       <JurySection hideCriteria />
 
-      {/* CTA */}
-      <section className="px-6 py-25 md:px-12">
-        <div className="max-w-[1100px] mx-auto text-center">
-          <h2 className="font-display text-[clamp(36px,6vw,52px)] leading-[1.1] mb-6">
-            ДО <span className="text-acid">СЛЕДВАЩИЯ ПЪТ</span>
+      {/* CTA — До следващия път */}
+      <section className="relative px-6 py-24 md:px-12 border-t border-border overflow-hidden">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 1px 1px, var(--color-acid) 1px, transparent 0)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        <div className="relative max-w-[1100px] mx-auto text-center">
+          <div className="font-mono text-[11px] tracking-[0.18em] text-acid uppercase mb-4">
+            {siteConfig.event.name} {siteConfig.event.year} · Край
+          </div>
+          <h2 className="font-display text-[clamp(40px,7vw,64px)] leading-[1.05] mb-6">
+            До <span className="text-acid">следващия път</span>
           </h2>
-          <p className="font-mono text-[13px] text-white/50 max-w-[500px] mx-auto leading-[1.8] mb-8">
-            Благодарим на всички участници, ментори и спонсори, които направиха събитието възможно.
+          <p className="font-mono text-[13px] text-white/55 max-w-[560px] mx-auto leading-[1.9] mb-10">
+            Благодарим на всички участници, ментори, жури и спонсори, които направиха събитието
+            възможно. Следвайте ни, за да сте първи, когато обявим следващото издание.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              href="/"
-              className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black py-3 px-8 hover:bg-white transition-colors"
+
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
+            <a
+              href="https://startupfactory.bg/buletin/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.14em] uppercase no-underline bg-acid text-black py-3 px-6 hover:bg-white transition-colors"
             >
-              Начална страница
-            </Link>
+              <Send className="w-4 h-4" />
+              Абонирай се за бюлетин
+            </a>
+            <a
+              href={siteConfig.social.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.14em] uppercase no-underline border border-white/20 text-white/70 py-3 px-6 hover:border-acid/50 hover:text-acid transition-all"
+            >
+              <Instagram className="w-4 h-4" />
+              Instagram
+            </a>
+            <a
+              href={siteConfig.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.14em] uppercase no-underline border border-white/20 text-white/70 py-3 px-6 hover:border-acid/50 hover:text-acid transition-all"
+            >
+              <Linkedin className="w-4 h-4" />
+              LinkedIn
+            </a>
+          </div>
+
+          <div className="flex flex-wrap justify-center font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase">
             <Link
               href="/showcase/gallery"
-              className="font-mono text-[11px] font-bold tracking-[0.14em] uppercase no-underline border border-white/20 text-white/70 py-3 px-8 hover:border-acid/50 hover:text-acid transition-all"
+              className="hover:text-acid no-underline transition-colors"
             >
               Пълна галерия →
             </Link>

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
+import { IS_SHOWCASE_MODE } from "@/lib";
 import { FullGalleryContent } from "@/components/full-gallery-content";
 
 export const metadata: Metadata = {
@@ -12,5 +14,6 @@ export const metadata: Metadata = {
 };
 
 export default function GalleryPage() {
+  if (!IS_SHOWCASE_MODE) notFound();
   return <FullGalleryContent />;
 }
