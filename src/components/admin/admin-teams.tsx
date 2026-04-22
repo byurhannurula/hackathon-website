@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Users, User, Lightbulb, Sparkles, Clock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Users, User, Lightbulb, Sparkles, Clock, Info, X } from "lucide-react";
 
 import { cn } from "@/lib";
 import { useAdminAuth } from "@/hooks";
@@ -186,9 +186,12 @@ export function AdminTeams() {
         <>
           {suggestions.length > 0 && (
             <section className="mb-10">
-              <p className="font-mono text-[12px] text-white/35 mb-4">
-                Препоръки на база умения и интереси — само идея за организаторите
-              </p>
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <p className="font-mono text-[12px] text-white/35">
+                  Препоръки на база умения и интереси — само идея за организаторите
+                </p>
+                <AlgorithmInfoButton />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {suggestions.map((sg, i) => (
                   <SuggestedCard key={i} index={i + 1} suggestion={sg} />
@@ -245,7 +248,7 @@ function TeamCard({ team }: { team: Team }) {
         ))}
       </div>
       {/* <IdeaBlock
-        ideas={team.members.filter((m) => m.has_theme === "Да" && m.theme_description)}
+        ideas={team.members.filter((m) => m.has_theme === "Да" && m.theme_description?.trim())}
         borderColor="border-white/5"
       /> */}
     </div>
@@ -261,6 +264,7 @@ function SuggestedCard({ index, suggestion }: { index: number; suggestion: Sugge
         <div className="flex items-center gap-2">
           <Sparkles size={14} className="text-acid/60" />
           <span className="font-display text-lg text-acid/80">Потенциален #{index}</span>
+          <SuggestionWhyButton suggestion={suggestion} />
         </div>
         <span className="font-mono text-[12px] text-acid/50">
           {suggestion.members.length} {suggestion.members.length === 1 ? "член" : "члена"}
@@ -273,7 +277,9 @@ function SuggestedCard({ index, suggestion }: { index: number; suggestion: Sugge
         ))}
       </div>
       <IdeaBlock
-        ideas={suggestion.members.filter((m) => m.has_theme === "Да" && m.theme_description)}
+        ideas={suggestion.members.filter(
+          (m) => m.has_theme === "Да" && m.theme_description?.trim()
+        )}
         borderColor="border-acid/10"
       />
     </div>
@@ -286,7 +292,7 @@ function SoloCard({ member }: { member: Member }) {
   return (
     <div className="border border-white/8 bg-card p-5 hover:border-white/15 transition-colors">
       <MemberRow member={member} expanded />
-      {member.has_theme === "Да" && member.theme_description && (
+      {member.has_theme === "Да" && member.theme_description?.trim() && (
         <div className="mt-3 pt-3 border-t border-white/5">
           <div className="flex items-center gap-1.5 mb-1">
             <Lightbulb size={12} className="text-acid/50" />
@@ -388,14 +394,305 @@ function MemberRow({ member, expanded = false }: { member: Member; expanded?: bo
             </span>
           </Tip>
         )}
-        {member.has_theme === "Да" && (
-          <Tip
-            label={`Има идея за проект${member.theme_description ? `: ${member.theme_description}` : ""}`}
-          >
+        {member.has_theme === "Да" && member.theme_description?.trim() && (
+          <Tip label={`Има идея за проект: ${member.theme_description}`}>
             <Lightbulb size={12} className="text-acid/50" />
           </Tip>
         )}
       </div>
+    </div>
+  );
+}
+
+// ─── Per-Suggestion Why Button ─────────────────────────────
+
+function SuggestionWhyButton({ suggestion }: { suggestion: SuggestedTeam }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const isPass1 = suggestion.reason.startsWith("Сходни интереси");
+  const keywords = isPass1
+    ? suggestion.reason
+        .replace("Сходни интереси:", "")
+        .split(",")
+        .map((k) => k.trim())
+        .filter(Boolean)
+    : [];
+
+  const levels = suggestion.members.map((m) => ({
+    name: m.full_name,
+    dev: m.dev_experience,
+    ai: m.ai_experience,
+    role: m.role,
+    hasIdea: m.has_theme === "Да",
+  }));
+
+  const devLevelsNumeric = levels.map((l) => {
+    const order = [
+      "Нямам опит",
+      "Минимален - под 1 година",
+      "Начално ниво - между 1 и 3 години",
+      "Средно ниво - между 4 и 7 години",
+      "Високо ниво - над 8 години",
+    ];
+    return order.indexOf(l.dev);
+  });
+  const spread = Math.max(...devLevelsNumeric) - Math.min(...devLevelsNumeric);
+  const ideasCount = levels.filter((l) => l.hasIdea).length;
+  const uniqueRoles = new Set(levels.map((l) => l.role));
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen((v) => !v);
+        }}
+        className={cn(
+          "inline-flex items-center justify-center p-1 -m-1 cursor-pointer transition-colors",
+          open ? "text-acid" : "text-white/30 hover:text-white/70"
+        )}
+        aria-label="Защо тези хора са заедно"
+      >
+        <Info size={13} />
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full mt-2 w-[min(88vw,360px)] bg-neutral-950 border border-acid/20 shadow-xl z-30 p-4">
+          <div className="flex items-start justify-between gap-2 mb-3">
+            <h4 className="font-display text-[14px] text-white">Защо са групирани?</h4>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white/30 hover:text-white/70 transition-colors cursor-pointer -mr-1 -mt-1 p-1"
+              aria-label="Затвори"
+            >
+              <X size={12} />
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-1">
+                Метод
+              </div>
+              <div className="font-mono text-[11px] text-white/70 leading-[1.6]">
+                {isPass1 ? (
+                  <>
+                    <span className="text-acid">Стъпка 1</span> — съчетани по общи ключови думи в
+                    описанията на идеите (поне 2 общи).
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white/80">Стъпка 2</span> — никой в групата няма
+                    припокриваща се идея с друг, затова са балансирани по dev опит (snake draft).
+                  </>
+                )}
+              </div>
+            </div>
+
+            {isPass1 && keywords.length > 0 && (
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-1.5">
+                  Общи ключови думи
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {keywords.map((kw, i) => (
+                    <span
+                      key={i}
+                      className="font-mono text-[11px] px-2 py-0.5 bg-acid/10 text-acid border border-acid/20"
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <div className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-1.5">
+                Dev опит в отбора
+              </div>
+              <div className="space-y-1">
+                {levels.map((l, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-[11px] text-white/60 truncate">{l.name}</span>
+                    <span className="font-mono text-[10px] text-white/45 shrink-0">
+                      {DEV_SHORT[l.dev] || "?"} · AI {AI_SHORT[l.ai] || "?"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="font-mono text-[10px] text-white/35 mt-1.5">
+                Разлика в нивата: <span className="text-white/60">{spread}</span> стъпки{" "}
+                {spread >= 2 ? "(добър микс)" : "(близки нива)"}
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-white/5 grid grid-cols-2 gap-2">
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-0.5">
+                  С идея
+                </div>
+                <div className="font-mono text-[12px] text-white/70">
+                  {ideasCount} / {levels.length}
+                </div>
+              </div>
+              <div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-white/35 mb-0.5">
+                  Уникални роли
+                </div>
+                <div className="font-mono text-[12px] text-white/70">
+                  {uniqueRoles.size} / {levels.length}
+                </div>
+              </div>
+            </div>
+
+            {uniqueRoles.size < levels.length && (
+              <div className="pt-2 border-t border-white/5">
+                <div className="font-mono text-[10px] text-amber-400/80 leading-[1.6]">
+                  ⚠ Повтарящи се роли — алгоритъмът не балансира по роля. Провери на ръка.
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Algorithm Info ────────────────────────────────────────
+
+function AlgorithmInfoButton() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative shrink-0">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] px-2.5 py-1.5 border cursor-pointer transition-colors",
+          open
+            ? "border-acid/40 text-acid bg-acid/5"
+            : "border-white/10 text-white/50 hover:border-white/25 hover:text-white/80"
+        )}
+        aria-label="Как се генерират предложенията"
+      >
+        <Info size={12} />
+        Как работи
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-[min(92vw,440px)] bg-neutral-950 border border-white/10 shadow-xl z-40 p-5">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} className="text-acid" />
+              <h3 className="font-display text-base text-white">Как се генерират предложенията</h3>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-white/40 hover:text-white/80 transition-colors cursor-pointer -mr-1 -mt-1 p-1"
+              aria-label="Затвори"
+            >
+              <X size={14} />
+            </button>
+          </div>
+
+          <p className="font-mono text-[12px] text-white/60 leading-[1.7] mb-4">
+            Участниците без отбор се групират в две стъпки. Човек, който е разпределен в стъпка 1,
+            не участва в стъпка 2.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="font-mono text-[10px] px-1.5 py-0.5 bg-acid/15 text-acid">
+                  СТЪПКА 1
+                </span>
+                <span className="font-display text-[13px] text-white/90">Съчетаване по идея</span>
+              </div>
+              <p className="font-mono text-[11px] text-white/50 leading-[1.7]">
+                За всеки, който е описал идея, извличаме ключови думи от текста (без стоп-думи и
+                шум). Ако двама души имат{" "}
+                <span className="text-acid">поне 2 общи ключови думи</span>, попадат в една група —
+                до 4 души. Добавяме и един човек без идея за баланс. Reason-ът на картата показва
+                общите ключови думи.
+              </p>
+              <p className="font-mono text-[10px] text-white/35 leading-[1.7] mt-1.5 italic">
+                Забележка: ако някой е маркирал „имам идея", но е оставил описанието празно, го
+                третираме като <span className="text-white/55">без идея</span> — не влиза в това
+                съчетаване.
+              </p>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="font-mono text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70">
+                  СТЪПКА 2
+                </span>
+                <span className="font-display text-[13px] text-white/90">
+                  Баланс по опит в програмирането
+                </span>
+              </div>
+              <p className="font-mono text-[11px] text-white/50 leading-[1.7]">
+                Останалите сортираме по ниво на dev опит и раздаваме „змийски" (snake draft) в
+                отбори по 3, така че всеки отбор да има микс от начинаещи и опитни. Reason-ът
+                показва дали отборът има идея, смесени нива, и двете, или нито едно.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-white/5">
+              <div className="font-mono text-[10px] uppercase tracking-widest text-amber-400/80 mb-1.5">
+                Какво НЕ гледаме
+              </div>
+              <p className="font-mono text-[11px] text-white/45 leading-[1.7]">
+                Роля (дизайнер / бекенд / PM), AI опит, организация, град. Проверявай ги на ръка
+                преди да финализираш отбор.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-white/5">
+              <p className="font-mono text-[11px] text-white/45 leading-[1.7] italic">
+                Това са предложения, не финални отбори. Използвай ги като стартова точка —
+                размествай, сливай или игнорирай свободно.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

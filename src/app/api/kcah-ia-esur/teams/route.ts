@@ -18,6 +18,9 @@ interface Member {
   registration_status: string;
 }
 
+const hasRealIdea = (m: { has_theme: string; theme_description: string | null }) =>
+  m.has_theme === "Да" && !!m.theme_description?.trim();
+
 const DEV_LEVEL: Record<string, number> = {
   "Нямам опит": 0,
   "Минимален - под 1 година": 1,
@@ -99,7 +102,7 @@ export async function GET() {
       totalApproved: registrations.length,
       formedTeams: teams.length,
       soloCount: solos.length,
-      solosWithIdea: solos.filter((s) => s.has_theme === "Да").length,
+      solosWithIdea: solos.filter(hasRealIdea).length,
       pendingCount: registrations.filter((r) => r.registration_status === "pending").length,
     },
   });
@@ -119,7 +122,7 @@ function buildSuggestions(solos: Member[]): SuggestedTeam[] {
   const used = new Set<string>();
 
   // Pass 1: Group by similar theme descriptions (people with matching interests)
-  const withTheme = solos.filter((s) => s.has_theme === "Да" && s.theme_description);
+  const withTheme = solos.filter(hasRealIdea);
   const themeGroups = groupByKeywords(withTheme);
 
   for (const group of themeGroups) {
@@ -129,10 +132,8 @@ function buildSuggestions(solos: Member[]): SuggestedTeam[] {
     const coreIds = new Set(core.map((m) => m.id));
     const keywords = extractKeywords(core.map((m) => m.theme_description || "").join(" "));
 
-    // Find a complementary solo (no theme, different skill level)
-    const complement = solos.find(
-      (s) => !coreIds.has(s.id) && !used.has(s.id) && s.has_theme === "Не"
-    );
+    // Find a complementary solo (no real idea, different skill level)
+    const complement = solos.find((s) => !coreIds.has(s.id) && !used.has(s.id) && !hasRealIdea(s));
 
     const team = complement ? [...core, complement] : core;
     for (const m of team) used.add(m.id);
@@ -150,7 +151,7 @@ function buildSuggestions(solos: Member[]): SuggestedTeam[] {
   for (const team of balanced) {
     for (const m of team) used.add(m.id);
 
-    const hasIdea = team.some((m) => m.has_theme === "Да");
+    const hasIdea = team.some(hasRealIdea);
     const levels = team.map((m) => DEV_LEVEL[m.dev_experience] ?? 0);
     const spread = Math.max(...levels) - Math.min(...levels);
 

@@ -17,7 +17,7 @@ export const siteConfig = {
     duration: "48Ч",
     durationBG: "48 часа",
     location: "Ruse, Bulgaria",
-    locationBG: "Русенски Университет",
+    locationBG: "Русенски Университет, Втори корпус, Зала 2.203",
     organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
     prizesPool: "€2,900",
