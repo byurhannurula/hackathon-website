@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { useLiveCount, useRegistrationOpen } from "@/hooks";
 import { siteConfig } from "@/constants";
-import { DecryptText, CountUp } from "@/components/ui";
+import { DecryptText, CountUp, CountdownTimer } from "@/components/ui";
 import { LogoGlitchNoise } from "@/components/ui/logo-glitch-noise";
 
 const DottedSurface = dynamic(
@@ -41,9 +41,8 @@ export function HeroSection() {
         <h1 className="sr-only">
           {siteConfig.event.name} {siteConfig.event.year} — {siteConfig.event.shortDescription}
         </h1>
-        <div className="animate-fade-in delay-200">
-          <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
-        </div>
+        <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
+        <div className="animate-fade-in delay-200"></div>
 
         <div className="flex items-center justify-center my-8 animate-[fadeUp_0.7s_0.5s_both_ease]">
           <LogoGlitchNoise className="w-[clamp(100px,50vw,320px)]!" />
@@ -56,6 +55,10 @@ export function HeroSection() {
         <p className="font-mono text-[clamp(11px,1.1vw,16px)] leading-[1.95] text-white/85 max-w-[560px] mx-auto mt-6 animate-[fadeUp_0.6s_1.1s_both_ease]">
           {siteConfig.event.shortDescription}
         </p>
+
+        <div className="mt-10 animate-[fadeUp_0.6s_1.2s_both_ease]">
+          <CountdownTimer />
+        </div>
 
         <div className="flex gap-3.5 mt-11 justify-center flex-wrap animate-[fadeUp_0.6s_1.25s_both_ease]">
           {regOpen ? (
@@ -81,7 +84,15 @@ export function HeroSection() {
         </div>
 
         <p className="font-mono text-xs tracking-[0.08em] text-white/50 mt-5 animate-[fadeUp_0.6s_1.4s_both_ease]">
-          Регистрациите са отворени до <span className="text-acid/80">20 април</span>
+          {regOpen ? (
+            <>
+              Регистрациите са <span className="text-acid/80">отворени</span>
+            </>
+          ) : (
+            <>
+              Регистрацията приключи — <span className="text-acid/80">до скоро на събитието!</span>
+            </>
+          )}
         </p>
 
         {/* Stats */}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import confetti from "canvas-confetti";
 
 /**
  * Fires a celebratory confetti burst once on mount.
@@ -21,50 +20,32 @@ export function ConfettiBurst({ enabled = true, onFired }: ConfettiBurstProps) {
     fired.current = true;
     onFired?.();
 
-    const duration = 2500;
-    const end = Date.now() + duration;
+    import("canvas-confetti").then(({ default: confetti }) => {
+      const duration = 2500;
+      const end = Date.now() + duration;
+      const colors = [
+        "#FF3355",
+        "#3B82F6",
+        "#FACC15",
+        "#22C55E",
+        "#A855F7",
+        "#F97316",
+        "#EC4899",
+        "#06B6D4",
+      ];
 
-    const frame = () => {
-      confetti({
-        particleCount: 3,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0, y: 0.7 },
-        colors: [
-          "#FF3355",
-          "#3B82F6",
-          "#FACC15",
-          "#22C55E",
-          "#A855F7",
-          "#F97316",
-          "#EC4899",
-          "#06B6D4",
-        ],
-      });
-      confetti({
-        particleCount: 3,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1, y: 0.7 },
-        colors: [
-          "#FF3355",
-          "#3B82F6",
-          "#FACC15",
-          "#22C55E",
-          "#A855F7",
-          "#F97316",
-          "#EC4899",
-          "#06B6D4",
-        ],
-      });
+      const frame = () => {
+        confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0, y: 0.7 }, colors });
+        confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1, y: 0.7 }, colors });
 
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      };
 
-    // Small delay so ticket renders first
-    setTimeout(frame, 400);
+      // Small delay so ticket renders first
+      setTimeout(frame, 400);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]);
 

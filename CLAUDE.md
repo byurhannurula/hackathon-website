@@ -1,3 +1,5 @@
+@AGENTS.md
+
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
@@ -47,7 +49,7 @@ pnpm run format:check # Prettier check
 
 ### Data flow
 
-- **Registration**: Multi-step form (`register-page.tsx`) validated with Zod schemas (`lib/schemas.ts`) + react-hook-form. Submits to `POST /api/register` which writes to **Supabase** (primary, provides ticket number) and **Airtable** (secondary backup).
+- **Registration**: Multi-step form (`register-page.tsx`) validated with Zod schemas (`lib/schemas.ts`) + react-hook-form. Submits to `POST /api/register` which writes to **Supabase** (provides ticket number).
 - **Tickets**: After registration, users get a shareable ticket page at `/tickets/[slug]` (slug = `ticket_id` UUID). Ticket SVG is rendered client-side for download/sharing.
 - **Live count**: `/api/count` endpoint calls Supabase `get_registration_count()` RPC; consumed by `useLiveCount` hook.
 - **Avatar proxy**: `/api/avatar` proxies GitHub avatar fetches to avoid CORS issues.
@@ -62,7 +64,7 @@ Supabase PostgreSQL. Schema defined in `supabase-init.sql`. Single `registration
 
 ### Environment variables
 
-See `.env.example`. Required for full functionality: Supabase URL + keys, Airtable PAT + base ID, site URL, Umami tracking ID.
+See `.env.example`. Required for full functionality: Supabase URL + keys, Umami tracking ID + API key, site URL.
 
 ### Styling
 

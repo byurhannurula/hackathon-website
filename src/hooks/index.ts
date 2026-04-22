@@ -8,3 +8,4 @@ export { useRegistrationOpen } from "./use-registration-open";
 export { useToast } from "./use-toast";
 export { useInView } from "./use-in-view";
 export { useAdminRegistrations } from "./use-admin-registrations";
+export { useAdminAuth } from "./use-admin-auth";

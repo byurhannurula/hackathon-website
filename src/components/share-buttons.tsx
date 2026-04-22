@@ -26,8 +26,13 @@ export function ShareButtons({ ticketId, downloading, onDownload }: ShareButtons
 
   return (
     <>
-      <div className="font-mono text-[11px] tracking-[0.18em] text-white/40 uppercase">
-        СПОДЕЛИ БИЛЕТА СИ
+      <div className="text-center">
+        <div className="font-mono text-[11px] tracking-[0.18em] text-white/40 uppercase">
+          СПОДЕЛИ БИЛЕТА СИ
+        </div>
+        <p className="font-mono text-[12px] text-white/30 mt-1.5 max-w-[380px] mx-auto leading-[1.7]">
+          Сподели билета си и покани приятели! Билетът не се изисква за достъп до събитието.
+        </p>
       </div>
       <div className="flex gap-2 flex-wrap justify-center">
         <FormButton

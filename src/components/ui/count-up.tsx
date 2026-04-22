@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useInView } from "@/hooks";
 
 interface CountUpProps {
   value: string; // e.g. "600+", "48H", "€5,750", "FREE"
@@ -8,46 +9,26 @@ interface CountUpProps {
 }
 
 export function CountUp({ value, className }: CountUpProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref, inView } = useInView({ threshold: 0.5 });
   const [displayed, setDisplayed] = useState(value);
-  const [visible, setVisible] = useState(false);
   const hasAnimated = useRef(false);
-  const isMobile = useRef(false);
 
   useEffect(() => {
-    isMobile.current = window.innerWidth < 768;
-  }, []);
+    if (!inView || hasAnimated.current) return;
+    hasAnimated.current = true;
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          if (isMobile.current) {
-            setVisible(true);
-          } else {
-            setVisible(true);
-            animateValue(value, setDisplayed);
-          }
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [value]);
+    if (window.innerWidth >= 768) {
+      animateValue(value, setDisplayed);
+    }
+  }, [inView, value]);
 
   return (
     <div
       ref={ref}
       className={className}
       style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(12px)",
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(12px)",
         transition: "opacity 0.6s ease-out, transform 0.6s ease-out",
       }}
     >

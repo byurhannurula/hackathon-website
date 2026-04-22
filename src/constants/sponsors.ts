@@ -25,6 +25,13 @@ export const SPONSORS: Sponsor[] = [
     tier: "strategic",
   },
   {
+    name: "SumUp",
+    label: "Технологичен партньор",
+    logo: "/sponsors/sumup-logo-black.svg",
+    href: "https://www.sumup.com/bg-bg/",
+    tier: "strategic",
+  },
+  {
     name: "Sirma",
     label: "AI партньор",
     logo: "/sponsors/sirma-logo-light.svg",
@@ -68,6 +75,14 @@ export const SPONSORS: Sponsor[] = [
     href: "https://www.ocean.investments/",
     tier: "supporter",
   },
+
+  {
+    name: "SoftServe",
+    logo: "/sponsors/softserve-logo-white.svg",
+    href: "https://www.softserveinc.com/en-us",
+    tier: "supporter",
+    logoScale: 1.25,
+  },
   {
     name: "CheckPoint",
     logo: "/sponsors/cp-logo-text.svg",
@@ -75,13 +90,38 @@ export const SPONSORS: Sponsor[] = [
     tier: "supporter",
   },
   {
+    name: "Logos",
+    logo: "/sponsors/logos.png",
+    href: "https://github.com/logos-circle-ruse",
+    tier: "supporter",
+    logoScale: 1.5,
+  },
+
+  {
     name: "Utro",
     logo: "/sponsors/utro.png",
     href: "https://utroruse.com/",
     tier: "media",
     invertLogo: true,
   },
+  {
+    name: "Ruse On The Danube",
+    logo: "/sponsors/ruse_on_the_danube_white.png",
+    href: "https://www.instagram.com/ruse.on.the.danube/",
+    tier: "media",
+    logoScale: 1.35,
+  },
+  {
+    name: "Шлаагер",
+    logo: "/sponsors/shlager.png",
+    href: "https://www.facebook.com/p/%D0%A8%D0%BB%D0%B0%D0%B3%D0%B5%D1%80-%D0%A0%D0%B0%D0%B4%D0%B8%D0%BE-905-FM-100063981518027/",
+    tier: "media",
+    invertLogo: false,
+    logoScale: 1.25,
+  },
 ];
 
 // Just names for ticker scroll
-export const SPONSOR_NAMES = SPONSORS.filter((s) => s.tier !== "media").map((s) => s.name);
+export const SPONSOR_NAMES = SPONSORS.filter((s) => s.tier !== "media")
+  .filter((s) => s.tier !== "supporter")
+  .map((s) => s.name);

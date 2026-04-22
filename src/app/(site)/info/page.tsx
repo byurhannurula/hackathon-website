@@ -10,6 +10,12 @@ export const metadata: Metadata = {
     description: "Всичко, което трябва да знаете за 48-часовия AI хакатон в Русе.",
     images: [{ url: "/api/og", width: 1200, height: 630 }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Информация | RUSE AI HACK '26",
+    description: "Всичко, което трябва да знаете за 48-часовия AI хакатон в Русе.",
+    images: ["/api/og"],
+  },
 };
 
 export default function InfoPage() {
