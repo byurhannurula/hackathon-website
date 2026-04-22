@@ -90,6 +90,14 @@ export const MENTORS: Person[] = [
     linkedin: "https://www.linkedin.com/in/alexander-kondov-2a8b25a9/",
   },
   {
+    name: "Пламен Кутинчев",
+    role: "Ментор",
+    org: "SumUp",
+    image:
+      "https://media.licdn.com/dms/image/v2/C4D03AQHVCVqkPVqoKg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1620855052178?e=1778716800&v=beta&t=2ImZXBzfWslhm4ktGVjLoun4oXiIE2tsZCG5REJ_Buw",
+    linkedin: "https://www.linkedin.com/in/cuctemeh/",
+  },
+  {
     name: "Ивелин Белчев",
     role: "Ментор",
     org: "Freelance, Checkpoint",
