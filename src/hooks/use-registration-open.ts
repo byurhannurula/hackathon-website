@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 let cached: boolean | null = null;
 
 export function useRegistrationOpen() {
-  const [open, setOpen] = useState(cached ?? true);
+  const [open, setOpen] = useState(cached ?? false);
 
   useEffect(() => {
     if (cached !== null) return;

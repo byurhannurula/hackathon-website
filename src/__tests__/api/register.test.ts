@@ -27,10 +27,10 @@ const validRegistration = {
   email: "ivan@example.com",
   phone: "+359 888 123 456",
   age: "25",
-  role: "Developer",
+  role: "Студент",
   organization: "Русенски университет",
-  devExperience: "3-5 години",
-  aiExperience: "Среден",
+  devExperience: "Начално ниво - между 1 и 3 години",
+  aiExperience: "Между 1 и 6 месеца",
   aiTools: "ChatGPT, Claude",
   motivation:
     "Искам да участвам защото обичам AI технологиите и искам да науча нови неща. Вярвам че този хакатон ще бъде невероятна възможност.",
@@ -38,7 +38,7 @@ const validRegistration = {
   hasTheme: "Да",
   hasTeam: "Не",
   wantChallenge: "Да",
-  volunteerHelp: "Може би",
+  volunteerHelp: "Възможно",
   agreeRandomTeams: true,
   gdprConsent: true,
   registrationNotGuaranteed: true,
@@ -148,7 +148,7 @@ describe("POST /api/register", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createClient>);
 
     const { POST } = await import("@/app/api/register/route");
     const res = await POST(makeRequest(validRegistration));
@@ -173,7 +173,7 @@ describe("POST /api/register", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createClient>);
 
     const { POST } = await import("@/app/api/register/route");
     const res = await POST(makeRequest(validRegistration));
@@ -197,7 +197,7 @@ describe("POST /api/register", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createClient>);
 
     const { POST } = await import("@/app/api/register/route");
     const res = await POST(makeRequest(validRegistration));
@@ -222,7 +222,7 @@ describe("POST /api/register", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createClient>);
 
     const { POST } = await import("@/app/api/register/route");
     const res = await POST(makeRequest(validRegistration));

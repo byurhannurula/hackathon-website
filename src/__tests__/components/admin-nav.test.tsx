@@ -1,75 +1,93 @@
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
-import { AdminNav } from "@/components/admin/admin-nav";
 
-// Mock next/link
+import { AdminNav } from "@/components/admin/admin-nav";
+import { RegistrationToggleCard } from "@/components/admin/registration-toggle-card";
+
 vi.mock("next/link", () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
   ),
 }));
 
-afterEach(cleanup);
+const pushMock = vi.fn();
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/kcah-ia-esur",
+  useRouter: () => ({ push: pushMock, replace: vi.fn(), back: vi.fn() }),
+}));
 
-const defaultProps = {
-  regOpen: true,
-  regToggleLoading: false,
-  onToggleClick: vi.fn(),
-  onLogout: vi.fn(),
-};
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
 
 describe("AdminNav", () => {
   it("renders RUSE AI HACK brand", () => {
-    const { getByText } = render(<AdminNav {...defaultProps} />);
+    const { getByText } = render(<AdminNav />);
     expect(getByText("RUSE")).toBeInTheDocument();
     expect(getByText(/AI HACK/)).toBeInTheDocument();
   });
 
   it("renders ADMIN label", () => {
-    const { getByText } = render(<AdminNav {...defaultProps} />);
+    const { getByText } = render(<AdminNav />);
     expect(getByText("ADMIN")).toBeInTheDocument();
   });
 
-  it("shows ON when registration is open", () => {
-    const { getByText } = render(<AdminNav {...defaultProps} regOpen={true} />);
-    expect(getByText("ON")).toBeInTheDocument();
+  it("renders navigation links", () => {
+    const { getByText } = render(<AdminNav />);
+    expect(getByText("Регистрации")).toBeInTheDocument();
+    expect(getByText("Статистика")).toBeInTheDocument();
+    expect(getByText("Отбори")).toBeInTheDocument();
   });
 
-  it("shows OFF when registration is closed", () => {
-    const { getByText } = render(<AdminNav {...defaultProps} regOpen={false} />);
-    expect(getByText("OFF")).toBeInTheDocument();
+  it("triggers logout fetch when logout button is clicked", () => {
+    const fetchSpy = vi.spyOn(global, "fetch").mockResolvedValue(new Response());
+    const { getByText } = render(<AdminNav />);
+    fireEvent.click(getByText("Изход"));
+    expect(fetchSpy).toHaveBeenCalledWith("/api/kcah-ia-esur/auth", { method: "DELETE" });
+    fetchSpy.mockRestore();
   });
 
-  it("calls onToggleClick when toggle button is clicked", () => {
-    const onToggleClick = vi.fn();
-    const { container } = render(<AdminNav {...defaultProps} onToggleClick={onToggleClick} />);
-    const toggleBtn = container.querySelector("button");
-    toggleBtn?.click();
-    expect(onToggleClick).toHaveBeenCalledTimes(1);
+  it("renders optional actions slot", () => {
+    const { getByText } = render(<AdminNav actions={<span>EXTRA</span>} />);
+    expect(getByText("EXTRA")).toBeInTheDocument();
+  });
+});
+
+describe("RegistrationToggleCard", () => {
+  const defaultProps = { regOpen: true, loading: false, onClick: vi.fn() };
+
+  it("shows ОТВОРЕНА when registration is open", () => {
+    const { getByText } = render(<RegistrationToggleCard {...defaultProps} regOpen={true} />);
+    expect(getByText("ОТВОРЕНА")).toBeInTheDocument();
   });
 
-  it("calls onLogout when logout button is clicked", () => {
-    const onLogout = vi.fn();
-    const { getByText } = render(<AdminNav {...defaultProps} onLogout={onLogout} />);
-    getByText("Изход").click();
-    expect(onLogout).toHaveBeenCalledTimes(1);
+  it("shows ЗАТВОРЕНА when registration is closed", () => {
+    const { getByText } = render(<RegistrationToggleCard {...defaultProps} regOpen={false} />);
+    expect(getByText("ЗАТВОРЕНА")).toBeInTheDocument();
   });
 
-  it("disables toggle button when loading", () => {
-    const { container } = render(<AdminNav {...defaultProps} regToggleLoading={true} />);
-    const toggleBtn = container.querySelector("button");
-    expect(toggleBtn?.disabled).toBe(true);
+  it("calls onClick when toggle is clicked", () => {
+    const onClick = vi.fn();
+    const { getByLabelText } = render(
+      <RegistrationToggleCard {...defaultProps} onClick={onClick} />
+    );
+    fireEvent.click(getByLabelText("Превключи регистрация"));
+    expect(onClick).toHaveBeenCalledTimes(1);
+  });
+
+  it("disables toggle when loading", () => {
+    const { getByLabelText } = render(<RegistrationToggleCard {...defaultProps} loading={true} />);
+    expect((getByLabelText("Превключи регистрация") as HTMLButtonElement).disabled).toBe(true);
   });
 
   it("applies emerald styling when registration is open", () => {
-    const { container } = render(<AdminNav {...defaultProps} regOpen={true} />);
-    const toggleBtn = container.querySelector("button");
-    expect(toggleBtn?.className).toContain("emerald");
+    const { getByLabelText } = render(<RegistrationToggleCard {...defaultProps} regOpen={true} />);
+    expect(getByLabelText("Превключи регистрация").className).toContain("emerald");
   });
 
   it("applies red styling when registration is closed", () => {
-    const { container } = render(<AdminNav {...defaultProps} regOpen={false} />);
-    const toggleBtn = container.querySelector("button");
-    expect(toggleBtn?.className).toContain("red");
+    const { getByLabelText } = render(<RegistrationToggleCard {...defaultProps} regOpen={false} />);
+    expect(getByLabelText("Превключи регистрация").className).toContain("red");
   });
 });

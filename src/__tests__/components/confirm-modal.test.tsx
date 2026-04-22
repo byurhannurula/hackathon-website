@@ -1,6 +1,7 @@
 import { render, cleanup } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { ConfirmModal } from "@/components/admin/confirm-modal";
+import type { Registration } from "@/lib/types";
 
 afterEach(cleanup);
 
@@ -9,13 +10,13 @@ const mockReg = {
   full_name: "Иван Иванов",
   email: "ivan@example.com",
   registration_status: "pending" as const,
-};
+} as unknown as Registration;
 
 describe("ConfirmModal", () => {
   it("renders approve dialog title for approved status", () => {
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={vi.fn()}
         onConfirm={vi.fn()}
       />
@@ -26,7 +27,7 @@ describe("ConfirmModal", () => {
   it("renders reject dialog title for rejected status", () => {
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "rejected" }}
+        confirmAction={{ reg: mockReg, status: "rejected" }}
         onCancel={vi.fn()}
         onConfirm={vi.fn()}
       />
@@ -37,7 +38,7 @@ describe("ConfirmModal", () => {
   it("displays the registrant name", () => {
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={vi.fn()}
         onConfirm={vi.fn()}
       />
@@ -48,7 +49,7 @@ describe("ConfirmModal", () => {
   it("displays the registrant email", () => {
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={vi.fn()}
         onConfirm={vi.fn()}
       />
@@ -60,7 +61,7 @@ describe("ConfirmModal", () => {
     const onCancel = vi.fn();
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={onCancel}
         onConfirm={vi.fn()}
       />
@@ -73,7 +74,7 @@ describe("ConfirmModal", () => {
     const onConfirm = vi.fn();
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={vi.fn()}
         onConfirm={onConfirm}
       />
@@ -86,7 +87,7 @@ describe("ConfirmModal", () => {
     const onConfirm = vi.fn();
     const { getByText } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "rejected" }}
+        confirmAction={{ reg: mockReg, status: "rejected" }}
         onCancel={vi.fn()}
         onConfirm={onConfirm}
       />
@@ -99,7 +100,7 @@ describe("ConfirmModal", () => {
     const onCancel = vi.fn();
     const { container } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={onCancel}
         onConfirm={vi.fn()}
       />
@@ -113,7 +114,7 @@ describe("ConfirmModal", () => {
   it("has correct aria attributes for accessibility", () => {
     const { container } = render(
       <ConfirmModal
-        confirmAction={{ reg: mockReg as any, status: "approved" }}
+        confirmAction={{ reg: mockReg, status: "approved" }}
         onCancel={vi.fn()}
         onConfirm={vi.fn()}
       />

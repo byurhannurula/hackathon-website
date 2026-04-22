@@ -1,8 +1,19 @@
+"use client";
+
 import Link from "next/link";
 import { Instagram, Facebook, Mail, Linkedin } from "lucide-react";
 import { siteConfig } from "@/constants";
+import { useRegistrationOpen } from "@/hooks";
 
 export function Footer() {
+  const regOpen = useRegistrationOpen();
+
+  const pageLinks = [
+    { label: "Информация", href: "/info" },
+    { label: "Правила", href: "/rules" },
+    ...(regOpen ? [{ label: "Регистрация", href: "/register" }] : []),
+  ];
+
   return (
     <footer className="border-t border-border bg-card">
       <div className="max-w-[1100px] mx-auto px-6 md:px-12 py-10">
@@ -89,11 +100,7 @@ export function Footer() {
                 Страници
               </div>
               <div className="flex flex-col gap-2">
-                {[
-                  { label: "Информация", href: "/info" },
-                  { label: "Правила", href: "/rules" },
-                  { label: "Регистрация", href: "/register" },
-                ].map((link) => (
+                {pageLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -117,12 +124,14 @@ export function Footer() {
                 >
                   {siteConfig.contact.sponsorEmail}
                 </a>
-                <Link
-                  href="/register"
-                  className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
-                >
-                  Регистрация →
-                </Link>
+                {regOpen && (
+                  <Link
+                    href="/register"
+                    className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
+                  >
+                    Регистрация →
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -15,13 +15,13 @@ const validStep1 = {
   email: "ivan@example.com",
   phone: "+359 888 123 456",
   age: "25",
-  role: "Developer",
+  role: "Студент",
   organization: "Русенски университет",
-  devExperience: "3-5 години",
+  devExperience: "Начално ниво - между 1 и 3 години",
 };
 
 const validStep2 = {
-  aiExperience: "Среден",
+  aiExperience: "Между 1 и 6 месеца",
   aiTools: "ChatGPT, Claude, Cursor",
   motivation:
     "Искам да участвам защото обичам AI технологиите и искам да науча нови неща. Вярвам че този хакатон ще бъде невероятна възможност за учене и нетуъркинг.",
@@ -32,7 +32,7 @@ const validStep3 = {
   hasTheme: "Да",
   hasTeam: "Не",
   wantChallenge: "Да",
-  volunteerHelp: "Може би",
+  volunteerHelp: "Възможно",
   agreeRandomTeams: true as const,
   gdprConsent: true as const,
   registrationNotGuaranteed: true as const,
@@ -348,9 +348,9 @@ describe("updateStatusSchema", () => {
     expect(result.success).toBe(true);
   });
 
-  it("rejects pending status (only approved/rejected allowed)", () => {
+  it("accepts pending status", () => {
     const result = updateStatusSchema.safeParse({ registration_status: "pending" });
-    expect(result.success).toBe(false);
+    expect(result.success).toBe(true);
   });
 
   it("rejects arbitrary status", () => {

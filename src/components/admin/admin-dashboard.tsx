@@ -1,26 +1,25 @@
 "use client";
 
-import { useToast } from "@/hooks";
-import { useAdminRegistrations } from "@/hooks";
+import { useToast, useAdminRegistrations } from "@/hooks";
 import { Toast } from "@/components/ui";
 import { AdminNav } from "./admin-nav";
 import { StatsGrid } from "./stats-grid";
 import { ControlsBar } from "./controls-bar";
 import { RegistrationsTable } from "./registrations-table";
 import { RegistrationSheet } from "./registration-sheet";
+import { RegistrationToggleCard } from "./registration-toggle-card";
 import { ConfirmModal } from "./confirm-modal";
 import { ToggleModal } from "./toggle-modal";
+import { BroadcastModal } from "./broadcast-modal";
 
 export function AdminDashboard() {
   const { toast, show: showToast } = useToast();
   const admin = useAdminRegistrations(showToast);
 
   return (
-    <div className="min-h-screen bg-bg text-white">
-      {/* Toast */}
+    <>
       {toast && <Toast message={toast.message} type={toast.type} />}
 
-      {/* Confirmation Modal */}
       {admin.confirmAction && (
         <ConfirmModal
           confirmAction={admin.confirmAction}
@@ -29,7 +28,6 @@ export function AdminDashboard() {
         />
       )}
 
-      {/* Registration Toggle Modal */}
       {admin.regToggleStep > 0 && (
         <ToggleModal
           regOpen={admin.regOpen}
@@ -39,13 +37,16 @@ export function AdminDashboard() {
         />
       )}
 
-      {/* Header */}
-      <AdminNav
-        regOpen={admin.regOpen}
-        regToggleLoading={admin.regToggleLoading}
-        onToggleClick={() => admin.setRegToggleStep(1)}
-        onLogout={admin.handleLogout}
-      />
+      {admin.broadcastOpen && (
+        <BroadcastModal
+          stats={admin.stats}
+          loading={admin.broadcastLoading}
+          onClose={() => admin.setBroadcastOpen(false)}
+          onSend={admin.sendBroadcast}
+        />
+      )}
+
+      <AdminNav />
 
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
         <StatsGrid stats={admin.stats} />
@@ -55,6 +56,7 @@ export function AdminDashboard() {
           onSearch={admin.handleSearch}
           statusFilter={admin.statusFilter}
           onStatusFilter={admin.setStatusFilter}
+          onBroadcast={() => admin.setBroadcastOpen(true)}
         />
 
         <RegistrationsTable
@@ -68,20 +70,25 @@ export function AdminDashboard() {
           order={admin.order}
           onSort={admin.handleSort}
           onPageChange={admin.goToPage}
-          fmtDate={admin.fmtDate}
+        />
+
+        <RegistrationToggleCard
+          regOpen={admin.regOpen}
+          loading={admin.regToggleLoading}
+          onClick={() => admin.setRegToggleStep(1)}
         />
       </div>
 
-      {/* Sheet overlay + panel */}
       {admin.selectedReg && (
         <RegistrationSheet
           reg={admin.selectedReg}
           onClose={() => admin.setSelectedReg(null)}
           onUpdateStatus={admin.requestStatusChange}
-          isLoading={admin.actionLoading === admin.selectedReg.id}
-          fmtDate={admin.fmtDate}
+          isLoading={admin.selectedRegLoading}
+          onNotesUpdated={admin.handleNotesUpdated}
+          onError={(msg) => admin.showToast(msg, "error")}
         />
       )}
-    </div>
+    </>
   );
 }

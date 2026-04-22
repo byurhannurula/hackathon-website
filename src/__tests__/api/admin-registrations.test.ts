@@ -82,8 +82,8 @@ describe("GET /api/kcah-ia-esur/registrations", () => {
     const req = new NextRequest("http://localhost:3000/api/kcah-ia-esur/registrations");
     await GET(req);
 
-    // range should be called with (0, 14) for page 1, pageSize 15
-    expect(mockRange).toHaveBeenCalledWith(0, 14);
+    // range should be called with (0, 9) for page 1, pageSize 10
+    expect(mockRange).toHaveBeenCalledWith(0, 9);
   });
 
   it("calculates correct range for page 2", async () => {
@@ -91,7 +91,7 @@ describe("GET /api/kcah-ia-esur/registrations", () => {
     const { GET } = await import("@/app/api/kcah-ia-esur/registrations/route");
     const req = new NextRequest("http://localhost:3000/api/kcah-ia-esur/registrations?page=2");
     await GET(req);
-    expect(mockRange).toHaveBeenCalledWith(15, 29);
+    expect(mockRange).toHaveBeenCalledWith(10, 19);
   });
 
   it("clamps negative page to 1", async () => {
@@ -99,7 +99,7 @@ describe("GET /api/kcah-ia-esur/registrations", () => {
     const { GET } = await import("@/app/api/kcah-ia-esur/registrations/route");
     const req = new NextRequest("http://localhost:3000/api/kcah-ia-esur/registrations?page=-5");
     await GET(req);
-    expect(mockRange).toHaveBeenCalledWith(0, 14);
+    expect(mockRange).toHaveBeenCalledWith(0, 9);
   });
 
   it("defaults sort to created_at desc", async () => {

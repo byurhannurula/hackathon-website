@@ -23,21 +23,21 @@ describe("StatusBadge", () => {
   it("applies pending styles", () => {
     const { getByText } = render(<StatusBadge status="pending" />);
     const badge = getByText("Изчакващ");
-    expect(badge.className).toContain("bg-white/10");
-    expect(badge.className).toContain("text-white/70");
+    expect(badge.className).toContain("bg-white/12");
+    expect(badge.className).toContain("text-white/80");
   });
 
   it("applies approved styles", () => {
     const { getByText } = render(<StatusBadge status="approved" />);
     const badge = getByText("Одобрен");
-    expect(badge.className).toContain("bg-emerald-500/15");
+    expect(badge.className).toContain("bg-emerald-500/20");
     expect(badge.className).toContain("text-emerald-400");
   });
 
   it("applies rejected styles", () => {
     const { getByText } = render(<StatusBadge status="rejected" />);
     const badge = getByText("Отхвърлен");
-    expect(badge.className).toContain("bg-red-500/15");
+    expect(badge.className).toContain("bg-red-500/20");
     expect(badge.className).toContain("text-red-400");
   });
 });

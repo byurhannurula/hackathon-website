@@ -280,12 +280,6 @@ export default function NotFound() {
             КЪМ НАЧАЛОТО
             <span className="absolute inset-0 border border-acid/0 group-hover:border-acid/40 transition-colors duration-300 pointer-events-none -m-1" />
           </Link>
-          <Link
-            href="/register"
-            className="font-display text-[15px] tracking-[0.08em] border border-acid/30 text-acid py-4 px-10 no-underline transition-all duration-200 hover:bg-acid/7 hover:scale-[1.02]"
-          >
-            РЕГИСТРАЦИЯ
-          </Link>
         </div>
 
         {/* Fun ASCII art */}

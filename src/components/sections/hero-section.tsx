@@ -41,8 +41,9 @@ export function HeroSection() {
         <h1 className="sr-only">
           {siteConfig.event.name} {siteConfig.event.year} — {siteConfig.event.shortDescription}
         </h1>
-        <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
-        <div className="animate-fade-in delay-200"></div>
+        <div className="animate-[fadeUp_0.6s_0.25s_both_ease]">
+          <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
+        </div>
 
         <div className="flex items-center justify-center my-8 animate-[fadeUp_0.7s_0.5s_both_ease]">
           <LogoGlitchNoise className="w-[clamp(100px,50vw,320px)]!" />

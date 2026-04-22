@@ -80,11 +80,11 @@ describe("PATCH /api/kcah-ia-esur/registrations/[id]", () => {
     );
   });
 
-  it("returns 400 for invalid status (pending)", async () => {
+  it("accepts pending status (default DB state)", async () => {
     const { PATCH } = await import("@/app/api/kcah-ia-esur/registrations/[id]/route");
     const [req, ctx] = makeRequest("uuid-1", { registration_status: "pending" });
     const res = await PATCH(req, ctx);
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
   });
 
   it("returns 400 for invalid status (arbitrary string)", async () => {

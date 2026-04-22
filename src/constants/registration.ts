@@ -23,6 +23,10 @@ export interface ConfirmAction {
   status: RegistrationStatus;
 }
 
+export type BroadcastFilter = "all" | "approved" | "pending" | "rejected";
+
+export type SheetTab = "details" | "analytics";
+
 // ─── Status helpers ─────────────────────────────────────────
 
 export const STATUS_LABELS: Record<RegistrationStatus, string> = {
@@ -32,7 +36,7 @@ export const STATUS_LABELS: Record<RegistrationStatus, string> = {
 };
 
 export const STATUS_COLORS: Record<RegistrationStatus, string> = {
-  pending: "bg-white/10 text-white/70",
-  approved: "bg-emerald-500/15 text-emerald-400",
-  rejected: "bg-red-500/15 text-red-400",
+  pending: "bg-white/12 text-white/80",
+  approved: "bg-emerald-500/20 text-emerald-400",
+  rejected: "bg-red-500/20 text-red-400",
 };

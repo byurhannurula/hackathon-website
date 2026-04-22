@@ -160,7 +160,7 @@ describe("POST /api/kcah-ia-esur/send-email", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createAdminClient>);
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(404);
@@ -180,7 +180,7 @@ describe("POST /api/kcah-ia-esur/send-email", () => {
           })),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createAdminClient>);
 
     const res = await POST(makeRequest(validBody));
     expect(res.status).toBe(404);

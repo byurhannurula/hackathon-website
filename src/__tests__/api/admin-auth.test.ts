@@ -1,11 +1,17 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { POST, DELETE } from "@/app/api/kcah-ia-esur/auth/route";
 import { NextRequest } from "next/server";
+
+let ipCounter = 0;
+function uniqueIp(): string {
+  ipCounter++;
+  return `10.0.${Math.floor(ipCounter / 256)}.${ipCounter % 256}`;
+}
 
 function makePostRequest(body: unknown): NextRequest {
   return new NextRequest("http://localhost:3000/api/kcah-ia-esur/auth", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-forwarded-for": uniqueIp() },
     body: JSON.stringify(body),
   });
 }
@@ -76,7 +82,7 @@ describe("POST /api/kcah-ia-esur/auth (login)", () => {
   it("handles null body gracefully", async () => {
     const req = new NextRequest("http://localhost:3000/api/kcah-ia-esur/auth", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "x-forwarded-for": uniqueIp() },
       body: "not-json",
     });
     const res = await POST(req);

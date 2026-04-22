@@ -1,9 +1,0 @@
-export { AdminDashboard } from "./admin-dashboard";
-export { AdminNav } from "./admin-nav";
-export { ConfirmModal } from "./confirm-modal";
-export { ControlsBar } from "./controls-bar";
-export { RegistrationSheet } from "./registration-sheet";
-export { RegistrationsTable } from "./registrations-table";
-export { StatsGrid } from "./stats-grid";
-export { StatusBadge } from "./status-badge";
-export { ToggleModal } from "./toggle-modal";

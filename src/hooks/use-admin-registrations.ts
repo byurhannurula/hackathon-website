@@ -6,8 +6,11 @@ import { useRouter } from "next/navigation";
 import type { Registration, RegistrationStatus } from "@/lib/types";
 import type { AdminStats, AdminPagination, SortField, ConfirmAction } from "@/constants";
 import { STATUS_LABELS } from "@/constants";
+import { ADMIN_API } from "@/lib";
 
-export function useAdminRegistrations(showToast: (message: string, type: "ok" | "error") => void) {
+type ShowToast = (message: string, type: "ok" | "error") => void;
+
+export function useAdminRegistrations(showToast: ShowToast) {
   const router = useRouter();
   const [data, setData] = useState<Registration[]>([]);
   const [stats, setStats] = useState<AdminStats>({
@@ -35,8 +38,10 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
   const [regOpen, setRegOpen] = useState(true);
   const [regToggleLoading, setRegToggleLoading] = useState(false);
   const [regToggleStep, setRegToggleStep] = useState<0 | 1 | 2>(0);
+  const [broadcastOpen, setBroadcastOpen] = useState(false);
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
 
-  // Fetch data
+  // ── Fetch list ─────────────────────────────────────────────────
   const fetchData = useCallback(
     async (overrides?: { search?: string; page?: number }) => {
       setLoading(true);
@@ -50,7 +55,7 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
       params.set("page", String(p));
 
       try {
-        const res = await fetch(`/api/kcah-ia-esur/registrations?${params}`);
+        const res = await fetch(ADMIN_API.registrations(params.toString()));
         const json = await res.json();
         if (json.ok) {
           setData(json.data);
@@ -72,7 +77,7 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
 
   // Fetch registration open/closed status
   useEffect(() => {
-    fetch("/api/kcah-ia-esur/registration-toggle")
+    fetch(ADMIN_API.registrationToggle)
       .then((r) => r.json())
       .then((d) => {
         if (d.ok) setRegOpen(d.open);
@@ -88,21 +93,17 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
   // Close sheet/modals on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        if (regToggleStep > 0) {
-          setRegToggleStep(0);
-        } else if (confirmAction) {
-          setConfirmAction(null);
-        } else {
-          setSelectedReg(null);
-        }
-      }
+      if (e.key !== "Escape") return;
+      if (broadcastOpen) setBroadcastOpen(false);
+      else if (regToggleStep > 0) setRegToggleStep(0);
+      else if (confirmAction) setConfirmAction(null);
+      else setSelectedReg(null);
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [confirmAction, regToggleStep]);
+  }, [confirmAction, regToggleStep, broadcastOpen]);
 
-  // Debounced search
+  // ── Debounced search ───────────────────────────────────────────
   function handleSearch(val: string) {
     setSearch(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -112,7 +113,6 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     }, 300);
   }
 
-  // Sort toggle
   function handleSort(field: SortField) {
     if (sort === field) {
       setOrder(order === "asc" ? "desc" : "asc");
@@ -122,26 +122,24 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     }
   }
 
-  // Page change
   function goToPage(p: number) {
     setPage(p);
     setSelectedReg(null);
     fetchData({ page: p });
   }
 
-  // Request confirmation before status change
   function requestStatusChange(reg: Registration, newStatus: RegistrationStatus) {
     setConfirmAction({ reg, status: newStatus });
   }
 
-  // Confirm and execute status update
+  // ── Status update ──────────────────────────────────────────────
   async function confirmStatusChange() {
     if (!confirmAction) return;
     const { reg, status: newStatus } = confirmAction;
     setConfirmAction(null);
     setActionLoading(reg.id);
     try {
-      const res = await fetch(`/api/kcah-ia-esur/registrations/${reg.id}`, {
+      const res = await fetch(ADMIN_API.registration(reg.id), {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ registration_status: newStatus }),
@@ -149,8 +147,7 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
       const json = await res.json();
       if (!json.ok) throw new Error(json.error);
 
-      // Send email
-      const emailRes = await fetch("/api/kcah-ia-esur/send-email", {
+      const emailRes = await fetch(ADMIN_API.sendEmail, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -170,7 +167,6 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
         showToast(`${STATUS_LABELS[newStatus]}, но имейлът не беше изпратен`, "error");
       }
 
-      // Update the selected reg in sheet if it's the same one
       const updatedReg = { ...reg, registration_status: newStatus };
       setSelectedReg((prev) => (prev?.id === reg.id ? updatedReg : prev));
       fetchData();
@@ -181,12 +177,12 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     }
   }
 
-  // Toggle registration open/closed (with double confirmation)
+  // ── Registration toggle ────────────────────────────────────────
   async function confirmAndToggleRegistration() {
     setRegToggleStep(0);
     setRegToggleLoading(true);
     try {
-      const res = await fetch("/api/kcah-ia-esur/registration-toggle", {
+      const res = await fetch(ADMIN_API.registrationToggle, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ open: !regOpen }),
@@ -203,22 +199,46 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     }
   }
 
-  // Logout
+  // ── Broadcast ──────────────────────────────────────────────────
+  async function sendBroadcast(payload: {
+    subject: string;
+    body: string;
+    recipientFilter: "all" | "approved" | "pending" | "rejected";
+  }) {
+    setBroadcastLoading(true);
+    try {
+      const res = await fetch(ADMIN_API.broadcastEmail, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        showToast(`Изпратени: ${json.sent}/${json.total} имейла`, "ok");
+        setBroadcastOpen(false);
+      } else {
+        showToast(json.error || "Грешка при изпращане", "error");
+      }
+    } catch {
+      showToast("Грешка при изпращане", "error");
+    } finally {
+      setBroadcastLoading(false);
+    }
+  }
+
+  // Notes updated in sheet — sync list + selected row
+  function handleNotesUpdated(reg: Registration, newNotes: string) {
+    const updated = { ...reg, notes: newNotes || null };
+    setSelectedReg(updated);
+    setData((prev) => prev.map((r) => (r.id === reg.id ? updated : r)));
+  }
+
   async function handleLogout() {
-    await fetch("/api/kcah-ia-esur/auth", { method: "DELETE" });
+    await fetch(ADMIN_API.auth, { method: "DELETE" });
     router.push("/kcah-ia-esur/login");
   }
 
-  // Format date
-  function fmtDate(iso: string) {
-    return new Date(iso).toLocaleDateString("bg-BG", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
+  const selectedRegLoading = selectedReg != null && actionLoading === selectedReg.id;
 
   return {
     data,
@@ -234,12 +254,18 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     selectedReg,
     setSelectedReg,
     actionLoading,
+    selectedRegLoading,
     confirmAction,
     setConfirmAction,
     regOpen,
     regToggleLoading,
     regToggleStep,
     setRegToggleStep,
+    broadcastOpen,
+    setBroadcastOpen,
+    broadcastLoading,
+    sendBroadcast,
+    handleNotesUpdated,
     handleSearch,
     handleSort,
     goToPage,
@@ -247,6 +273,6 @@ export function useAdminRegistrations(showToast: (message: string, type: "ok" | 
     confirmStatusChange,
     confirmAndToggleRegistration,
     handleLogout,
-    fmtDate,
+    showToast,
   };
 }

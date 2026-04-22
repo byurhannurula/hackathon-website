@@ -1,52 +1,58 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { cn } from "@/lib";
+import { useAdminAuth } from "@/hooks";
+
+const NAV_ITEMS = [
+  { href: "/kcah-ia-esur", label: "Регистрации" },
+  { href: "/kcah-ia-esur/stats", label: "Статистика" },
+  { href: "/kcah-ia-esur/teams", label: "Отбори" },
+] as const;
 
 interface AdminNavProps {
-  regOpen: boolean;
-  regToggleLoading: boolean;
-  onToggleClick: () => void;
-  onLogout: () => void;
+  /** Optional extra controls rendered on the right before logout */
+  actions?: React.ReactNode;
 }
 
-export function AdminNav({ regOpen, regToggleLoading, onToggleClick, onLogout }: AdminNavProps) {
+export function AdminNav({ actions }: AdminNavProps) {
+  const pathname = usePathname();
+  const { logout } = useAdminAuth();
+
   return (
     <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
-      <Link href="/">
-        <span className="font-display text-xl">
-          <span className="text-acid">RUSE</span> AI HACK
-        </span>
-        <span className="font-mono text-[10px] text-white/30 ml-3 tracking-[0.14em]">ADMIN</span>
-      </Link>
+      <div className="flex items-center gap-6">
+        <Link href="/">
+          <span className="font-display text-xl">
+            <span className="text-acid">RUSE</span> AI HACK
+          </span>
+          <span className="font-mono text-[12px] text-white/40 ml-3 tracking-[0.14em]">ADMIN</span>
+        </Link>
+        <nav className="flex gap-1">
+          {NAV_ITEMS.map((item) => {
+            const active = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "font-mono text-[13px] tracking-[0.08em] px-3 py-1.5 transition-colors",
+                  active ? "text-acid border-b-2 border-acid" : "text-white/50 hover:text-white"
+                )}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
       <div className="flex items-center gap-5">
-        <div className="flex items-center gap-2.5">
-          <span className="font-mono text-[10px] tracking-[0.1em] text-white/40 uppercase">
-            Регистрация
-          </span>
-          <button
-            onClick={onToggleClick}
-            disabled={regToggleLoading}
-            className={`relative w-11 h-6 rounded-full border transition-colors duration-200 cursor-pointer disabled:opacity-50 ${
-              regOpen
-                ? "bg-emerald-500/20 border-emerald-500/40"
-                : "bg-red-500/15 border-red-500/30"
-            }`}
-          >
-            <span
-              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-200 ${
-                regOpen ? "translate-x-5 bg-emerald-400" : "translate-x-0 bg-red-400"
-              }`}
-            />
-          </button>
-          <span
-            className={`font-mono text-[10px] tracking-widest uppercase ${
-              regOpen ? "text-emerald-400" : "text-red-400"
-            }`}
-          >
-            {regOpen ? "ON" : "OFF"}
-          </span>
-        </div>
+        {actions}
         <button
-          onClick={onLogout}
-          className="font-mono text-[11px] text-white/40 hover:text-white transition-colors cursor-pointer"
+          onClick={logout}
+          className="font-mono text-[13px] text-white/50 hover:text-white transition-colors cursor-pointer"
         >
           Изход
         </button>

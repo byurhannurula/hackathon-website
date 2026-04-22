@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -24,16 +24,15 @@ import {
   TicketUnlockSequence,
 } from "@/components/ui";
 import { useAnalytics } from "@/components/analytics";
+import { useStep1Form } from "@/hooks";
 import {
   type TicketData,
   type Step1Data,
   type Step2Data,
   type Step3Data,
-  step1Schema,
   step2Schema,
   step3Schema,
   cn,
-  getGithubAvatarUrl,
 } from "@/lib";
 
 interface RegisterPageProps {
@@ -47,28 +46,56 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
   const [hasThemeValue, setHasThemeValue] = useState<string>("");
   const [hasTeamValue, setHasTeamValue] = useState<string>("");
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [pendingTicket, setPendingTicket] = useState<TicketData | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
   const [regStatusLoading, setRegStatusLoading] = useState(true);
   const [registrationClosed, setRegistrationClosed] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  const form1 = useForm<Step1Data>({
-    resolver: zodResolver(step1Schema),
-    mode: "onChange",
+  const {
+    form: form1,
+    avatarUrl,
+    fullName,
+    submitStep1,
+    handleFetchAvatar,
+  } = useStep1Form({
+    onSuccess: (data) => {
+      setStep1Data(data);
+      setSubmitAttempted(false);
+      setStep(2);
+    },
+    setSubmitAttempted,
+    trackEvent,
   });
 
   const form2 = useForm<Step2Data>({
     resolver: zodResolver(step2Schema),
     mode: "onChange",
+    defaultValues: {
+      aiExperience: "",
+      aiTools: "",
+      motivation: "",
+      expectations: "",
+    },
   });
 
   const form3 = useForm<Step3Data>({
     resolver: zodResolver(step3Schema),
     mode: "onChange",
+    defaultValues: {
+      hasTheme: "",
+      themeDescription: "",
+      hasTeam: "",
+      teamName: "",
+      wantChallenge: "",
+      volunteerHelp: "",
+      agreeRandomTeams: false as unknown as true,
+      gdprConsent: false as unknown as true,
+      registrationNotGuaranteed: false as unknown as true,
+      additionalQuestions: "",
+    },
   });
 
   useEffect(() => {
@@ -86,40 +113,30 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
       .finally(() => setRegStatusLoading(false));
   }, []);
 
-  // Detect browser autofill: autofill doesn't trigger React onChange,
-  // so react-hook-form misses the values. Sync DOM values after a short delay.
+  // Re-validate when fields become dirty without being touched (autofill signal)
+  const { dirtyFields: dirty2, touchedFields: touched2 } = form2.formState;
+  const { dirtyFields: dirty3, touchedFields: touched3 } = form3.formState;
+
   useEffect(() => {
-    const syncAutofill = () => {
-      const fields = ["fullName", "email", "phone", "age"] as const;
-      fields.forEach((name) => {
-        const el = document.querySelector<HTMLInputElement>(`input[name="${name}"]`);
-        if (el && el.value && !form1.getValues(name)) {
-          form1.setValue(name, el.value, { shouldValidate: true });
-        }
-      });
-    };
-    const timer = setTimeout(syncAutofill, 800);
-    return () => clearTimeout(timer);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const dirtyCount = Object.keys(dirty2).length;
+    const touchedCount = Object.keys(touched2).length;
+    if (dirtyCount > 0 && dirtyCount > touchedCount) {
+      form2.trigger();
+    }
+  }, [dirty2, touched2, form2]);
 
-  const handleFetchAvatar = async () => {
-    const handle = form1.getValues("handle")?.trim();
-    if (!handle || handle.length < 2) return;
-
-    const fallback = getGithubAvatarUrl(handle);
-    setAvatarUrl(fallback);
-    form1.setValue("avatarUrl", fallback);
-  };
-
-  const onStep1Submit = (data: Step1Data) => {
-    trackEvent("registration_step_complete", { step: 1 });
-    setStep1Data(data);
-    setStep(2);
-  };
+  useEffect(() => {
+    const dirtyCount = Object.keys(dirty3).length;
+    const touchedCount = Object.keys(touched3).length;
+    if (dirtyCount > 0 && dirtyCount > touchedCount) {
+      form3.trigger();
+    }
+  }, [dirty3, touched3, form3]);
 
   const onStep2Submit = (data: Step2Data) => {
     trackEvent("registration_step_complete", { step: 2 });
     setStep2Data(data);
+    setSubmitAttempted(false);
     setStep(3);
   };
 
@@ -191,7 +208,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
   };
 
   const currentForm = step === 1 ? form1 : step === 2 ? form2 : form3;
-  const isValid = currentForm.formState.isValid;
+  const errorCount = Object.keys(currentForm.formState.errors).length;
 
   // ── LOADING STATUS CHECK ──
   if (regStatusLoading) {
@@ -326,26 +343,51 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
         {/* STEP 1: Personal & Professional */}
         {step === 1 && (
-          <form onSubmit={form1.handleSubmit(onStep1Submit)} className="space-y-6">
+          <form onSubmit={submitStep1} className="space-y-6">
+            <p className="font-mono text-[10px] text-white/30 leading-relaxed -mt-4 mb-2">
+              Ако браузърът попълни полетата автоматично, натиснете „ПРОДЪЛЖИ" — стойностите ще
+              бъдат проверени.
+            </p>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <FormLabel>Име и фамилия</FormLabel>
-                <FormInput
-                  {...form1.register("fullName", {
-                    onChange: (e) => setFullName(e.target.value),
-                  })}
-                  placeholder="Иван Иванов"
-                  error={form1.formState.errors.fullName?.message}
+                <Controller
+                  name="fullName"
+                  control={form1.control}
+                  render={({ field, fieldState }) => (
+                    <FormInput
+                      {...field}
+                      autoComplete="name"
+                      placeholder="Иван Иванов"
+                      error={fieldState.error?.message}
+                      onInput={(e) => {
+                        const val = (e.target as HTMLInputElement).value;
+                        if (val !== field.value) field.onChange(val);
+                      }}
+                    />
+                  )}
                 />
               </div>
 
               <div>
                 <FormLabel>Email</FormLabel>
-                <FormInput
-                  {...form1.register("email")}
-                  type="email"
-                  placeholder="you@example.com"
-                  error={form1.formState.errors.email?.message}
+                <Controller
+                  name="email"
+                  control={form1.control}
+                  render={({ field, fieldState }) => (
+                    <FormInput
+                      {...field}
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      error={fieldState.error?.message}
+                      onInput={(e) => {
+                        const val = (e.target as HTMLInputElement).value;
+                        if (val !== field.value) field.onChange(val);
+                      }}
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -353,21 +395,43 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <FormLabel>Телефон</FormLabel>
-                <FormInput
-                  {...form1.register("phone")}
-                  type="tel"
-                  placeholder="+359 888 123 456"
-                  error={form1.formState.errors.phone?.message}
+                <Controller
+                  name="phone"
+                  control={form1.control}
+                  render={({ field, fieldState }) => (
+                    <FormInput
+                      {...field}
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="+359 888 123 456"
+                      error={fieldState.error?.message}
+                      onInput={(e) => {
+                        const val = (e.target as HTMLInputElement).value;
+                        if (val !== field.value) field.onChange(val);
+                      }}
+                    />
+                  )}
                 />
               </div>
 
               <div>
                 <FormLabel>Вашата възраст на 24 април 2026 г.</FormLabel>
-                <FormInput
-                  {...form1.register("age")}
-                  type="number"
-                  placeholder="25"
-                  error={form1.formState.errors.age?.message}
+                <Controller
+                  name="age"
+                  control={form1.control}
+                  render={({ field, fieldState }) => (
+                    <FormInput
+                      {...field}
+                      type="number"
+                      autoComplete="off"
+                      placeholder="25"
+                      error={fieldState.error?.message}
+                      onInput={(e) => {
+                        const val = (e.target as HTMLInputElement).value;
+                        if (val !== field.value) field.onChange(val);
+                      }}
+                    />
+                  )}
                 />
               </div>
             </div>
@@ -376,6 +440,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               <FormLabel>Вие сте:</FormLabel>
               <FormSelect
                 {...form1.register("role")}
+                autoComplete="off"
                 options={ROLE_OPTIONS}
                 error={form1.formState.errors.role?.message}
               />
@@ -387,6 +452,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               </FormLabel>
               <FormInput
                 {...form1.register("organization")}
+                autoComplete="organization"
                 placeholder="Русенски университет, Acme Corp и др."
                 error={form1.formState.errors.organization?.message}
               />
@@ -396,6 +462,7 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               <FormLabel>Опит в софтуерна разработка</FormLabel>
               <FormSelect
                 {...form1.register("devExperience")}
+                autoComplete="off"
                 options={DEV_EXPERIENCE_OPTIONS}
                 error={form1.formState.errors.devExperience?.message}
               />
@@ -408,6 +475,10 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
                 <FormInput
                   placeholder="username"
                   className="flex-1"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   {...form1.register("handle")}
                 />
                 <FormButton
@@ -433,7 +504,13 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
               </div>
             </div>
 
-            <FormButton type="submit" disabled={!isValid} size="md" className="w-full">
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mb-2">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
+            <FormButton type="submit" disabled={submitting} size="md" className="w-full">
               ПРОДЪЛЖИ →
             </FormButton>
           </form>
@@ -441,7 +518,13 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
 
         {/* STEP 2: AI & Motivation */}
         {step === 2 && (
-          <form onSubmit={form2.handleSubmit(onStep2Submit)} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              setSubmitAttempted(true);
+              form2.handleSubmit(onStep2Submit)(e);
+            }}
+            className="space-y-6"
+          >
             <div>
               <FormLabel>Опит от използване на AI за vibe coding</FormLabel>
               <FormSelect
@@ -488,23 +571,38 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div className="flex gap-3">
               <FormButton
                 type="button"
-                onClick={() => setStep(1)}
+                onClick={() => {
+                  setSubmitAttempted(false);
+                  setStep(1);
+                }}
                 variant="outline"
                 size="md"
                 className="flex-1"
               >
                 ← НАЗАД
               </FormButton>
-              <FormButton type="submit" disabled={!isValid} size="md" className="flex-1">
+              <FormButton type="submit" disabled={submitting} size="md" className="flex-1">
                 ПРОДЪЛЖИ →
               </FormButton>
             </div>
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mt-3">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
           </form>
         )}
 
         {/* STEP 3: Project & Participation */}
         {step === 3 && (
-          <form onSubmit={form3.handleSubmit(onStep3Submit)} className="space-y-6">
+          <form
+            onSubmit={(e) => {
+              setSubmitAttempted(true);
+              form3.handleSubmit(onStep3Submit)(e);
+            }}
+            className="space-y-6"
+          >
             <div>
               <FormLabel>Имате ли избрана тема за разработка?</FormLabel>
               <FormSelect
@@ -625,22 +723,26 @@ export function RegisterPage({ onRegister }: RegisterPageProps) {
             <div className="flex gap-3">
               <FormButton
                 type="button"
-                onClick={() => setStep(2)}
+                onClick={() => {
+                  setSubmitAttempted(false);
+                  setStep(2);
+                }}
                 variant="outline"
                 size="md"
                 className="flex-1"
               >
                 ← НАЗАД
               </FormButton>
-              <FormButton
-                type="submit"
-                disabled={!isValid || submitting}
-                size="md"
-                className="flex-1"
-              >
+              <FormButton type="submit" disabled={submitting} size="md" className="flex-1">
                 ВЗЕМИ БИЛЕТ ✦
               </FormButton>
             </div>
+            {submitAttempted && errorCount > 0 && (
+              <p className="font-mono text-[11px] text-red-400 mt-2">
+                Моля, попълнете всички задължителни полета ({errorCount}{" "}
+                {errorCount === 1 ? "поле" : "полета"} с грешки)
+              </p>
+            )}
           </form>
         )}
       </div>

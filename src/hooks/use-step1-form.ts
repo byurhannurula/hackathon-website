@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { useForm, useWatch, type UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { type Step1Data, step1Schema, getGithubAvatarUrl } from "@/lib";
@@ -44,7 +44,7 @@ export function useStep1Form({
   });
 
   const [avatarUrl, setAvatarUrl] = useState("");
-  const fullName = form.watch("fullName");
+  const fullName = useWatch({ control: form.control, name: "fullName" }) ?? "";
 
   // ── Autofill sync ──────────────────────────────────────────────
   const syncStep1Autofill = useCallback(() => {

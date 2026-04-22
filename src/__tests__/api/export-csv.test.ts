@@ -119,7 +119,7 @@ describe("GET /api/kcah-ia-esur/export-csv", () => {
           }),
         })),
       })),
-    } as any);
+    } as unknown as ReturnType<typeof createAdminClient>);
 
     const res = await GET();
     const csv = await res.text();
