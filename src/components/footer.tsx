@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Instagram, Facebook, Mail, Linkedin } from "lucide-react";
 import { siteConfig } from "@/constants";
+import { FooterRegisterLink } from "@/components/footer-register-link";
 
 export function Footer() {
   return (
@@ -56,12 +57,7 @@ export function Footer() {
                 >
                   {siteConfig.contact.sponsorEmail}
                 </a>
-                <Link
-                  href="/register"
-                  className="font-mono text-[11px] text-acid/70 no-underline hover:text-acid transition-colors"
-                >
-                  Регистрация →
-                </Link>
+                <FooterRegisterLink />
               </div>
             </div>
           </div>

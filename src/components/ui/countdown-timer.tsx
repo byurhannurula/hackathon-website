@@ -97,41 +97,48 @@ export function CountdownTimer({ enabled = true }: CountdownTimerProps) {
   }
 
   if (phase === "live") {
-    const timeLeft = calcTimeLeft(end);
+    const nowMs = second * 1000;
+    const elapsedMs = nowMs - start.getTime();
+    const totalMs = end.getTime() - start.getTime();
+    const progress = Math.min(100, Math.max(0, (elapsedMs / totalMs) * 100));
+    const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
 
     return (
-      <div className="text-center py-4">
-        <div className="inline-flex items-center gap-2.5 mb-4">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-acid opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-acid" />
+      <div className="py-4 flex flex-col items-center gap-4">
+        <div className="inline-flex items-center gap-4 md:gap-6">
+          <span className="font-display text-3xl md:text-5xl text-acid/30 leading-none select-none">
+            [
           </span>
-          <span className="font-display text-2xl text-acid tracking-[0.08em]">LIVE NOW</span>
-        </div>
-        {timeLeft && (
-          <div className="flex gap-3 md:gap-5 justify-center items-center">
-            {[
-              { value: timeLeft.hours + timeLeft.days * 24, label: "ЧАСА" },
-              { value: timeLeft.minutes, label: "МИН" },
-              { value: timeLeft.seconds, label: "СЕК" },
-            ].map((unit, i, arr) => (
-              <div key={unit.label} className="flex items-center gap-3 md:gap-5">
-                <div className="text-center min-w-[52px] md:min-w-[72px]">
-                  <div className="font-display text-3xl md:text-5xl text-acid leading-[1.1] tabular-nums">
-                    {pad(unit.value)}
-                  </div>
-                  <div className="font-mono text-[9px] md:text-[10px] tracking-[0.2em] text-white/40 mt-1">
-                    {unit.label}
-                  </div>
-                </div>
-                {i < arr.length - 1 && (
-                  <span className="font-display text-2xl md:text-4xl text-white/15 -mt-4">:</span>
-                )}
-              </div>
-            ))}
+          <div className="flex items-center gap-4 md:gap-5">
+            <span className="relative flex h-4 w-4 md:h-5 md:w-5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-acid opacity-60" />
+              <span
+                className="animate-ping absolute inline-flex h-full w-full rounded-full bg-acid opacity-40"
+                style={{ animationDelay: "0.4s" }}
+              />
+              <span className="relative inline-flex rounded-full h-4 w-4 md:h-5 md:w-5 bg-acid shadow-[0_0_24px_rgba(var(--acid-rgb),0.8)]" />
+            </span>
+            <span className="font-display text-4xl md:text-6xl text-acid tracking-[0.12em] leading-none">
+              LIVE NOW
+            </span>
           </div>
-        )}
-        <p className="font-mono text-[10px] text-white/30 mt-3 tracking-[0.1em]">ОСТАВАЩО ВРЕМЕ</p>
+          <span className="font-display text-3xl md:text-5xl text-acid/30 leading-none select-none">
+            ]
+          </span>
+        </div>
+
+        <div className="w-full max-w-[420px] flex flex-col gap-2">
+          <div className="flex justify-between font-mono text-[10px] tracking-[0.15em] text-white/40 uppercase">
+            <span>Час {elapsedHours} / 48</span>
+            <span>Хакатонът е в ход</span>
+          </div>
+          <div className="h-[2px] w-full bg-white/10 overflow-hidden">
+            <div
+              className="h-full bg-acid shadow-[0_0_8px_rgba(var(--acid-rgb),0.6)]"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
       </div>
     );
   }
