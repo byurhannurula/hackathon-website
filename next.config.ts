@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion", "three"],
-    webpackBuildWorker: true,
   },
 
   // Security and caching headers
@@ -56,6 +55,16 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      {
+        // Cache OG images at edge for 7 days — critical for Twitter/X card rendering
+        source: "/api/og",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400",
           },
         ],
       },

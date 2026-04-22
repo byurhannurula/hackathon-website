@@ -65,6 +65,14 @@ export interface Registration {
   status_updated_at: string | null;
 }
 
+export interface UserAnalytics {
+  pageViews: number;
+  shares: number;
+  downloads: number;
+  consoleSecret: boolean;
+  konamiCode: boolean;
+}
+
 export type SponsorTier = "general" | "strategic" | "partner" | "supporter" | "media";
 
 export interface Sponsor {
@@ -74,4 +82,5 @@ export interface Sponsor {
   href?: string;
   tier: SponsorTier;
   invertLogo?: boolean;
+  logoScale?: number;
 }

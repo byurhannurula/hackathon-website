@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { User } from "lucide-react";
 
@@ -8,38 +7,34 @@ import type { Person, InfoCriterion } from "@/lib/types";
 import { MENTORS, JUDGING_CRITERIA } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
 import { LIIcon } from "@/components/ui";
+import { useInView } from "@/hooks";
 
-function PersonCard({ person, index, priority }: { person: Person; index: number; priority?: boolean }) {
+function PersonCard({
+  person,
+  index,
+  priority,
+}: {
+  person: Person;
+  index: number;
+  priority?: boolean;
+}) {
   const hasImage = person.image.length > 0;
   const hasDetails = person.org.length > 0;
-  const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const { ref: inViewRef, inView: visible } = useInView({ threshold: 0.15 });
 
   const Wrapper = person.linkedin ? "a" : "div";
   const linkProps = person.linkedin
-    ? { href: person.linkedin, target: "_blank" as const, rel: "noopener noreferrer" }
+    ? {
+        href: person.linkedin,
+        target: "_blank" as const,
+        rel: "noopener noreferrer",
+      }
     : {};
 
   return (
     <Wrapper
       {...linkProps}
-      ref={ref as React.Ref<HTMLAnchorElement> & React.Ref<HTMLDivElement>}
+      ref={inViewRef as React.Ref<HTMLAnchorElement> & React.Ref<HTMLDivElement>}
       className="group block border border-white/7 bg-card transition-all duration-300 hover:border-acid/30 no-underline"
       style={{
         opacity: visible ? 1 : 0,
@@ -62,8 +57,8 @@ function PersonCard({ person, index, priority }: { person: Person; index: number
         )}
       </div>
       <div className="p-3">
-        <div className="flex items-center gap-1.5">
-          <div className="font-body font-bold text-[13px] text-white leading-tight truncate">
+        <div className="flex items-center justify-between gap-1.5">
+          <div className="font-body font-bold text-[13px] text-white leading-tight ">
             {person.name}
           </div>
           {person.linkedin && (
@@ -93,7 +88,7 @@ function PersonGrid({ people, label }: { people: Person[]; label: string }) {
       <div className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase mb-5">
         {label}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {people.map((person: Person, i: number) => (
           <PersonCard key={person.name} person={person} index={i} priority={i < 6} />
         ))}

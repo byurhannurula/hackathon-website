@@ -10,12 +10,14 @@ export const siteConfig = {
     name: "RUSE AI HACK",
     tagline: "App in a Snap",
     year: "'26",
+    startDate: "2026-04-24T18:00:00+03:00", // Friday 17:00 EEST (registration + opening)
+    endDate: "2026-04-26T17:00:00+03:00", // Sunday 17:00 EEST (closing ceremony)
     date: "24–26 APRIL 2026",
     dateBG: "24–26 април 2026",
     duration: "48Ч",
     durationBG: "48 часа",
     location: "Ruse, Bulgaria",
-    locationBG: "Русенски Университет",
+    locationBG: "Русенски Университет, Втори корпус, Зала 2.203",
     organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
     prizesPool: "€2,900",

@@ -32,9 +32,11 @@ export async function isRegistrationOpen(): Promise<boolean> {
 export async function setRegistrationOpen(open: boolean): Promise<void> {
   try {
     const supabase = createAdminClient();
-    await supabase
-      .from("site_settings")
-      .upsert({ key: "registration_open", value: String(open), updated_at: new Date().toISOString() });
+    await supabase.from("site_settings").upsert({
+      key: "registration_open",
+      value: String(open),
+      updated_at: new Date().toISOString(),
+    });
   } catch (e) {
     console.error("Failed to persist registration_open:", e);
   }

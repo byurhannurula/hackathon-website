@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import Tilt from "vanilla-tilt";
 
 import { AvatarCircle, GHIcon } from "@/components/ui";
 import { type TicketData, cn } from "@/lib";
@@ -50,17 +49,25 @@ export function TicketVisual({
         : "text-[clamp(15px,2.6vw,21px)]";
 
   useEffect(() => {
-    if (interactive && ticketRef.current && !window.matchMedia("(pointer: coarse)").matches) {
-      Tilt.init(ticketRef.current, {
+    if (!interactive || !ticketRef.current || window.matchMedia("(pointer: coarse)").matches)
+      return;
+
+    const el = ticketRef.current;
+    let destroyed = false;
+
+    import("vanilla-tilt").then(({ default: Tilt }) => {
+      if (destroyed || !el) return;
+      Tilt.init(el, {
         glare: true,
         max: 5,
         "max-glare": 0.16,
         "full-page-listening": true,
       });
-    }
+    });
 
     return () => {
-      const element = ticketRef.current as HTMLDivElement & {
+      destroyed = true;
+      const element = el as HTMLDivElement & {
         vanillaTilt?: { destroy: () => void };
       };
       if (element?.vanillaTilt) {
@@ -90,11 +97,19 @@ export function TicketVisual({
       {/* Circular overlays to hide glare at left/right cutouts */}
       <div
         className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
-        style={{ top: "50%", left: "-7%", transform: "translateZ(0) translateY(-50%)" }}
+        style={{
+          top: "50%",
+          left: "-7%",
+          transform: "translateZ(0) translateY(-50%)",
+        }}
       />
       <div
         className="absolute w-[72px] h-[58px] bg-[#0A0E06] rounded-full z-100 pointer-events-none"
-        style={{ top: "50%", left: "96%", transform: "translateZ(0) translateY(-50%)" }}
+        style={{
+          top: "50%",
+          left: "96%",
+          transform: "translateZ(0) translateY(-50%)",
+        }}
       />
 
       <TicketSVG />

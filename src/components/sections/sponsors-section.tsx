@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { useInView } from "@/hooks";
 import type { SponsorTier } from "@/lib/types";
 
 const TIER_ORDER: SponsorTier[] = ["general", "strategic", "partner", "supporter"];
 
 const TIER_GRID: Record<SponsorTier, string> = {
   general: "grid-cols-1",
-  strategic: "grid-cols-1 sm:grid-cols-2",
+  strategic: "grid-cols-1 sm:grid-cols-3",
   partner: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4",
   supporter: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
   media: "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5",
@@ -73,6 +73,9 @@ function SponsorCard({
               width: logoSize.w,
               height: logoSize.h,
               ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+              ...(sponsor.logoScale && {
+                transform: `scale(${sponsor.logoScale})`,
+              }),
             }}
           >
             <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />
@@ -88,24 +91,7 @@ function SponsorCard({
 }
 
 export function SponsorsSection({ hideCTA = false }: { hideCTA?: boolean } = {}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
+  const { ref, inView } = useInView({ threshold: 0.15 });
 
   return (
     <section id="sponsors" className="px-6 py-25 md:px-12 bg-card border-t border-border">
@@ -150,7 +136,9 @@ export function SponsorsSection({ hideCTA = false }: { hideCTA?: boolean } = {})
               "mt-12 p-6 md:p-8 border border-acid/10 bg-acid/2 flex justify-between items-center flex-wrap gap-5 transition-all duration-700 ease-out",
               inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
-            style={{ transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms" }}
+            style={{
+              transitionDelay: inView ? `${TIER_ORDER.length * 150}ms` : "0ms",
+            }}
           >
             <div>
               <div className="font-body font-bold text-[15px]">Интересувате се от спонсорство?</div>

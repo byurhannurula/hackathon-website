@@ -1,26 +1,14 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { CountdownTimer } from "@/components/ui/countdown-timer";
 import { siteConfig } from "@/constants";
-import { useRegistrationOpen } from "@/hooks";
+import { useRegistrationOpen, useInView } from "@/hooks";
 import { cn } from "@/lib";
 
 export function CTASection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const { ref, inView: visible } = useInView({ threshold: 0.3 });
   const regOpen = useRegistrationOpen();
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.3 }
-    );
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <section ref={ref} className="px-6 py-35 md:px-12 text-center relative overflow-hidden">

@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode } from "react";
 import { TypewriterText } from "@/components/ui";
+import { useInView } from "@/hooks";
 
 interface SectionHeaderProps {
   title: ReactNode;
@@ -10,25 +11,7 @@ interface SectionHeaderProps {
 }
 
 export const SectionHeader = ({ title, label, as: Tag = "h2" }: SectionHeaderProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !label) return;
-
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.3 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [label]);
+  const { ref, inView } = useInView({ threshold: 0.3 });
 
   return (
     <div ref={ref}>

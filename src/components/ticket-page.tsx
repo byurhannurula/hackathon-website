@@ -18,6 +18,7 @@ interface TicketPageProps {
 export function TicketPage({ data }: TicketPageProps) {
   const { trackEvent } = useAnalytics();
   const [isOwner, setIsOwner] = useState<boolean | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { nodeRef, downloading, exporting, download } = useTicketDownload(data?.ticketNum);
 
   const name = data?.name || "Участник";
@@ -40,6 +41,16 @@ export function TicketPage({ data }: TicketPageProps) {
       ticketNum: data?.ticketNum || 0,
       ticketId: data?.ticketId || "",
     });
+
+    // Check admin session only when navigating from admin panel (via ?admin param)
+    const params = new URLSearchParams(window.location.search);
+    if (!owner && params.has("admin")) {
+      fetch("/api/kcah-ia-esur/registration-toggle")
+        .then((r) => {
+          if (r.ok) setIsAdmin(true);
+        })
+        .catch(() => {});
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.ticketNum]);
 
@@ -72,7 +83,9 @@ export function TicketPage({ data }: TicketPageProps) {
               <>
                 ОЧАКВАЙ ОТГОВОР
                 <br />
-                <span className="text-[clamp(16px,4vw,28px)] text-white/60">ПО ИМЕЙЛ ДО 48 ЧАСА</span>
+                <span className="text-[clamp(16px,4vw,28px)] text-white/60">
+                  ПО ИМЕЙЛ ДО 48 ЧАСА
+                </span>
               </>
             ) : (
               <>
@@ -102,7 +115,7 @@ export function TicketPage({ data }: TicketPageProps) {
 
       {/* Share Actions / Viewer CTA — follows ticket */}
       <div className="mt-14 flex flex-col items-center gap-6 relative z-1 animate-[ticketFadeIn_0.6s_0.35s_ease_both]">
-        {isOwner && data?.ticketId ? (
+        {(isOwner || isAdmin) && data?.ticketId ? (
           <ShareButtons ticketId={data.ticketId} downloading={downloading} onDownload={download} />
         ) : (
           <Link

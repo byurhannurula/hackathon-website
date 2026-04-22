@@ -1,31 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
+import { useInView } from "@/hooks";
 
 export function MediaPartnersSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0.15 });
   const mediaSponsors = SPONSORS.filter((s) => s.tier === "media");
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   if (mediaSponsors.length === 0) return null;
 
@@ -60,7 +43,12 @@ export function MediaPartnersSection() {
                     style={{
                       width: 120,
                       height: 45,
-                      ...(sponsor.invertLogo && { filter: "brightness(0) invert(1)" }),
+                      ...(sponsor.invertLogo && {
+                        filter: "brightness(0) invert(1)",
+                      }),
+                      ...(sponsor.logoScale && {
+                        transform: `scale(${sponsor.logoScale})`,
+                      }),
                     }}
                   >
                     <Image src={sponsor.logo} alt={sponsor.name} fill className="object-contain" />

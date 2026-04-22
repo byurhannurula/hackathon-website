@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import { X } from "lucide-react";
-import Link from "next/link";
+import { X, ExternalLink, AlertTriangle } from "lucide-react";
 
-import type { Registration, RegistrationStatus } from "@/lib/types";
+import type { Registration, RegistrationStatus, UserAnalytics } from "@/lib/types";
+import { cn } from "@/lib";
+import { StatCard } from "./stat-card";
 
 // ─── Types ──────────────────────────────────────────────────
 
@@ -39,17 +39,21 @@ const STATUS_LABELS: Record<RegistrationStatus, string> = {
 };
 
 const STATUS_COLORS: Record<RegistrationStatus, string> = {
-  pending: "bg-white/10 text-white/70",
-  approved: "bg-emerald-500/15 text-emerald-400",
-  rejected: "bg-red-500/15 text-red-400",
+  pending: "bg-white/12 text-white/80",
+  approved: "bg-emerald-500/20 text-emerald-400",
+  rejected: "bg-red-500/20 text-red-400",
 };
 
 // ─── Main Component ─────────────────────────────────────────
 
 export function AdminDashboard() {
-  const router = useRouter();
   const [data, setData] = useState<Registration[]>([]);
-  const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, approved: 0, rejected: 0 });
+  const [stats, setStats] = useState<Stats>({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  });
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     pageSize: 50,
@@ -64,12 +68,23 @@ export function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [selectedReg, setSelectedReg] = useState<Registration | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [toast, setToast] = useState<{ message: string; type: "ok" | "error" } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "ok" | "error";
+  } | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
   const debounceRef = useRef<NodeJS.Timeout>(null);
   const [regOpen, setRegOpen] = useState(true);
   const [regToggleLoading, setRegToggleLoading] = useState(false);
   const [regToggleStep, setRegToggleStep] = useState<0 | 1 | 2>(0); // 0=hidden, 1=first confirm, 2=final confirm
+  const [broadcastOpen, setBroadcastOpen] = useState(false);
+  const [broadcastSubject, setBroadcastSubject] = useState("");
+  const [broadcastBody, setBroadcastBody] = useState("");
+  const [broadcastFilter, setBroadcastFilter] = useState<
+    "all" | "approved" | "pending" | "rejected"
+  >("all");
+  const [broadcastLoading, setBroadcastLoading] = useState(false);
+  const [broadcastConfirm, setBroadcastConfirm] = useState(false);
 
   // Fetch data
   const fetchData = useCallback(
@@ -124,7 +139,9 @@ export function AdminDashboard() {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
-        if (regToggleStep > 0) {
+        if (broadcastOpen) {
+          resetBroadcast();
+        } else if (regToggleStep > 0) {
           setRegToggleStep(0);
         } else if (confirmAction) {
           setConfirmAction(null);
@@ -135,7 +152,7 @@ export function AdminDashboard() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [confirmAction, regToggleStep]);
+  }, [confirmAction, regToggleStep, broadcastOpen]);
 
   // Debounced search
   function handleSearch(val: string) {
@@ -244,10 +261,41 @@ export function AdminDashboard() {
     }
   }
 
-  // Logout
-  async function handleLogout() {
-    await fetch("/api/kcah-ia-esur/auth", { method: "DELETE" });
-    router.push("/kcah-ia-esur/login");
+  function resetBroadcast() {
+    setBroadcastOpen(false);
+    setBroadcastConfirm(false);
+    setBroadcastSubject("");
+    setBroadcastBody("");
+    setBroadcastFilter("all");
+  }
+
+  // Send broadcast email
+  async function sendBroadcast() {
+    setBroadcastLoading(true);
+    try {
+      const res = await fetch("/api/kcah-ia-esur/broadcast-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: broadcastSubject,
+          body: broadcastBody,
+          recipientFilter: broadcastFilter,
+        }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        showToast(`Изпратени: ${json.sent}/${json.total} имейла`, "ok");
+        resetBroadcast();
+      } else {
+        showToast(json.error || "Грешка при изпращане", "error");
+        setBroadcastConfirm(false);
+      }
+    } catch {
+      showToast("Грешка при изпращане", "error");
+      setBroadcastConfirm(false);
+    } finally {
+      setBroadcastLoading(false);
+    }
   }
 
   // Format date
@@ -262,11 +310,11 @@ export function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-bg text-white">
+    <>
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 z-70 px-6 py-4 font-mono text-[13px] border shadow-lg ${
+          className={`fixed bottom-6 right-6 z-70 px-6 py-4 font-mono text-sm border shadow-lg ${
             toast.type === "ok"
               ? "bg-emerald-950 border-emerald-500/40 text-emerald-400"
               : "bg-red-950 border-red-500/40 text-red-400"
@@ -290,31 +338,31 @@ export function AdminDashboard() {
               aria-modal="true"
               className="bg-card border border-white/10 p-6 max-w-[400px] w-full animate-[fadeUp_0.2s_ease]"
             >
-              <div id="confirm-dialog-title" className="font-display text-xl mb-2">
+              <div id="confirm-dialog-title" className="font-display text-2xl mb-2">
                 {confirmAction.status === "approved" ? "ОДОБРЯВАНЕ" : "ОТХВЪРЛЯНЕ"}
               </div>
-              <p className="font-mono text-[13px] text-white/60 leading-[1.7] mb-2">
+              <p className="font-mono text-sm text-white/70 leading-[1.7] mb-2">
                 {confirmAction.status === "approved"
                   ? "Сигурен ли си, че искаш да одобриш"
                   : "Сигурен ли си, че искаш да отхвърлиш"}{" "}
                 <span className="text-white font-bold">{confirmAction.reg.full_name}</span>?
               </p>
-              <p className="font-mono text-[11px] text-white/40 mb-6">
+              <p className="font-mono text-[13px] text-white/50 mb-6">
                 Ще бъде изпратен имейл до {confirmAction.reg.email}
               </p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setConfirmAction(null)}
-                  className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-2.5 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                  className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                 >
                   Отказ
                 </button>
                 <button
                   onClick={confirmStatusChange}
-                  className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-2.5 cursor-pointer transition-all ${
+                  className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
                     confirmAction.status === "approved"
-                      ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
-                      : "bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25"
+                      ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
+                      : "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
                   }`}
                 >
                   {confirmAction.status === "approved" ? "Одобри" : "Отхвърли"}
@@ -347,14 +395,14 @@ export function AdminDashboard() {
                   >
                     {regOpen ? "ЗАТВАРЯНЕ НА РЕГИСТРАЦИЯТА" : "ОТВАРЯНЕ НА РЕГИСТРАЦИЯТА"}
                   </div>
-                  <div className="font-mono text-[13px] text-white/60 leading-[1.8] mb-4 space-y-2">
+                  <div className="font-mono text-sm text-white/70 leading-[1.8] mb-4 space-y-2">
                     {regOpen ? (
                       <>
                         <p>
                           Това ще <span className="text-red-400 font-bold">блокира</span> всички
                           нови регистрации:
                         </p>
-                        <ul className="list-disc list-inside text-white/45 space-y-1 pl-1">
+                        <ul className="list-disc list-inside text-white/55 space-y-1 pl-1">
                           <li>
                             Формата за регистрация ще покаже &quot;Регистрацията е затворена&quot;
                           </li>
@@ -368,7 +416,7 @@ export function AdminDashboard() {
                           Това ще <span className="text-emerald-400 font-bold">отвори</span>{" "}
                           регистрациите отново:
                         </p>
-                        <ul className="list-disc list-inside text-white/45 space-y-1 pl-1">
+                        <ul className="list-disc list-inside text-white/55 space-y-1 pl-1">
                           <li>Потребителите ще могат да се регистрират</li>
                           <li>Формата и бутоните ще бъдат активни на сайта</li>
                           <li>API-то ще приема нови заявки</li>
@@ -376,22 +424,22 @@ export function AdminDashboard() {
                       </>
                     )}
                   </div>
-                  <p className="font-mono text-[11px] text-white/30 mb-6">
+                  <p className="font-mono text-[13px] text-white/40 mb-6">
                     Промяната влиза в сила веднага за всички потребители.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setRegToggleStep(0)}
-                      className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                     >
                       Отказ
                     </button>
                     <button
                       onClick={() => setRegToggleStep(2)}
-                      className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
+                      className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all ${
                         regOpen
-                          ? "bg-red-500/15 text-red-400 border border-red-500/30 hover:bg-red-500/25"
-                          : "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
+                          ? "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
+                          : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
                       }`}
                     >
                       Продължи →
@@ -405,28 +453,28 @@ export function AdminDashboard() {
                   >
                     СИГУРЕН ЛИ СИ?
                   </div>
-                  <p className="font-mono text-[14px] text-white/70 leading-[1.8] mb-2">
+                  <p className="font-mono text-[15px] text-white/80 leading-[1.8] mb-2">
                     {regOpen
                       ? "Потвърди, че искаш да ЗАТВОРИШ регистрацията."
                       : "Потвърди, че искаш да ОТВОРИШ регистрацията."}
                   </p>
-                  <p className="font-mono text-[11px] text-white/30 mb-6">
+                  <p className="font-mono text-[13px] text-white/40 mb-6">
                     Тази стъпка не може да бъде отменена автоматично — ще трябва ръчно да превключиш
                     обратно.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={() => setRegToggleStep(1)}
-                      className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase border border-white/15 text-white/50 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/30"
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
                     >
                       ← Назад
                     </button>
                     <button
                       onClick={confirmAndToggleRegistration}
-                      className={`flex-1 font-mono text-[12px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all font-bold ${
+                      className={`flex-1 font-mono text-[13px] tracking-[0.08em] uppercase px-5 py-3 cursor-pointer transition-all font-bold ${
                         regOpen
-                          ? "bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-red-500/30"
-                          : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30"
+                          ? "bg-red-500/25 text-red-400 border border-red-500/40 hover:bg-red-500/35"
+                          : "bg-emerald-500/25 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/35"
                       }`}
                     >
                       {regOpen ? "ЗАТВОРИ РЕГИСТРАЦИЯТА" : "ОТВОРИ РЕГИСТРАЦИЯТА"}
@@ -439,69 +487,219 @@ export function AdminDashboard() {
         </>
       )}
 
-      {/* Header */}
-      <header className="border-b border-white/7 px-4 md:px-8 py-4 flex items-center justify-between">
-        <Link href="/">
-          <span className="font-display text-xl">
-            <span className="text-acid">RUSE</span> AI HACK
-          </span>
-          <span className="font-mono text-[10px] text-white/30 ml-3 tracking-[0.14em]">ADMIN</span>
-        </Link>
-        <div className="flex items-center gap-5">
-          <div className="flex items-center gap-2.5">
-            <span className="font-mono text-[10px] tracking-widest text-white/40 uppercase">
-              Регистрация
-            </span>
-            <button
-              onClick={() => setRegToggleStep(1)}
-              disabled={regToggleLoading}
-              className={`relative w-11 h-6 rounded-full border transition-colors duration-200 cursor-pointer disabled:opacity-50 ${
-                regOpen
-                  ? "bg-emerald-500/20 border-emerald-500/40"
-                  : "bg-red-500/15 border-red-500/30"
-              }`}
+      {/* Broadcast Email Modal */}
+      {broadcastOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-60 bg-black/80 backdrop-blur-[4px] animate-[fadeIn_0.15s_ease]"
+            onClick={resetBroadcast}
+          />
+          <div className="fixed inset-0 z-61 flex items-center justify-center p-4">
+            <div
+              role="dialog"
+              aria-labelledby="broadcast-dialog-title"
+              aria-modal="true"
+              className="bg-card border border-white/10 p-7 max-w-[560px] w-full animate-[fadeUp_0.2s_ease] shadow-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
             >
-              <span
-                className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-200 ${
-                  regOpen ? "translate-x-5 bg-emerald-400" : "translate-x-0 bg-red-400"
-                }`}
-              />
-            </button>
-            <span
-              className={`font-mono text-[10px] tracking-widest uppercase ${
-                regOpen ? "text-emerald-400" : "text-red-400"
-              }`}
-            >
-              {regOpen ? "ON" : "OFF"}
-            </span>
+              {!broadcastConfirm ? (
+                <>
+                  <div id="broadcast-dialog-title" className="font-display text-2xl mb-1 text-acid">
+                    ИЗПРАТИ СЪОБЩЕНИЕ
+                  </div>
+                  <p className="font-mono text-[13px] text-white/50 mb-6">
+                    Изпрати имейл до всички регистрирани потребители
+                  </p>
+
+                  {/* Recipient filter */}
+                  <div className="mb-4">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Получатели
+                    </label>
+                    <select
+                      value={broadcastFilter}
+                      onChange={(e) => setBroadcastFilter(e.target.value as typeof broadcastFilter)}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none cursor-pointer transition-colors focus:border-acid"
+                    >
+                      <option value="all" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Всички ({stats.total})
+                      </option>
+                      <option value="approved" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Одобрени ({stats.approved})
+                      </option>
+                      <option value="pending" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Изчакващи ({stats.pending})
+                      </option>
+                      <option value="rejected" style={{ background: "#0a0a0a", color: "#fff" }}>
+                        Отхвърлени ({stats.rejected})
+                      </option>
+                    </select>
+                  </div>
+
+                  {/* Subject */}
+                  <div className="mb-4">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Тема
+                    </label>
+                    <input
+                      type="text"
+                      value={broadcastSubject}
+                      onChange={(e) => setBroadcastSubject(e.target.value)}
+                      placeholder="Тема на имейла..."
+                      maxLength={200}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors focus:border-acid placeholder:text-white/30"
+                    />
+                  </div>
+
+                  {/* Body */}
+                  <div className="mb-6">
+                    <label className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2 block">
+                      Съдържание
+                    </label>
+                    <textarea
+                      value={broadcastBody}
+                      onChange={(e) => setBroadcastBody(e.target.value)}
+                      placeholder="Текст на съобщението... (нов ред = нов параграф)"
+                      rows={6}
+                      maxLength={5000}
+                      className="w-full py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors focus:border-acid placeholder:text-white/30 resize-y leading-[1.8]"
+                    />
+                    <div className="font-mono text-[11px] text-white/25 mt-1 text-right">
+                      {broadcastBody.length}/5000
+                    </div>
+                  </div>
+
+                  {(() => {
+                    const count =
+                      broadcastFilter === "all"
+                        ? stats.total
+                        : broadcastFilter === "approved"
+                          ? stats.approved
+                          : broadcastFilter === "pending"
+                            ? stats.pending
+                            : stats.rejected;
+                    return count >= 80 ? (
+                      <div
+                        className={`font-mono text-[13px] p-3 mb-4 border ${
+                          count >= 100
+                            ? "bg-red-500/10 border-red-500/30 text-red-400"
+                            : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
+                        }`}
+                      >
+                        {count >= 100
+                          ? `⚠ ${count} получателя надвишава дневния лимит от 100 имейла в Resend. Част от имейлите няма да бъдат доставени.`
+                          : `⚠ ${count} получателя е близо до дневния лимит от 100 имейла в Resend.`}
+                      </div>
+                    ) : null;
+                  })()}
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={resetBroadcast}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
+                    >
+                      Отказ
+                    </button>
+                    <button
+                      onClick={() => setBroadcastConfirm(true)}
+                      disabled={!broadcastSubject.trim() || !broadcastBody.trim()}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/15 text-acid border border-acid/30 px-5 py-3 cursor-pointer transition-all hover:bg-acid/25 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      Продължи →
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="font-display text-2xl mb-3 text-acid">ПОТВЪРЖДЕНИЕ</div>
+                  <div className="font-mono text-sm text-white/70 leading-[1.8] mb-2 space-y-2">
+                    <p>
+                      Ще изпратиш имейл до{" "}
+                      <span className="text-acid font-bold">
+                        {broadcastFilter === "all"
+                          ? stats.total
+                          : broadcastFilter === "approved"
+                            ? stats.approved
+                            : broadcastFilter === "pending"
+                              ? stats.pending
+                              : stats.rejected}
+                      </span>{" "}
+                      {broadcastFilter === "all"
+                        ? "потребителя"
+                        : broadcastFilter === "approved"
+                          ? "одобрени"
+                          : broadcastFilter === "pending"
+                            ? "изчакващи"
+                            : "отхвърлени"}
+                    </p>
+                  </div>
+
+                  <div className="bg-white/3 border border-white/8 p-4 mb-2">
+                    <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                      Тема
+                    </div>
+                    <div className="font-mono text-[14px] text-white/90">{broadcastSubject}</div>
+                  </div>
+
+                  <div className="bg-white/3 border border-white/8 p-4 mb-6">
+                    <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
+                      Съдържание
+                    </div>
+                    <div className="font-mono text-[13px] text-white/70 leading-[1.8] whitespace-pre-line">
+                      {broadcastBody}
+                    </div>
+                  </div>
+
+                  {(() => {
+                    const count =
+                      broadcastFilter === "all"
+                        ? stats.total
+                        : broadcastFilter === "approved"
+                          ? stats.approved
+                          : broadcastFilter === "pending"
+                            ? stats.pending
+                            : stats.rejected;
+                    return count >= 100 ? (
+                      <div className="font-mono text-[13px] p-3 mb-4 border bg-red-500/10 border-red-500/30 text-red-400">
+                        ⚠ {count} получателя надвишава дневния лимит от 100 имейла в Resend. Част от
+                        имейлите няма да бъдат доставени.
+                      </div>
+                    ) : null;
+                  })()}
+
+                  <p className="font-mono text-[13px] text-red-400/70 mb-6">
+                    Това действие не може да бъде отменено.
+                  </p>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setBroadcastConfirm(false)}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase border border-white/20 text-white/60 px-5 py-3 cursor-pointer transition-all hover:text-white hover:border-white/40"
+                    >
+                      ← Назад
+                    </button>
+                    <button
+                      onClick={sendBroadcast}
+                      disabled={broadcastLoading}
+                      className="flex-1 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/20 text-acid border border-acid/40 px-5 py-3 cursor-pointer transition-all hover:bg-acid/30 font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      {broadcastLoading ? "Изпращане..." : "ИЗПРАТИ"}
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="font-mono text-[11px] text-white/40 hover:text-white transition-colors cursor-pointer"
-          >
-            Изход
-          </button>
-        </div>
-      </header>
+        </>
+      )}
 
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 py-6">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {(
-            [
-              { label: "Общо", value: stats.total, cls: "text-white" },
-              { label: "Изчакващи", value: stats.pending, cls: "text-white/70" },
-              { label: "Одобрени", value: stats.approved, cls: "text-emerald-400" },
-              { label: "Отхвърлени", value: stats.rejected, cls: "text-red-400" },
-            ] as const
-          ).map((s) => (
-            <div key={s.label} className="border border-white/7 bg-card p-4">
-              <div className="font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase">
-                {s.label}
-              </div>
-              <div className={`font-display text-3xl mt-1 ${s.cls}`}>{s.value}</div>
-            </div>
-          ))}
+          <StatCard label="Общо" value={stats.total} />
+          <StatCard label="Изчакващи" value={stats.pending} className="text-white/70" />
+          <StatCard label="Одобрени" value={stats.approved} className="text-emerald-400" />
+          <StatCard label="Отхвърлени" value={stats.rejected} className="text-red-400" />
         </div>
 
         {/* Controls */}
@@ -511,22 +709,36 @@ export function AdminDashboard() {
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
             placeholder="Търси по име или имейл..."
-            className="flex-1 py-2.5 px-3.5 text-xs bg-white/3 border border-white/12 text-white font-mono outline-none transition-colors duration-200 focus:border-acid placeholder:text-white/20"
+            className="flex-1 py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none transition-colors duration-200 focus:border-acid placeholder:text-white/30"
           />
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="py-2.5 px-3.5 text-xs bg-white/3 border border-white/12 text-white font-mono outline-none cursor-pointer"
+            className="py-3 px-4 text-sm bg-white/4 border border-white/15 text-white font-mono outline-none cursor-pointer"
           >
-            <option value="all">Всички статуси</option>
-            <option value="pending">Изчакващи</option>
-            <option value="approved">Одобрени</option>
-            <option value="rejected">Отхвърлени</option>
+            <option value="all" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Всички статуси
+            </option>
+            <option value="pending" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Изчакващи
+            </option>
+            <option value="approved" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Одобрени
+            </option>
+            <option value="rejected" style={{ background: "#0a0a0a", color: "#fff" }}>
+              Отхвърлени
+            </option>
           </select>
+          <button
+            onClick={() => setBroadcastOpen(true)}
+            className="py-3 px-5 text-sm bg-acid/5 border border-acid/20 text-acid/80 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/40 cursor-pointer whitespace-nowrap"
+          >
+            ✉ Съобщение
+          </button>
           <a
             href="/api/kcah-ia-esur/export-csv"
             download
-            className="py-2.5 px-4 text-xs bg-white/3 border border-white/12 text-white/60 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/30 no-underline whitespace-nowrap text-center"
+            className="py-3 px-5 text-sm bg-white/4 border border-white/15 text-white/70 font-mono transition-colors duration-200 hover:text-acid hover:border-acid/30 no-underline whitespace-nowrap text-center"
           >
             ↓ CSV Export
           </a>
@@ -540,7 +752,7 @@ export function AdminDashboard() {
             ))}
           </div>
         ) : data.length === 0 ? (
-          <div className="text-center py-20 font-mono text-sm text-white/30">
+          <div className="text-center py-20 font-mono text-base text-white/40">
             Няма намерени регистрации
           </div>
         ) : (
@@ -555,13 +767,17 @@ export function AdminDashboard() {
                       { field: "full_name" as SortField, label: "Име" },
                       { field: null, label: "Имейл" },
                       { field: null, label: "Роля" },
-                      { field: "registration_status" as SortField, label: "Статус" },
+                      {
+                        field: "registration_status" as SortField,
+                        label: "Статус",
+                      },
                       { field: "created_at" as SortField, label: "Дата" },
+                      { field: null, label: "" },
                     ].map((col, i) => (
                       <th
                         key={i}
                         onClick={col.field ? () => handleSort(col.field!) : undefined}
-                        className={`font-mono text-[9px] tracking-[0.14em] text-white/40 uppercase px-4 py-3 ${
+                        className={`font-mono text-[12px] tracking-[0.12em] text-white/55 uppercase px-4 py-3.5 ${
                           col.field ? "cursor-pointer hover:text-acid transition-colors" : ""
                         } ${sort === col.field ? "text-acid" : ""}`}
                       >
@@ -580,23 +796,31 @@ export function AdminDashboard() {
                         selectedReg?.id === reg.id ? "bg-acid/3" : "hover:bg-white/3"
                       }`}
                     >
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-acid/70">
+                      <td className="px-4 py-4 font-mono text-[13px] text-acid/80">
                         {String(reg.ticket_number).padStart(4, "0")}
                       </td>
-                      <td className="px-4 py-3.5 font-body text-[14px] font-bold">
+                      <td className="px-4 py-4 font-body text-[15px] font-bold text-white/95">
                         {reg.full_name}
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/50">
-                        {reg.email}
-                      </td>
-                      <td className="px-4 py-3.5 font-mono text-[12px] text-white/40">
-                        {reg.role}
-                      </td>
-                      <td className="px-4 py-3.5">
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/65">{reg.email}</td>
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/55">{reg.role}</td>
+                      <td className="px-4 py-4">
                         <StatusBadge status={reg.registration_status} />
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-[11px] text-white/30">
+                      <td className="px-4 py-4 font-mono text-[13px] text-white/45">
                         {fmtDate(reg.created_at)}
+                      </td>
+                      <td className="px-4 py-4">
+                        <a
+                          href={`/tickets/${reg.ticket_id}?admin`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center justify-center w-8 h-8 text-white/30 hover:text-acid transition-colors"
+                          title="Отвори билета"
+                        >
+                          <ExternalLink size={15} />
+                        </a>
                       </td>
                     </tr>
                   ))}
@@ -617,17 +841,31 @@ export function AdminDashboard() {
                   <div className="p-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="font-body text-[15px] font-bold">{reg.full_name}</div>
-                        <div className="font-mono text-[12px] text-white/40 mt-0.5">
+                        <div className="font-body text-base font-bold text-white/95">
+                          {reg.full_name}
+                        </div>
+                        <div className="font-mono text-[13px] text-white/55 mt-0.5">
                           {reg.email}
                         </div>
                       </div>
                       <StatusBadge status={reg.registration_status} />
                     </div>
-                    <div className="flex items-center gap-3 mt-2 font-mono text-[11px] text-white/30">
-                      <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
-                      <span>{reg.role}</span>
-                      <span>{fmtDate(reg.created_at)}</span>
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-3 font-mono text-[13px] text-white/45">
+                        <span>#{String(reg.ticket_number).padStart(4, "0")}</span>
+                        <span>{reg.role}</span>
+                        <span>{fmtDate(reg.created_at)}</span>
+                      </div>
+                      <a
+                        href={`/tickets/${reg.ticket_id}?admin`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center justify-center w-8 h-8 text-white/30 hover:text-acid transition-colors"
+                        title="Отвори билета"
+                      >
+                        <ExternalLink size={15} />
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -637,7 +875,7 @@ export function AdminDashboard() {
             {/* Pagination */}
             {pagination.totalPages > 1 && (
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-white/5">
-                <div className="font-mono text-[11px] text-white/30">
+                <div className="font-mono text-[13px] text-white/45">
                   {(page - 1) * pagination.pageSize + 1}–
                   {Math.min(page * pagination.pageSize, pagination.total)} от {pagination.total}
                 </div>
@@ -645,7 +883,7 @@ export function AdminDashboard() {
                   <button
                     onClick={() => goToPage(page - 1)}
                     disabled={page <= 1}
-                    className="font-mono text-[11px] px-3 py-1.5 border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="font-mono text-[13px] px-4 py-2 border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
                   >
                     ← Назад
                   </button>
@@ -653,10 +891,10 @@ export function AdminDashboard() {
                     <button
                       key={p}
                       onClick={() => goToPage(p)}
-                      className={`font-mono text-[11px] px-3 py-1.5 border transition-colors cursor-pointer ${
+                      className={`font-mono text-[13px] px-4 py-2 border transition-colors cursor-pointer ${
                         p === page
                           ? "border-acid/40 text-acid bg-acid/5"
-                          : "border-white/10 text-white/40 hover:text-white hover:border-white/20"
+                          : "border-white/15 text-white/50 hover:text-white hover:border-white/30"
                       }`}
                     >
                       {p}
@@ -665,7 +903,7 @@ export function AdminDashboard() {
                   <button
                     onClick={() => goToPage(page + 1)}
                     disabled={page >= pagination.totalPages}
-                    className="font-mono text-[11px] px-3 py-1.5 border border-white/10 text-white/50 hover:text-white hover:border-white/20 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="font-mono text-[13px] px-4 py-2 border border-white/15 text-white/60 hover:text-white hover:border-white/30 transition-colors cursor-pointer disabled:opacity-20 disabled:cursor-not-allowed"
                   >
                     Напред →
                   </button>
@@ -674,6 +912,52 @@ export function AdminDashboard() {
             )}
           </>
         )}
+
+        {/* ─── Registration Toggle Card ─────────────────────── */}
+        <div className="mt-12 mb-4 border border-white/7 bg-card p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-display text-lg tracking-wide">РЕГИСТРАЦИЯ</h3>
+              <p className="font-mono text-[13px] text-white/40 mt-1">
+                Контрол на формата за регистрация
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span
+                className={cn(
+                  "font-mono text-[12px] tracking-widest uppercase font-bold",
+                  regOpen ? "text-emerald-400" : "text-red-400"
+                )}
+              >
+                {regOpen ? "ОТВОРЕНА" : "ЗАТВОРЕНА"}
+              </span>
+              <button
+                onClick={() => setRegToggleStep(1)}
+                disabled={regToggleLoading}
+                className={cn(
+                  "relative w-11 h-6 rounded-full border transition-colors duration-200 cursor-pointer disabled:opacity-50",
+                  regOpen
+                    ? "bg-emerald-500/20 border-emerald-500/40"
+                    : "bg-red-500/15 border-red-500/30"
+                )}
+              >
+                <span
+                  className={cn(
+                    "absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-200",
+                    regOpen ? "translate-x-5 bg-emerald-400" : "translate-x-0 bg-red-400"
+                  )}
+                />
+              </button>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5 bg-white/3 border border-white/5 p-3.5">
+            <AlertTriangle size={15} className="text-amber-400/70 mt-0.5 shrink-0" />
+            <p className="font-mono text-[12px] text-white/45 leading-[1.7]">
+              Превключването минава през двойно потвърждение. Промяната влиза в сила веднага —
+              формата, бутоните и API-то се обновяват за всички потребители.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Sheet overlay + panel */}
@@ -685,20 +969,28 @@ export function AdminDashboard() {
           />
           <aside className="fixed top-0 right-0 z-50 h-full w-full max-w-[520px] bg-bg border-l border-white/7 overflow-y-auto animate-[slideIn_0.25s_ease]">
             <SheetContent
+              key={selectedReg.id}
               reg={selectedReg}
               onClose={() => setSelectedReg(null)}
               onUpdateStatus={requestStatusChange}
               isLoading={actionLoading === selectedReg.id}
               fmtDate={fmtDate}
+              onNotesUpdated={(reg, newNotes) => {
+                const updated = { ...reg, notes: newNotes || null };
+                setSelectedReg(updated);
+                setData((prev) => prev.map((r) => (r.id === reg.id ? updated : r)));
+              }}
             />
           </aside>
         </>
       )}
-    </div>
+    </>
   );
 }
 
 // ─── Sheet Content ──────────────────────────────────────────
+
+type SheetTab = "details" | "analytics";
 
 function SheetContent({
   reg,
@@ -706,14 +998,74 @@ function SheetContent({
   onUpdateStatus,
   isLoading,
   fmtDate,
+  onNotesUpdated,
 }: {
   reg: Registration;
   onClose: () => void;
   onUpdateStatus: (reg: Registration, status: RegistrationStatus) => void;
   isLoading: boolean;
   fmtDate: (iso: string) => string;
+  onNotesUpdated: (reg: Registration, notes: string) => void;
 }) {
+  const [tab, setTab] = useState<SheetTab>("details");
+  const [analytics, setAnalytics] = useState<UserAnalytics | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState(false);
+  const analyticsCache = useRef<Record<string, UserAnalytics>>({});
+  const [notes, setNotes] = useState(reg.notes ?? "");
+  const [notesSaving, setNotesSaving] = useState(false);
+  const [notesSaved, setNotesSaved] = useState(false);
+  const notesDirty = notes !== (reg.notes ?? "");
+
+  // Lazy fetch analytics only when tab is opened
+  useEffect(() => {
+    if (tab !== "analytics") return;
+    if (analyticsCache.current[reg.ticket_id]) {
+      setAnalytics(analyticsCache.current[reg.ticket_id]);
+      return;
+    }
+
+    setAnalyticsLoading(true);
+    setAnalyticsError(false);
+    fetch(`/api/kcah-ia-esur/analytics/${reg.ticket_id}`)
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.ok) {
+          setAnalytics(json.data);
+          analyticsCache.current[reg.ticket_id] = json.data;
+        } else {
+          setAnalyticsError(true);
+        }
+      })
+      .catch(() => setAnalyticsError(true))
+      .finally(() => setAnalyticsLoading(false));
+  }, [tab, reg.ticket_id]);
+
+  async function saveNotes() {
+    setNotesSaving(true);
+    try {
+      const res = await fetch(`/api/kcah-ia-esur/registrations/${reg.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes }),
+      });
+      const json = await res.json();
+      if (json.ok) {
+        onNotesUpdated(reg, notes);
+        setNotesSaved(true);
+        setTimeout(() => setNotesSaved(false), 2000);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setNotesSaving(false);
+    }
+  }
+
   const fields: [string, string | null][] = [
+    ["Имейл", reg.email],
+    ["Роля", reg.role],
+    ["Дата на регистрация", fmtDate(reg.created_at)],
     ["Телефон", reg.phone],
     ["Възраст", reg.age],
     ["Организация", reg.organization],
@@ -734,9 +1086,9 @@ function SheetContent({
       {/* Sheet header */}
       <div className="flex items-center justify-between px-6 py-5 border-b border-white/7">
         <div>
-          <div className="font-body text-lg font-bold">{reg.full_name}</div>
+          <div className="font-body text-xl font-bold text-white/95">{reg.full_name}</div>
           <div className="flex items-center gap-3 mt-1">
-            <span className="font-mono text-[12px] text-acid/70">
+            <span className="font-mono text-[14px] text-acid/80">
               #{String(reg.ticket_number).padStart(4, "0")}
             </span>
             <StatusBadge status={reg.registration_status} />
@@ -750,60 +1102,132 @@ function SheetContent({
         </button>
       </div>
 
+      {/* Tabs */}
+      <div className="flex border-b border-white/7 px-6">
+        {(
+          [
+            { key: "details", label: "Детайли" },
+            { key: "analytics", label: "Анализ" },
+          ] as const
+        ).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setTab(t.key)}
+            className={`font-mono text-[13px] tracking-[0.1em] uppercase px-5 py-3.5 cursor-pointer transition-colors border-b-2 -mb-px ${
+              tab === t.key
+                ? "text-acid border-acid"
+                : "text-white/50 border-transparent hover:text-white/70"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* Sheet body */}
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6">
-        {/* Contact */}
-        <div className="flex items-center gap-4 font-mono text-[13px]">
-          <span className="text-white/50">{reg.email}</span>
-          <span className="text-white/20">·</span>
-          <span className="text-white/40">{reg.role}</span>
-          <span className="text-white/20">·</span>
-          <span className="text-white/30">{fmtDate(reg.created_at)}</span>
-        </div>
-
-        {/* Info grid */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-5">
-          {fields.map(
-            ([label, value]) =>
-              value && (
-                <div key={label}>
-                  <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-1">
-                    {label}
-                  </div>
-                  <div className="font-mono text-[14px] text-white/85">{value}</div>
-                </div>
-              )
-          )}
-        </div>
-
-        {/* Motivation */}
-        <div>
-          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-            Мотивация
-          </div>
-          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
-            {reg.motivation}
-          </div>
-        </div>
-
-        {/* Expectations */}
-        <div>
-          <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-            Очаквания
-          </div>
-          <div className="font-mono text-[13px] text-white/70 leading-[1.8] bg-white/2 p-4 border border-white/5">
-            {reg.expectations}
-          </div>
-        </div>
-
-        {/* Notes */}
-        {reg.notes && (
-          <div>
-            <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest mb-2">
-              Бележки
+        {tab === "details" ? (
+          <>
+            {/* Info grid */}
+            <div className="grid grid-cols-2 gap-x-8 gap-y-5">
+              {fields.map(
+                ([label, value]) =>
+                  value && (
+                    <div key={label}>
+                      <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-1">
+                        {label}
+                      </div>
+                      <div className="font-mono text-[15px] text-white/90 break-words">{value}</div>
+                    </div>
+                  )
+              )}
             </div>
-            <div className="font-mono text-[13px] text-white/60 leading-[1.8]">{reg.notes}</div>
-          </div>
+
+            {/* Motivation */}
+            <div>
+              <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-2">
+                Мотивация
+              </div>
+              <div className="font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words">
+                {reg.motivation}
+              </div>
+            </div>
+
+            {/* Expectations */}
+            <div>
+              <div className="font-mono text-[12px] text-white/50 uppercase tracking-widest mb-2">
+                Очаквания
+              </div>
+              <div className="font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words">
+                {reg.expectations}
+              </div>
+            </div>
+
+            {/* Notes (editable) */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="font-mono text-[11px] text-white/40 uppercase tracking-widest">
+                  Бележки <span className="text-white/20 normal-case">(само за админи)</span>
+                </div>
+                {notesSaved && (
+                  <span className="font-mono text-[12px] text-emerald-400 tracking-wide">
+                    Запазено ✓
+                  </span>
+                )}
+              </div>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Добави бележка..."
+                rows={3}
+                maxLength={2000}
+                className="w-full font-mono text-[14px] text-white/80 leading-[1.8] bg-white/3 p-4 border border-white/8 break-words resize-y outline-none transition-colors focus:border-acid/30 placeholder:text-white/20"
+              />
+              {notesDirty && (
+                <button
+                  onClick={saveNotes}
+                  disabled={notesSaving}
+                  className="mt-2 font-mono text-[13px] tracking-[0.08em] uppercase bg-acid/10 text-acid border border-acid/25 px-5 py-2 cursor-pointer transition-all hover:bg-acid/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {notesSaving ? "..." : "Запази бележка"}
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          /* Analytics tab */
+          <>
+            {analyticsLoading ? (
+              <div className="grid grid-cols-2 gap-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="h-[72px] bg-white/2 border border-white/5 animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : analyticsError ? (
+              <div className="font-mono text-sm text-white/40 py-8 text-center">
+                Грешка при зареждане на данните
+              </div>
+            ) : analytics ? (
+              <div className="grid grid-cols-2 gap-3">
+                <StatCard label="Преглеждания" value={analytics.pageViews} />
+                <StatCard label="Споделяния" value={analytics.shares} />
+                <StatCard label="Изтегляния" value={analytics.downloads} />
+                <StatCard
+                  label="Easter Eggs"
+                  value={
+                    [analytics.consoleSecret && "Конзола", analytics.konamiCode && "Konami"]
+                      .filter(Boolean)
+                      .join(", ") || "—"
+                  }
+                />
+              </div>
+            ) : (
+              <div className="font-mono text-sm text-white/40 py-8 text-center">Няма данни</div>
+            )}
+          </>
         )}
       </div>
 
@@ -813,7 +1237,7 @@ function SheetContent({
           <button
             onClick={() => onUpdateStatus(reg, "approved")}
             disabled={isLoading}
-            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-emerald-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[14px] tracking-[0.08em] uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-6 py-3 cursor-pointer transition-all hover:bg-emerald-500/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Одобри"}
           </button>
@@ -822,7 +1246,7 @@ function SheetContent({
           <button
             onClick={() => onUpdateStatus(reg, "rejected")}
             disabled={isLoading}
-            className="flex-1 font-mono text-[12px] tracking-[0.08em] uppercase bg-red-500/15 text-red-400 border border-red-500/30 px-6 py-2.5 cursor-pointer transition-all hover:bg-red-500/25 disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex-1 font-mono text-[14px] tracking-[0.08em] uppercase bg-red-500/20 text-red-400 border border-red-500/40 px-6 py-3 cursor-pointer transition-all hover:bg-red-500/30 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {isLoading ? "..." : "Отхвърли"}
           </button>
@@ -837,7 +1261,7 @@ function SheetContent({
 function StatusBadge({ status }: { status: RegistrationStatus }) {
   return (
     <span
-      className={`inline-block font-mono text-[10px] tracking-widest uppercase px-2.5 py-1 ${STATUS_COLORS[status]}`}
+      className={`inline-block font-mono text-[12px] tracking-widest uppercase px-3 py-1 font-bold ${STATUS_COLORS[status]}`}
     >
       {STATUS_LABELS[status]}
     </span>

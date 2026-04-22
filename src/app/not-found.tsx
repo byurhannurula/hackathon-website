@@ -28,7 +28,7 @@ const MESSAGES = [
   "Този URL е по-празен от хладилника ми.",
   "Дори AI не може да намери тази страница.",
   "Тази страница е на почивка. Завинаги.",
-  "Вселената каза: \"Не.\"",
+  'Вселената каза: "Не."',
   "Ctrl+Z няма да помогне тук.",
   "Поздрави от /dev/null.",
   "Тук е по-пусто от хакатон без WiFi.",
@@ -122,9 +122,12 @@ function MatrixChar({ char, index, fontSize }: { char: string; index: number; fo
     spawn();
     const moveInterval = setInterval(spawn, 3000 + index * 400);
 
-    const charInterval = setInterval(() => {
-      setCurrentChar(MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)]);
-    }, 500 + index * 100);
+    const charInterval = setInterval(
+      () => {
+        setCurrentChar(MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)]);
+      },
+      500 + index * 100
+    );
 
     return () => {
       clearInterval(moveInterval);

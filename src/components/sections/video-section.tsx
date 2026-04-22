@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Play } from "lucide-react";
 
 import { cn } from "@/lib";
 import { SectionHeader } from "@/components/section-header";
+import { useInView } from "@/hooks";
 
 interface VideoSectionProps {
   videoId: string;
@@ -17,25 +18,8 @@ export function VideoSection({
   label = "Виж повече",
   title = "Какво те очаква",
 }: VideoSectionProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const { ref, inView } = useInView({ threshold: 0.2 });
   const [playing, setPlaying] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <section id="video" className="px-6 py-25 md:px-12">
