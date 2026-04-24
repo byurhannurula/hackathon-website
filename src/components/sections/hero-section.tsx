@@ -1,11 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Link from "next/link";
 
 import { useLiveCount, useRegistrationOpen } from "@/hooks";
 import { siteConfig } from "@/constants";
-import { DecryptText, CountUp, CountdownTimer } from "@/components/ui";
+import { DecryptText, CountUp, CountdownTimer, FormButton, Link } from "@/components/ui";
 import { LogoGlitchNoise } from "@/components/ui/logo-glitch-noise";
 
 const DottedSurface = dynamic(
@@ -41,8 +40,9 @@ export function HeroSection() {
         <h1 className="sr-only">
           {siteConfig.event.name} {siteConfig.event.year} — {siteConfig.event.shortDescription}
         </h1>
-        <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
-        <div className="animate-fade-in delay-200"></div>
+        <div className="animate-[fadeUp_0.6s_0.25s_both_ease]">
+          <DecryptText text={siteConfig.event.heroSubline} speed={40} delay={250} />
+        </div>
 
         <div className="flex items-center justify-center my-8 animate-[fadeUp_0.7s_0.5s_both_ease]">
           <LogoGlitchNoise className="w-[clamp(100px,50vw,320px)]!" />
@@ -62,25 +62,24 @@ export function HeroSection() {
 
         <div className="flex gap-3.5 mt-11 justify-center flex-wrap animate-[fadeUp_0.6s_1.25s_both_ease]">
           {regOpen ? (
-            <Link
-              href="/register"
-              className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-acid text-black border-none py-4 px-11 cursor-pointer transition-all duration-200 hover:bg-white hover:-translate-y-0.5 no-underline"
-            >
+            <Link href="/register" variant="primary" size="lg" className="uppercase">
               Регистрация
             </Link>
           ) : (
-            <span className="inline-block font-display uppercase text-lg tracking-[0.07em] bg-white/10 text-white/40 border-none py-4 px-11 cursor-not-allowed">
+            <span className="inline-block font-display uppercase text-lg tracking-[0.08em] bg-white/10 text-white/40 py-4 px-11 cursor-not-allowed">
               Регистрацията приключи
             </span>
           )}
-          <button
-            className="font-display uppercase text-lg tracking-[0.07em] bg-transparent text-acid border border-acid/60 py-4 px-11 cursor-pointer transition-all duration-200 hover:border-acid hover:text-acid"
+          <FormButton
+            variant="outlineBold"
+            size="lg"
+            className="uppercase"
             onClick={() =>
               document.getElementById("agenda")?.scrollIntoView({ behavior: "smooth" })
             }
           >
             ВИЖ ПРОГРАМАТА
-          </button>
+          </FormButton>
         </div>
 
         <p className="font-mono text-xs tracking-[0.08em] text-white/50 mt-5 animate-[fadeUp_0.6s_1.4s_both_ease]">

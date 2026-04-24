@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   const page = Math.max(1, parseInt(req.nextUrl.searchParams.get("page") || "1", 10));
 
   // Sanitize inputs
-  const search = rawSearch.slice(0, MAX_SEARCH_LENGTH).replace(/[%_\\]/g, "");
+  const search = rawSearch.slice(0, MAX_SEARCH_LENGTH).replace(/[%_\\.,()]/g, "");
   const sort = ALLOWED_SORT_COLUMNS.has(rawSort) ? rawSort : "created_at";
   const order = rawOrder === "asc" ? "asc" : "desc";
 

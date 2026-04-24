@@ -97,7 +97,7 @@ function PersonGrid({ people, label }: { people: Person[]; label: string }) {
   );
 }
 
-export function JurySectionMedium() {
+export function JurySectionMedium({ hideCriteria = false }: { hideCriteria?: boolean } = {}) {
   return (
     <section id="jury" className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div className="max-w-[1100px] mx-auto">
@@ -108,22 +108,24 @@ export function JurySectionMedium() {
         </div>
 
         {/* Judging Criteria */}
-        <div className="mt-16">
-          <div className="font-mono text-[10px] tracking-[0.18em] text-acid/85 uppercase mb-6">
-            КРИТЕРИИ ЗА ОЦЕНЯВАНЕ
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-white/5">
-            {JUDGING_CRITERIA.map((c: InfoCriterion, i: number) => (
-              <div key={i} className="bg-bg p-5 border-t-2 border-t-acid/30">
-                <div className="font-display text-2xl text-acid/80 mb-1">{c.pct}</div>
-                <div className="font-body font-bold text-[13px] text-white">{c.title}</div>
-                <div className="font-mono text-[11px] text-white/45 mt-2 leading-[1.7]">
-                  {c.desc}
+        {!hideCriteria && (
+          <div className="mt-16">
+            <div className="font-mono text-[10px] tracking-[0.18em] text-acid/85 uppercase mb-6">
+              КРИТЕРИИ ЗА ОЦЕНЯВАНЕ
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-px bg-white/5">
+              {JUDGING_CRITERIA.map((c: InfoCriterion, i: number) => (
+                <div key={i} className="bg-bg p-5 border-t-2 border-t-acid/30">
+                  <div className="font-display text-2xl text-acid/80 mb-1">{c.pct}</div>
+                  <div className="font-body font-bold text-[13px] text-white">{c.title}</div>
+                  <div className="font-mono text-[11px] text-white/45 mt-2 leading-[1.7]">
+                    {c.desc}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

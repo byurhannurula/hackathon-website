@@ -57,6 +57,19 @@ export function buildShareUrl(ticketId: string): string {
 /**
  * Build social share URLs for a ticket.
  */
+/**
+ * Format an ISO datetime string for Bulgarian locale (dd/mm/yyyy hh:mm).
+ */
+export function fmtDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("bg-BG", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 export function buildSocialShareUrls(shareUrl: string) {
   const hashtags = "RuseAIHack,AI,Hackathon,VibeCoding,AppInASnap";
   const tweetText = `🚀 Участвам в RUSE AI HACK '26 — 48-часов AI хакатон в Русе! Вземи и ти билет 👇`;

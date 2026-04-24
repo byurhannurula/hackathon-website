@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/components/ui";
 import { CountdownTimer } from "@/components/ui/countdown-timer";
 import { siteConfig } from "@/constants";
 import { useRegistrationOpen, useInView } from "@/hooks";
@@ -55,7 +55,8 @@ export function CTASection() {
               </p>
               <Link
                 href="/register"
-                className="inline-block font-display text-xl tracking-[0.08em] bg-acid text-black border-none py-5 px-18 cursor-pointer mt-6 transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
+                variant="primary"
+                className="text-xl py-5 px-18 mt-6 hover:scale-[1.03]"
               >
                 РЕГИСТРИРАЙ СЕ &mdash; БЕЗПЛАТНО Е
               </Link>

@@ -3,7 +3,11 @@ import { createAdminClient } from "@/lib/supabase-admin";
 
 function escapeCsv(value: unknown): string {
   if (value === null || value === undefined) return "";
-  const str = String(value);
+  let str = String(value);
+  // Prevent CSV formula injection — prefix dangerous leading chars with a tab
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = `\t${str}`;
+  }
   if (str.includes(",") || str.includes('"') || str.includes("\n")) {
     return `"${str.replace(/"/g, '""')}"`;
   }

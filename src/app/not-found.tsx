@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import Link from "next/link";
+import { Link } from "@/components/ui";
 
 // English chars for the matrix-style background
 const MATRIX_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>{}[]=/\\|~^";
@@ -275,16 +275,11 @@ export default function NotFound() {
         <div className="flex gap-4 justify-center flex-wrap">
           <Link
             href="/"
-            className="group relative font-display text-[15px] tracking-[0.08em] bg-acid text-black border-none py-4 px-10 cursor-pointer transition-all duration-200 hover:bg-white hover:scale-[1.03] no-underline"
+            variant="primary"
+            className="group relative text-[15px] py-4 px-10 hover:scale-[1.03]"
           >
             КЪМ НАЧАЛОТО
             <span className="absolute inset-0 border border-acid/0 group-hover:border-acid/40 transition-colors duration-300 pointer-events-none -m-1" />
-          </Link>
-          <Link
-            href="/register"
-            className="font-display text-[15px] tracking-[0.08em] border border-acid/30 text-acid py-4 px-10 no-underline transition-all duration-200 hover:bg-acid/7 hover:scale-[1.02]"
-          >
-            РЕГИСТРАЦИЯ
           </Link>
         </div>
 
