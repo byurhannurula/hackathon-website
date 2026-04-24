@@ -446,7 +446,7 @@ export function Rules() {
           <p className="font-mono text-sm text-white/50 mb-8 max-w-[480px] mx-auto leading-[1.8]">
             С регистрацията си приемате всички правила и условия описани на тази страница.
           </p>
-          <Link href="/register" variant="primary" className="text-xl py-5 px-12 mt-4">
+          <Link href="/register" variant="primary" size="lg" className="mt-4">
             ВЗЕМИ БИЛЕТ &rarr;
           </Link>
         </div>

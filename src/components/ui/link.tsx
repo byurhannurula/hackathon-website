@@ -23,6 +23,7 @@ interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 
 const EXTERNAL_RE = /^(https?:)?\/\/|^(mailto|tel):/i;
 
 const linkTextSize: Record<ButtonSize, string> = {
+  xs: "text-[10px]",
   sm: "text-[11px]",
   md: "text-[13px]",
   lg: "text-[15px]",

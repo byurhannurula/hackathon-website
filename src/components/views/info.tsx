@@ -226,7 +226,7 @@ export function Info() {
           <h2 className="font-display text-[clamp(36px,6vw,56px)] leading-[0.95] mb-6">
             ГОТОВ ЛИ СИ? <span className="text-acid">РЕГИСТРИРАЙ СЕ</span>
           </h2>
-          <Link href="/register" variant="primary" className="text-xl py-5 px-12 mt-4">
+          <Link href="/register" variant="primary" size="lg" className="mt-4">
             ВЗЕМИ БИЛЕТ →
           </Link>
         </div>

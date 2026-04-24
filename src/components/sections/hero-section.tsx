@@ -62,7 +62,7 @@ export function HeroSection() {
 
         <div className="flex gap-3.5 mt-11 justify-center flex-wrap animate-[fadeUp_0.6s_1.25s_both_ease]">
           {regOpen ? (
-            <Link href="/register" variant="primary" className="uppercase text-lg py-4 px-11">
+            <Link href="/register" variant="primary" size="lg" className="uppercase">
               Регистрация
             </Link>
           ) : (
@@ -71,8 +71,9 @@ export function HeroSection() {
             </span>
           )}
           <FormButton
-            variant="outline"
-            className="uppercase text-lg py-4 px-11 border-acid/60 hover:bg-transparent hover:border-acid"
+            variant="outlineBold"
+            size="lg"
+            className="uppercase"
             onClick={() =>
               document.getElementById("agenda")?.scrollIntoView({ behavior: "smooth" })
             }

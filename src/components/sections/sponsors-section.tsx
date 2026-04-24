@@ -4,7 +4,7 @@ import Image from "next/image";
 import { cn } from "@/lib";
 import { SPONSORS, SPONSOR_TIER_LABELS, siteConfig } from "@/constants";
 import { SectionHeader } from "@/components/section-header";
-import { Link } from "@/components/ui";
+import { Link, CornerBrackets } from "@/components/ui";
 import { useInView } from "@/hooks";
 import type { SponsorTier } from "@/lib/types";
 
@@ -61,11 +61,7 @@ function SponsorCard({
           tierHeight
         )}
       >
-        {/* Corner accents */}
-        <span className="absolute top-0 left-0 h-0 w-0 border-t border-l border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
-        <span className="absolute top-0 right-0 h-0 w-0 border-t border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
-        <span className="absolute bottom-0 left-0 h-0 w-0 border-b border-l border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
-        <span className="absolute bottom-0 right-0 h-0 w-0 border-b border-r border-acid opacity-0 transition-all duration-300 group-hover:h-4 group-hover:w-4 group-hover:opacity-100" />
+        <CornerBrackets variant="grow" size="sm" />
 
         {sponsor.logo ? (
           <div

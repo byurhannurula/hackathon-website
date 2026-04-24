@@ -117,7 +117,7 @@ export function TicketPage({ data }: TicketPageProps) {
         {(isOwner || isAdmin) && data?.ticketId ? (
           <ShareButtons ticketId={data.ticketId} downloading={downloading} onDownload={download} />
         ) : (
-          <Link href="/register" variant="primary" className="text-lg py-4 px-11">
+          <Link href="/register" variant="primary" size="lg">
             ВЗЕМИ БИЛЕТ &rarr;
           </Link>
         )}

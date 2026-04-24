@@ -8,7 +8,7 @@ import { ArrowRight, Expand } from "lucide-react";
 
 import { cn } from "@/lib";
 import type { ShowcasePhoto } from "@/lib";
-import { Lightbox } from "@/components/ui";
+import { Lightbox, CornerBrackets } from "@/components/ui";
 import { SectionHeader } from "@/components/section-header";
 import { useInView } from "@/hooks";
 
@@ -89,11 +89,7 @@ function GalleryCell({
       {/* Dark gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400 z-[1]" />
 
-      {/* Corner accents */}
-      <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-acid/0 group-hover:border-acid/70 transition-all duration-300 z-[2]" />
-      <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-acid/0 group-hover:border-acid/70 transition-all duration-300 z-[2]" />
-      <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-acid/0 group-hover:border-acid/70 transition-all duration-300 z-[2]" />
-      <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-acid/0 group-hover:border-acid/70 transition-all duration-300 z-[2]" />
+      <CornerBrackets variant="fade" size="md" />
 
       {/* Caption + expand icon on hover */}
       <div className="absolute inset-x-0 bottom-0 p-3 flex items-end justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-[3]">

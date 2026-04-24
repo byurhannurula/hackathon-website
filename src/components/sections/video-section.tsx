@@ -5,6 +5,7 @@ import { Play } from "lucide-react";
 
 import { cn } from "@/lib";
 import { SectionHeader } from "@/components/section-header";
+import { CornerBrackets } from "@/components/ui";
 import { useInView } from "@/hooks";
 
 interface VideoSectionProps {
@@ -35,11 +36,7 @@ export function VideoSection({
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-7"
           )}
         >
-          {/* Decorative corner accents */}
-          <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-acid/40 z-10" />
-          <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-acid/40 z-10" />
-          <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-acid/40 z-10" />
-          <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-acid/40 z-10" />
+          <CornerBrackets variant="static" size="lg" className="z-10" />
 
           {playing ? (
             <iframe

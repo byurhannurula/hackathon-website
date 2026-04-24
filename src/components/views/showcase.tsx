@@ -34,11 +34,8 @@ import {
   TestimonialsSection,
   FunCountersSection,
 } from "@/components/sections";
-
-const ctaButtonBase =
-  "inline-flex items-center gap-2 font-mono text-[11px] font-bold tracking-[0.14em] uppercase py-3 px-6 transition-all";
-const ctaPrimaryCls = `${ctaButtonBase} bg-acid text-black hover:bg-white`;
-const ctaOutlineCls = `${ctaButtonBase} border border-white/20 text-white/70 hover:border-acid/50 hover:text-acid`;
+import { WinnersSectionEditorial } from "../sections/winners-section-editorial";
+import { WinnersSectionPodium } from "../sections/winners-section-podium";
 
 export function Showcase() {
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.2 });
@@ -92,7 +89,9 @@ export function Showcase() {
 
       <ShowcaseStatsSection stats={SHOWCASE_STATS} />
 
-      <WinnersSection winners={SHOWCASE_WINNERS} />
+      {/* <WinnersSection winners={SHOWCASE_WINNERS} /> */}
+      {/* <WinnersSectionEditorial winners={SHOWCASE_WINNERS} /> */}
+      <WinnersSectionPodium winners={SHOWCASE_WINNERS} />
 
       <PhotoGallerySection photos={featuredPhotos} showViewAll />
 
@@ -132,15 +131,15 @@ export function Showcase() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-3 mb-10">
-            <Link href="https://startupfactory.bg/buletin/" className={ctaPrimaryCls}>
+            <Link href="https://startupfactory.bg/buletin/" variant="primary" size="xs">
               <Send className="w-4 h-4" />
               Абонирай се за бюлетин
             </Link>
-            <Link href={siteConfig.social.instagram} className={ctaOutlineCls}>
+            <Link href={siteConfig.social.instagram} variant="ghost" size="xs">
               <Instagram className="w-4 h-4" />
               Instagram
             </Link>
-            <Link href={siteConfig.social.linkedin} className={ctaOutlineCls}>
+            <Link href={siteConfig.social.linkedin} variant="ghost" size="xs">
               <Linkedin className="w-4 h-4" />
               LinkedIn
             </Link>

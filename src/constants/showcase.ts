@@ -13,8 +13,8 @@ import type {
 // ── Stats ──────────────────────────────────────────────────────────────────
 
 export const SHOWCASE_STATS: ShowcaseStat[] = [
-  { value: "100+", label: "Участници" },
-  { value: "22", label: "Отбора" },
+  { value: "80+", label: "Участници" },
+  { value: "20", label: "Отбора" },
   { value: "48", label: "Часа хакатон" },
   { value: "€2,900", label: "Награден фонд" },
 ];

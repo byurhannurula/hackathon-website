@@ -13,3 +13,4 @@ export * from "./toast";
 export * from "./lightbox";
 export * from "./countdown-timer";
 export * from "./link";
+export * from "./corner-brackets";
