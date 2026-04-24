@@ -29,13 +29,11 @@ import {
   VideoSection,
   SponsorsSection,
   JurySection,
-  WinnersSection,
   ProjectsGallerySection,
   TestimonialsSection,
   FunCountersSection,
+  WinnersSectionPodium,
 } from "@/components/sections";
-import { WinnersSectionEditorial } from "../sections/winners-section-editorial";
-import { WinnersSectionPodium } from "../sections/winners-section-podium";
 
 export function Showcase() {
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.2 });
