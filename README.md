@@ -1,10 +1,10 @@
 # RUSE AI HACK '26 — Event Site
 
-The official site for **[RUSE AI HACK '26](https://aihack,startupfactory.bg)** — the first 48-hour AI hackathon in Ruse, Bulgaria. Built with Next.js 16, React 19, Tailwind CSS v4, TypeScript and Supabase. Deployed on Vercel.
+The official site for **[RUSE AI HACK '26](https://aihack.startupfactory.bg)** — the first 48-hour AI hackathon in Ruse, Bulgaria. Built with Next.js 16, React 19, Tailwind CSS v4, TypeScript and Supabase. Deployed on Vercel.
 
 The site itself is in **Bulgarian**; this README and the codebase are in English.
 
-> Want to see how the site is built and who inspired what? Visit **[/code](https://aihack,startupfactory.bg/code)** — a behind-the-scenes page covering the stack, performance techniques and credits.
+> Want to see how the site is built and who inspired what? Visit **[/code](https://aihack.startupfactory.bg/code)** — a behind-the-scenes page covering the stack, performance techniques and credits.
 
 ---
 
