@@ -33,6 +33,7 @@ export function Footer() {
   const pageLinks = [
     { label: "Информация", href: "/info" },
     { label: "Правила", href: "/rules" },
+    { label: "Под капака", href: "/code" },
     ...(regOpen && !IS_SHOWCASE_MODE ? [{ label: "Регистрация", href: "/register" }] : []),
   ];
 

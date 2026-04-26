@@ -14,6 +14,19 @@ export { ShowcaseStatsSection } from "./showcase-stats-section";
 export { WinnersSection } from "./winners-section";
 export { WinnersSectionPodium } from "./winners-section-podium";
 export { WinnersSectionEditorial } from "./winners-section-editorial";
+export {
+  WinnersSectionLeaderboard,
+  WinnersSectionMosaic,
+  WinnersSectionPolaroid,
+} from "./winners-section-variants";
+export {
+  WinnersSectionTicket,
+  WinnersSectionCommitLog,
+  WinnersSectionFlipBoard,
+  WinnersSectionBoardingPass,
+  WinnersSectionCassette,
+  WinnersSectionVinyl,
+} from "./winners-section-extras";
 export { ProjectsGallerySection } from "./projects-gallery-section";
 export { TestimonialsSection } from "./testimonials-section";
 export { FunCountersSection } from "./fun-counters-section";

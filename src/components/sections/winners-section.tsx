@@ -14,10 +14,12 @@ interface WinnersSectionProps {
   winners: ShowcaseWinner[];
 }
 
-const PLACE_LABEL: Record<1 | 2 | 3, string> = {
+const PLACE_LABEL: Record<1 | 2 | 3 | 4 | 5, string> = {
   1: "I място",
   2: "II място",
   3: "III място",
+  4: "IV място",
+  5: "V място",
 };
 
 export function WinnersSection({ winners }: WinnersSectionProps) {

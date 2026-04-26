@@ -19,7 +19,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   return (
     <section className="px-6 py-25 md:px-12">
       <div className="max-w-[1100px] mx-auto" ref={ref}>
-        <div className="mb-12">
+        <div className="mb-14">
           <SectionHeader label="ОТЗИВИ" title="Какво казаха участниците" />
         </div>
 

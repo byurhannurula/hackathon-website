@@ -13,14 +13,16 @@ function PersonCard({
   person,
   index,
   priority,
+  visible,
 }: {
   person: Person;
   index: number;
   priority?: boolean;
+  visible: boolean;
 }) {
   const hasImage = person.image.length > 0;
   const hasDetails = person.org.length > 0;
-  const { ref: inViewRef, inView: visible } = useInView({ threshold: 0.15 });
+  const delay = Math.min(index, 8) * 50;
 
   const Wrapper = person.linkedin ? "a" : "div";
   const linkProps = person.linkedin
@@ -34,12 +36,11 @@ function PersonCard({
   return (
     <Wrapper
       {...linkProps}
-      ref={inViewRef as React.Ref<HTMLAnchorElement> & React.Ref<HTMLDivElement>}
       className="group block border border-white/7 bg-card transition-all duration-300 hover:border-acid/30 no-underline"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(16px)",
-        transition: `opacity 0.5s ease ${index * 80}ms, transform 0.5s ease ${index * 80}ms, border-color 0.2s`,
+        transition: `opacity 0.5s ease ${delay}ms, transform 0.5s ease ${delay}ms, border-color 0.2s`,
       }}
     >
       <div className="aspect-square overflow-hidden relative bg-white/3 flex items-center justify-center">
@@ -83,14 +84,22 @@ function PersonCard({
 }
 
 function PersonGrid({ people, label }: { people: Person[]; label: string }) {
+  const { ref, inView } = useInView({ threshold: 0, rootMargin: "0px 0px -10% 0px" });
+
   return (
-    <div>
+    <div ref={ref}>
       <div className="font-mono text-[10px] tracking-[0.18em] text-white/40 uppercase mb-5">
         {label}
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
         {people.map((person: Person, i: number) => (
-          <PersonCard key={person.name} person={person} index={i} priority={i < 6} />
+          <PersonCard
+            key={person.name}
+            person={person}
+            index={i}
+            priority={i < 6}
+            visible={inView}
+          />
         ))}
       </div>
     </div>

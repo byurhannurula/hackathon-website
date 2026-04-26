@@ -14,3 +14,5 @@ export * from "./lightbox";
 export * from "./countdown-timer";
 export * from "./link";
 export * from "./corner-brackets";
+export * from "./decrypt-link";
+export * from "./runaway-link";

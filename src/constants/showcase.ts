@@ -10,6 +10,10 @@ import type {
 // Order mirrors the showcase page layout:
 // Stats → Winners → Photos → Video → Projects → Testimonials → Fun counters
 
+// ── Video ──────────────────────────────────────────────────────────────────
+
+export const SHOWCASE_VIDEO_ID = process.env.NEXT_PUBLIC_SHOWCASE_VIDEO_ID ?? "";
+
 // ── Stats ──────────────────────────────────────────────────────────────────
 
 export const SHOWCASE_STATS: ShowcaseStat[] = [
@@ -59,12 +63,35 @@ export const SHOWCASE_WINNERS: ShowcaseWinner[] = [
     imageUrl:
       "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop&q=80",
   },
+  // {
+  //   place: 4,
+  //   teamName: "Prompt Masters",
+  //   projectName: "StudyBuddy",
+  //   pitch:
+  //     "Персонализиран AI тютор, който превръща учебниците в интерактивни куизове и обяснения на прост език.",
+  //   members: ["Виктория Иванова", "Георги Тодоров", "Петър Колев"],
+  //   prize: "€800",
+  //   repoUrl: "https://github.com",
+  //   imageUrl:
+  //     "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=800&fit=crop&q=80",
+  // },
+  // {
+  //   place: 5,
+  //   teamName: "Caffeine Overflow",
+  //   projectName: "RouteSense",
+  //   pitch:
+  //     "Агент, който планира най-краткия маршрут из Русе, включително градски транспорт и време за ходене пеша.",
+  //   members: ["Димитър Ангелов", "София Христова", "Мартин Николов"],
+  //   prize: "€400",
+  //   demoUrl: "https://example.com",
+  //   imageUrl:
+  //     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=800&fit=crop&q=80",
+  // },
 ];
 
 // ── Photos ─────────────────────────────────────────────────────────────────
 
 export const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
-  // Featured (shown on /showcase)
   {
     src: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&h=1000&fit=crop&q=80",
     alt: "Участници работят по проекти",
@@ -351,10 +378,6 @@ export const SHOWCASE_PHOTOS: ShowcasePhoto[] = [
   },
 ];
 
-// ── Video ──────────────────────────────────────────────────────────────────
-
-export const SHOWCASE_VIDEO_ID = process.env.NEXT_PUBLIC_SHOWCASE_VIDEO_ID ?? "";
-
 // ── Projects ───────────────────────────────────────────────────────────────
 
 export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
@@ -383,6 +406,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     projectName: "DressCode",
     description: "AI стилист, който комбинира дрехи от гардероба ти на база времето и случая.",
     tech: ["React Native", "Gemini Vision"],
+    demoUrl: "https://example.com",
     imageUrl:
       "https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=800&fit=crop&q=80",
   },
@@ -393,6 +417,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
       "Copilot разширение, което открива security bugs, преди да ги commit-неш в main branch.",
     tech: ["TypeScript", "LLM", "VSCode API"],
     repoUrl: "https://github.com",
+    demoUrl: "https://example.com",
     imageUrl:
       "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&h=800&fit=crop&q=80",
   },
@@ -401,6 +426,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     projectName: "GreenRoute",
     description: "Логистичен агент, който оптимизира доставки спрямо CO2 отпечатък.",
     tech: ["Go", "LangChain"],
+    demoUrl: "https://example.com",
     imageUrl:
       "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=800&fit=crop&q=80",
   },
@@ -449,17 +475,17 @@ export const SHOWCASE_TESTIMONIALS: ShowcaseTestimonial[] = [
 
 export const SHOWCASE_FUN_COUNTERS: ShowcaseFunCounter[] = [
   {
-    value: "14,823",
+    value: "180",
     label: "Чаши кафе",
-    hint: "Средно по 148 на участник. Някой брои ли?",
+    hint: "Средно по ~10 на участник. Някой брои ли?",
   },
   {
-    value: "72%",
+    value: "80%",
     label: "Ученици и студенти",
     hint: "Остатъкът — ментори, жури и смели първокурсници.",
   },
   {
-    value: "92",
+    value: "128",
     label: "Git commits в последния час",
     hint: "Последната минута преди deadline беше особено бурна.",
   },
@@ -469,7 +495,7 @@ export const SHOWCASE_FUN_COUNTERS: ShowcaseFunCounter[] = [
     hint: "Общо. Не на нощ.",
   },
   {
-    value: "312",
+    value: "160",
     label: "Пица резена",
     hint: "Маргарита води с пепперони на близка втора позиция.",
   },

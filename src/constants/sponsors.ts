@@ -13,7 +13,7 @@ export const SPONSOR_TIER_LABELS: Record<SponsorTier, string> = {
 export const SPONSORS: Sponsor[] = [
   {
     name: "Reward Gateway",
-    logo: "/sponsors/reward_gateway/reward_gateway_white.svg",
+    logo: "/sponsors/reward-gateway-white.svg",
     href: "https://www.rewardgateway.com/",
     tier: "general",
   },
@@ -27,38 +27,38 @@ export const SPONSORS: Sponsor[] = [
   {
     name: "SumUp",
     label: "Технологичен партньор",
-    logo: "/sponsors/sumup-logo-black.svg",
+    logo: "/sponsors/sumup-black.svg",
     href: "https://www.sumup.com/bg-bg/",
     tier: "strategic",
   },
   {
     name: "Sirma",
     label: "AI партньор",
-    logo: "/sponsors/sirma-logo-light.svg",
+    logo: "/sponsors/sirma-light.svg",
     href: "https://sirma.com/",
     tier: "strategic",
   },
   {
     name: "Avenga",
-    logo: "/sponsors/avenga/avenga_logo_white_rgb.svg",
+    logo: "/sponsors/avenga-white.svg",
     href: "https://www.avenga.com/",
     tier: "partner",
   },
   {
     name: "GraphWise",
-    logo: "/sponsors/graphwise/graphwise_white.svg",
+    logo: "/sponsors/graphwise-white.svg",
     href: "https://graphwise.ai/",
     tier: "partner",
   },
   {
     name: "JetHost",
-    logo: "/sponsors/jethost/jh_logo_horizontal_white.svg",
+    logo: "/sponsors/jethost-white.svg",
     href: "https://jethost.bg/",
     tier: "partner",
   },
   {
     name: "ReCheck",
-    logo: "/sponsors/recheck-logo.svg",
+    logo: "/sponsors/recheck.svg",
     href: "https://recheck.io/",
     tier: "partner",
   },
@@ -71,21 +71,21 @@ export const SPONSORS: Sponsor[] = [
   },
   {
     name: "Ocean Investments",
-    logo: "/sponsors/ocean_investments/oi_logo.svg",
+    logo: "/sponsors/ocean-investments.svg",
     href: "https://www.ocean.investments/",
     tier: "supporter",
   },
 
   {
     name: "SoftServe",
-    logo: "/sponsors/softserve-logo-white.svg",
+    logo: "/sponsors/softserve-white.svg",
     href: "https://www.softserveinc.com/en-us",
     tier: "supporter",
     logoScale: 1.25,
   },
   {
     name: "CheckPoint",
-    logo: "/sponsors/cp-logo-text.svg",
+    logo: "/sponsors/checkpoint.svg",
     href: "https://checkpoint.pub/",
     tier: "supporter",
   },
@@ -106,7 +106,7 @@ export const SPONSORS: Sponsor[] = [
   },
   {
     name: "Ruse On The Danube",
-    logo: "/sponsors/ruse_on_the_danube_white.png",
+    logo: "/sponsors/ruse-on-the-danube-white.png",
     href: "https://www.instagram.com/ruse.on.the.danube/",
     tier: "media",
     logoScale: 1.35,

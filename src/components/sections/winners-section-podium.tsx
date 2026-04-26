@@ -14,31 +14,52 @@ interface WinnersSectionPodiumProps {
   winners: ShowcaseWinner[];
 }
 
-const PLACE_LABEL: Record<1 | 2 | 3, string> = {
+const PLACE_LABEL: Record<1 | 2 | 3 | 4 | 5, string> = {
   1: "I място",
   2: "II място",
   3: "III място",
+  4: "IV място",
+  5: "V място",
 };
 
-// Podium visual arrangement on desktop: 2nd | 1st | 3rd.
-const DESKTOP_ORDER: Record<1 | 2 | 3, string> = {
-  1: "md:order-2",
-  2: "md:order-1",
-  3: "md:order-3",
+// Tailwind needs static class strings — predeclare every variant we may use.
+const COLS_CLASS: Record<number, string> = {
+  1: "lg:grid-cols-1",
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
 };
 
-// Plinth heights in px — 1st is the tallest platform.
-const PLINTH_HEIGHT: Record<1 | 2 | 3, number> = {
-  1: 96,
-  2: 60,
-  3: 36,
+const ORDER_CLASS: Record<number, string> = {
+  0: "lg:order-1",
+  1: "lg:order-2",
+  2: "lg:order-3",
+  3: "lg:order-4",
+  4: "lg:order-5",
 };
+
+/** Symmetric podium index: 1st in center, evens spread left, odds spread right. */
+function podiumIndex(place: number, count: number): number {
+  const center = Math.floor(count / 2);
+  if (place === 1) return center;
+  const offset = Math.floor(place / 2);
+  return place % 2 === 0 ? center - offset : center + offset;
+}
+
+/** Plinth height in px — 1st is the tallest, descending by ~24px per place. */
+function plinthHeight(place: number): number {
+  return Math.max(24, 120 - (place - 1) * 24);
+}
 
 export function WinnersSectionPodium({ winners }: WinnersSectionPodiumProps) {
   const { ref, inView } = useInView({ threshold: 0.2 });
   const ordered = useMemo(() => [...winners].sort((a, b) => a.place - b.place), [winners]);
 
   if (winners.length === 0) return null;
+
+  const count = ordered.length;
+  const colsCls = COLS_CLASS[count] ?? COLS_CLASS[3];
 
   return (
     <section className="px-6 py-25 md:px-12">
@@ -47,13 +68,13 @@ export function WinnersSectionPodium({ winners }: WinnersSectionPodiumProps) {
           <SectionHeader label="ХАКАТОН '26" title="Победители" />
         </div>
 
-        <ol className="grid gap-5 md:grid-cols-3 md:items-end list-none p-0">
+        <ol className={cn("grid gap-5 lg:items-end list-none p-0", colsCls)}>
           {ordered.map((w, i) => (
             <li
               key={`${w.place}-${w.teamName}`}
               className={cn(
                 "flex flex-col transition-all duration-700",
-                DESKTOP_ORDER[w.place],
+                ORDER_CLASS[podiumIndex(w.place, count)],
                 inView ? "opacity-100" : "opacity-0"
               )}
               style={{ transitionDelay: inView ? `${i * 140}ms` : "0ms" }}
@@ -161,15 +182,14 @@ export function WinnersSectionPodium({ winners }: WinnersSectionPodiumProps) {
                 </div>
               </article>
 
-              {/* Podium plinth — sells the "podium" metaphor on desktop.
-                  Hidden on mobile where the stacking order is just 1/2/3. */}
+              {/* Podium plinth — only shown when cards sit on a single row (lg+). */}
               <div
                 aria-hidden
                 className={cn(
-                  "hidden md:flex items-center justify-center relative overflow-hidden border-x border-b",
+                  "hidden lg:flex items-center justify-center relative overflow-hidden border-x border-b",
                   w.place === 1 ? "bg-acid/10 border-acid/30" : "bg-white/[0.03] border-white/10"
                 )}
-                style={{ height: PLINTH_HEIGHT[w.place] }}
+                style={{ height: plinthHeight(w.place) }}
               >
                 <span
                   className={cn(

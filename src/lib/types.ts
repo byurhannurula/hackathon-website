@@ -91,7 +91,7 @@ export interface ShowcaseStat {
 }
 
 export interface ShowcaseWinner {
-  place: 1 | 2 | 3;
+  place: 1 | 2 | 3 | 4 | 5;
   teamName: string;
   projectName: string;
   pitch: string;

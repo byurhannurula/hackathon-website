@@ -11,7 +11,7 @@ export function OrganizerSection() {
             Организирано от
           </div>
           <Image
-            src="/sponsors/startupfactory-horizontal.svg"
+            src="/sponsors/organizers/startup-factory.svg"
             alt="Startup Factory"
             width={200}
             height={63}
@@ -23,7 +23,7 @@ export function OrganizerSection() {
           </div>
           <div className="flex items-center gap-6 justify-center md:justify-start">
             <Image
-              src="/sponsors/uni-ruse.png"
+              src="/sponsors/organizers/uni-ruse.png"
               alt="Русенски Университет"
               width={70}
               height={70}
@@ -31,7 +31,7 @@ export function OrganizerSection() {
               className="object-contain brightness-120 mix-blend-lighten"
             />
             <Image
-              src="/sponsors/software-roastery.svg"
+              src="/sponsors/organizers/software-roastery.svg"
               alt="Software Roastery"
               width={200}
               height={84}

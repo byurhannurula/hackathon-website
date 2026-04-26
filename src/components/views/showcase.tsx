@@ -1,7 +1,7 @@
 "use client";
 
-import { Instagram, Linkedin, Send } from "lucide-react";
 import dynamic from "next/dynamic";
+import { Instagram, Linkedin, Send } from "lucide-react";
 
 const DottedSurface = dynamic(
   () => import("@/components/ui/dotted-surface").then((m) => m.DottedSurface),
@@ -14,6 +14,17 @@ import { Nav } from "@/components/nav";
 import { Link } from "@/components/ui";
 import { Footer } from "@/components/footer";
 import {
+  PhotoGallerySection,
+  ShowcaseStatsSection,
+  VideoSection,
+  SponsorsSection,
+  JurySection,
+  ProjectsGallerySection,
+  TestimonialsSection,
+  FunCountersSection,
+  WinnersSectionMosaic,
+} from "@/components/sections";
+import {
   SHOWCASE_PHOTOS,
   SHOWCASE_STATS,
   SHOWCASE_VIDEO_ID,
@@ -23,17 +34,6 @@ import {
   SHOWCASE_FUN_COUNTERS,
   siteConfig,
 } from "@/constants";
-import {
-  PhotoGallerySection,
-  ShowcaseStatsSection,
-  VideoSection,
-  SponsorsSection,
-  JurySection,
-  ProjectsGallerySection,
-  TestimonialsSection,
-  FunCountersSection,
-  WinnersSectionPodium,
-} from "@/components/sections";
 
 export function Showcase() {
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.2 });
@@ -56,7 +56,7 @@ export function Showcase() {
         <div className="relative z-2 w-full max-w-[1100px] mx-auto text-center">
           <div
             className={cn(
-              "font-mono text-[13px] tracking-[0.22em] text-acid uppercase mb-6 transition-all duration-700",
+              "font-mono text-[22px] tracking-[0.22em] text-acid uppercase mb-6 transition-all duration-700",
               heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}
           >
@@ -65,7 +65,7 @@ export function Showcase() {
 
           <h1
             className={cn(
-              "font-display text-[clamp(64px,11vw,120px)] leading-[1.02] transition-all duration-700 delay-100",
+              "font-display text-[clamp(56px,11vw,100px)] leading-[1.02] transition-all duration-700 delay-100",
               heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             )}
           >
@@ -87,9 +87,10 @@ export function Showcase() {
 
       <ShowcaseStatsSection stats={SHOWCASE_STATS} />
 
-      {/* <WinnersSection winners={SHOWCASE_WINNERS} /> */}
-      {/* <WinnersSectionEditorial winners={SHOWCASE_WINNERS} /> */}
-      <WinnersSectionPodium winners={SHOWCASE_WINNERS} />
+      {/* <WinnersSectionLeaderboard winners={SHOWCASE_WINNERS} /> */}
+      <WinnersSectionMosaic winners={SHOWCASE_WINNERS} />
+      {/* <WinnersSectionPolaroid winners={SHOWCASE_WINNERS} /> */}
+      {/* <WinnersSectionTicket winners={SHOWCASE_WINNERS} /> */}
 
       <PhotoGallerySection photos={featuredPhotos} showViewAll />
 
