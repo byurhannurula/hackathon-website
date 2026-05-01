@@ -15,7 +15,7 @@ export function Nav() {
   const navItems = IS_SHOWCASE_MODE
     ? [
         { key: "home", label: "Начало", href: "/" },
-        { key: "gallery", label: "Галерия", href: "/showcase/gallery" },
+        { key: "gallery", label: "Галерия", href: siteConfig.galleryUrl },
         { key: "code", label: "Под капака", href: "/code" },
       ]
     : [
@@ -106,14 +106,6 @@ export function Nav() {
                   {item.label}
                 </Link>
               ))}
-
-              <div
-                className="mt-4 text-center font-mono text-[11px] tracking-[0.18em] text-acid uppercase leading-relaxed animate-reveal-up"
-                style={{ animationDelay: "260ms" }}
-              >
-                {siteConfig.event.dateBG} · {siteConfig.event.locationBG} ·{" "}
-                {siteConfig.event.duration.toLowerCase()} хакатон
-              </div>
 
               {regOpen && (
                 <Link

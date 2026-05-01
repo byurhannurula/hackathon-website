@@ -102,6 +102,18 @@ export interface ShowcaseWinner {
   prize?: string;
 }
 
+export interface ShowcaseHonorableMention {
+  category: string;
+  teamName: string;
+  projectName: string;
+  pitch: string;
+  members: string[];
+  repoUrl?: string;
+  demoUrl?: string;
+  imageUrl?: string;
+  sponsor?: string;
+}
+
 export interface ShowcasePhoto {
   src: string;
   alt: string;

@@ -21,7 +21,7 @@ export const siteConfig = {
     organizer: "Startup Factory",
     organizerSubtitle: "Ruse Innovation Hub · Building founders since 2018",
     prizesPool: "€2,900",
-    participantsCount: "100+",
+    participantsCount: "70+",
     free: "Безплатен вход",
 
     // Derived fields
@@ -58,6 +58,8 @@ export const siteConfig = {
     sponsorEmail: "info@startupfactory.bg",
     organizerUrl: "https://startupfactory.bg",
   },
+
+  galleryUrl: "https://photos.app.goo.gl/KzgwVfVURBPFoJE89",
 } as const;
 
 export type SiteConfig = typeof siteConfig;

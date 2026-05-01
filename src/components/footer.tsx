@@ -20,7 +20,7 @@ const EVENT_SECTION_LINKS = [
 ];
 
 const SHOWCASE_SECTION_LINKS = [
-  { label: "Галерия", href: "/showcase/gallery" },
+  { label: "Галерия", href: siteConfig.galleryUrl },
   { label: "Победители", href: "/showcase#winners" },
   { label: "Спонсори", href: "/showcase#sponsors" },
 ];
@@ -88,7 +88,7 @@ export function Footer() {
           </div>
 
           {/* Navigation columns */}
-          <div className="flex gap-12">
+          <div className="flex flex-col md:flex-row gap-8 md:gap-12">
             {/* Sections */}
             <div>
               <div className="font-mono text-[10px] tracking-[0.18em] text-white/45 uppercase mb-3">
@@ -142,7 +142,7 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-border px-6 py-4 md:px-12 flex justify-between items-center flex-wrap gap-3 max-w-[1100px] mx-auto">
+      <div className="border-t border-border px-6 py-4 md:px-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 md:gap-3 max-w-[1100px] mx-auto">
         <span className="font-mono text-[10px] text-white/45 tracking-widest">
           &copy; {new Date().getFullYear()}{" "}
           <Link href={siteConfig.contact.organizerUrl} className="text-white/55 hover:text-teal">

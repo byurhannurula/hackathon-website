@@ -94,7 +94,7 @@ function GalleryCell({
       {/* Caption + expand icon on hover */}
       <div className="absolute inset-x-0 bottom-0 p-3 flex items-end justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-[3]">
         <span className="font-mono text-[10px] text-white/80 tracking-wide leading-tight line-clamp-1">
-          {photo.alt}
+          &nbsp;
         </span>
         <Expand className="w-3.5 h-3.5 text-acid/80 shrink-0 ml-2" />
       </div>
@@ -108,10 +108,10 @@ function GalleryCell({
 // ── Main gallery section ──
 interface PhotoGallerySectionProps {
   photos: ShowcasePhoto[];
-  showViewAll?: boolean;
+  viewAllUrl?: string;
 }
 
-export function PhotoGallerySection({ photos, showViewAll }: PhotoGallerySectionProps) {
+export function PhotoGallerySection({ photos, viewAllUrl }: PhotoGallerySectionProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const openLightbox = useCallback((i: number) => {
@@ -131,10 +131,12 @@ export function PhotoGallerySection({ photos, showViewAll }: PhotoGallerySection
           ))}
         </div>
 
-        {showViewAll && (
+        {viewAllUrl && (
           <div className="mt-12 flex justify-center">
             <Link
-              href="/showcase/gallery"
+              href={viewAllUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 font-mono text-[12px] tracking-[0.14em] uppercase text-acid/80 hover:text-acid no-underline transition-colors border border-acid/20 hover:border-acid/50 px-6 py-3"
             >
               Разгледай цялата галерия

@@ -4,7 +4,7 @@ import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib";
 
 const ACID = "#feee04";
-const LOGO = "/logos/ai-hack-logo.svg";
+const LOGO = "/logos/ai-logo.svg";
 
 /* ─── Burst state (timed glitch) ─── */
 

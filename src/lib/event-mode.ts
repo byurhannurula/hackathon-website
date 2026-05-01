@@ -2,8 +2,8 @@
  * Site mode — swaps the root landing page and toggles showcase visibility.
  * Controlled by NEXT_PUBLIC_EVENT_MODE (inlined at build time).
  *
- * - "event"    (default): root renders the event landing. /showcase and /showcase/gallery 404.
- * - "showcase":           root renders the showcase. /showcase and /showcase/gallery also accessible.
+ * - "event"    (default): root renders the event landing. /showcase 404s.
+ * - "showcase":           root renders the showcase. /showcase is accessible.
  *
  * Flip by setting NEXT_PUBLIC_EVENT_MODE=showcase on the deployment and rebuilding.
  */
