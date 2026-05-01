@@ -106,19 +106,14 @@ export function Showcase() {
       )}
 
       <SponsorsSection hideCTA />
-      <JurySection hideCriteria />
+      <JurySection hideCriteria transparent />
 
       {/* CTA — До следващия път */}
       <section className="relative px-6 py-24 md:px-12 border-t border-border overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, var(--color-acid) 1px, transparent 0)",
-            backgroundSize: "24px 24px",
-          }}
-        />
-        <div className="relative max-w-[1100px] mx-auto text-center">
+        <div className="absolute inset-0 pointer-events-none bg-grid-acid" />
+        <div className="absolute inset-0 pointer-events-none bg-glow-acid" />
+
+        <div className="relative z-1 max-w-[1100px] mx-auto text-center">
           <div className="font-mono text-[11px] tracking-[0.18em] text-acid uppercase mb-4">
             {siteConfig.event.name} {siteConfig.event.year} · Край
           </div>

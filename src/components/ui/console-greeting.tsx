@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { siteConfig } from "@/constants";
+import { IS_SHOWCASE_MODE } from "@/lib";
 
 interface ConsoleGreetingProps {
   /** Set to false to disable console messages */
@@ -39,37 +40,52 @@ export function ConsoleGreeting({ enabled = true }: ConsoleGreetingProps) {
 
     console.log("%c─────────────────────────────────────────────", "color: #333;");
 
-    console.log(
-      "%c👀 Любопитен човек, а? Харесва ни!",
-      "color: #00ffb2; font-size: 14px; font-family: monospace;"
-    );
+    if (IS_SHOWCASE_MODE) {
+      console.log(
+        "%c🎉 Първото издание приключи. Благодарим на всички!",
+        "color: #00ffb2; font-size: 14px; font-family: monospace;"
+      );
 
-    console.log(
-      "%c💻 Ако обичаш да ровиш в код — може би това е точно твоят хакатон.",
-      "color: #7b61ff; font-size: 12px; font-family: monospace;"
-    );
+      console.log(
+        "%c📸 Разгледай снимките, победителите и моментите от събитието.",
+        "color: #7b61ff; font-size: 12px; font-family: monospace;"
+      );
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
-    console.log(
-      `%c🎯 Регистрирай се: %c${siteUrl}/register`,
-      "color: #18abc0; font-size: 12px; font-family: monospace;",
-      "color: #feee04; font-size: 12px; font-family: monospace; text-decoration: underline;"
-    );
+      console.log(
+        "%c👀 Любопитен човек, а? Виж кода: %chttps://github.com/byurhannurula/hackathon-website",
+        "color: #18abc0; font-size: 12px; font-family: monospace;",
+        "color: #feee04; font-size: 12px; font-family: monospace; text-decoration: underline;"
+      );
+
+      console.log(
+        "%c📬 Абонирай се за бюлетина и бъди първи за следващото издание: %chttps://startupfactory.bg/buletin",
+        "color: #18abc0; font-size: 12px; font-family: monospace;",
+        "color: #feee04; font-size: 12px; font-family: monospace; text-decoration: underline;"
+      );
+    } else {
+      console.log(
+        "%c👀 Любопитен човек, а? Харесва ни!",
+        "color: #00ffb2; font-size: 14px; font-family: monospace;"
+      );
+
+      console.log(
+        "%c💻 Ако обичаш да ровиш в код — може би това е точно твоят хакатон.",
+        "color: #7b61ff; font-size: 12px; font-family: monospace;"
+      );
+
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "";
+      console.log(
+        `%c🎯 Регистрирай се: %c${siteUrl}/register`,
+        "color: #18abc0; font-size: 12px; font-family: monospace;",
+        "color: #feee04; font-size: 12px; font-family: monospace; text-decoration: underline;"
+      );
+    }
 
     console.log("%c─────────────────────────────────────────────", "color: #333;");
 
     console.log(
       "%c⚡ Powered by Next.js, Tailwind, Supabase & good vibes",
       "color: #555; font-size: 10px; font-family: monospace;"
-    );
-
-    console.log("%c─────────────────────────────────────────────", "color: #333;");
-
-    console.log(
-      "%c🔍 Псст… тази страница крие тайни. Напиши %chackVerify()%c в конзолата.",
-      "color: #888; font-size: 11px; font-family: monospace;",
-      "color: #feee04; font-weight: bold; font-size: 11px; font-family: monospace;",
-      "color: #888; font-size: 11px; font-family: monospace;"
     );
   }, [enabled]);
 

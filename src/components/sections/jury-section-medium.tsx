@@ -106,9 +106,15 @@ function PersonGrid({ people, label }: { people: Person[]; label: string }) {
   );
 }
 
-export function JurySectionMedium({ hideCriteria = false }: { hideCriteria?: boolean } = {}) {
+export function JurySectionMedium({
+  hideCriteria = false,
+  transparent = false,
+}: { hideCriteria?: boolean; transparent?: boolean } = {}) {
   return (
-    <section id="jury" className="px-6 py-25 md:px-12 bg-card border-t border-border">
+    <section
+      id="jury"
+      className={`px-6 py-25 md:px-12 border-t border-border ${transparent ? "" : "bg-card"}`}
+    >
       <div className="max-w-[1100px] mx-auto">
         <SectionHeader label="КОЙ НАСОЧВА" title="Ментори" />
 

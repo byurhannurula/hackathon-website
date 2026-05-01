@@ -119,7 +119,7 @@ export function PhotoGallerySection({ photos, viewAllUrl }: PhotoGallerySectionP
   }, []);
 
   return (
-    <section className="px-6 py-25 md:px-12">
+    <section className="px-6 py-25 md:px-12 bg-card border-t border-border">
       <div className="max-w-[1100px] mx-auto">
         <div className="mb-12">
           <SectionHeader label="Галерия" title="Моменти от събитието" />
