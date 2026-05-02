@@ -1,3 +1,5 @@
+import { siteConfig } from "@/constants/site";
+
 import { createAdminClient } from "./supabase-admin";
 
 /**
@@ -12,6 +14,7 @@ function envDefault(): boolean {
 }
 
 export async function isRegistrationOpen(): Promise<boolean> {
+  if (siteConfig.registrationClosed) return false;
   try {
     const supabase = createAdminClient();
     const { data } = await supabase
@@ -30,6 +33,7 @@ export async function isRegistrationOpen(): Promise<boolean> {
 }
 
 export async function setRegistrationOpen(open: boolean): Promise<void> {
+  if (siteConfig.registrationClosed) return;
   try {
     const supabase = createAdminClient();
     await supabase.from("site_settings").upsert({

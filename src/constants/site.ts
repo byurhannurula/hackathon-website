@@ -6,6 +6,14 @@
 export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
 
+  /**
+   * Hard kill switch for registration. When true, registration is closed
+   * regardless of DB state, env vars, or admin panel toggles — safe to
+   * delete Supabase keys without accidentally re-opening registration.
+   * Forkers: leave this `true` if you don't want to wire up Supabase.
+   */
+  registrationClosed: true,
+
   event: {
     name: "RUSE AI HACK",
     tagline: "App in a Snap",
