@@ -173,14 +173,14 @@ export const SHOWCASE_TESTIMONIALS: ShowcaseTestimonial[] = [
 
 export const SHOWCASE_MEDIA: ShowcaseMediaItem[] = [
   {
-    outlet: "Bloomberg",
+    outlet: "Bloomberg TV",
     title: "България има шанс да хване AI вълната, но още изостава в дигитализацията",
     url: "https://www.bloombergtv.bg/a/16-biznes-start/159229-balgariya-ima-shans-da-hvane-ai-valnata-no-oshte-izostava-v-digitalizatsiyata",
   },
   {
     outlet: "Утро Русе",
     title:
-      "Над 70 ученици, студенти и специалисти от България, Азербайджан и Грузия се срещнаха в Русе",
+      "Иновации могат да се създават и тук. Ще дадем тласък за хората, които желаят да приложат изкуствен интелект в работата си",
     url: "https://utroruse.com/article/1242176/",
   },
   {
