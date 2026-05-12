@@ -133,6 +133,14 @@ export interface ShowcaseProject {
   imageUrl?: string;
 }
 
+export interface ShowcaseMediaItem {
+  outlet: string;
+  title: string;
+  url: string;
+  date?: string;
+  excerpt?: string;
+}
+
 export interface ShowcaseTestimonial {
   quote: string;
   name: string;

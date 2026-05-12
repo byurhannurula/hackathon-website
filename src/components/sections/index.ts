@@ -14,6 +14,8 @@ export { PhotoGallerySection } from "./photo-gallery-section";
 export { ShowcaseStatsSection } from "./showcase-stats-section";
 export { WinnersSection } from "./winners-section";
 export { WinnersSectionLeaderboard } from "./winners-section-leaderboard";
+export { HonorableMentionsSection } from "./honorable-mentions-section";
+export { PressSection } from "./press-section";
 export { ProjectsGallerySection } from "./projects-gallery-section";
 export { TestimonialsSection } from "./testimonials-section";
 export { FunCountersSection } from "./fun-counters-section";

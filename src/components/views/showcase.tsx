@@ -22,12 +22,18 @@ import {
   JurySection,
   OrganizerCreditsSection,
   WinnersSection,
+  HonorableMentionsSection,
+  TestimonialsSection,
+  PressSection,
 } from "@/components/sections";
 import {
   SHOWCASE_PHOTOS,
   SHOWCASE_STATS,
   SHOWCASE_VIDEO_ID,
   SHOWCASE_WINNERS,
+  SHOWCASE_HONORABLE_MENTIONS,
+  SHOWCASE_TESTIMONIALS,
+  SHOWCASE_MEDIA,
   siteConfig,
 } from "@/constants";
 
@@ -97,15 +103,28 @@ export function Showcase() {
 
       <ShowcaseStatsSection stats={SHOWCASE_STATS} />
 
-      <WinnersSection winners={SHOWCASE_WINNERS} />
+      <div className="bg-card">
+        <WinnersSection winners={SHOWCASE_WINNERS} />
+      </div>
 
+      <HonorableMentionsSection mentions={SHOWCASE_HONORABLE_MENTIONS} />
+
+      {/* PhotoGallery has built-in bg-card → gray slot */}
       <PhotoGallerySection photos={SHOWCASE_PHOTOS} viewAllUrl={siteConfig.galleryUrl} />
 
       {SHOWCASE_VIDEO_ID && (
         <VideoSection videoId={SHOWCASE_VIDEO_ID} label="Акценти" title="Видео от събитието" />
       )}
 
+      <div className="bg-card">
+        <TestimonialsSection testimonials={SHOWCASE_TESTIMONIALS} />
+      </div>
+
+      <PressSection items={SHOWCASE_MEDIA} />
+
+      {/* SponsorsSection has built-in bg-card → gray slot */}
       <SponsorsSection hideCTA />
+
       <JurySection hideCriteria transparent />
 
       {/* CTA — До следващия път */}

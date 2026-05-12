@@ -1,4 +1,12 @@
-import type { ShowcaseStat, ShowcaseWinner, ShowcasePhoto, ShowcaseFunCounter } from "@/lib/types";
+import type {
+  ShowcaseStat,
+  ShowcaseWinner,
+  ShowcasePhoto,
+  ShowcaseFunCounter,
+  ShowcaseHonorableMention,
+  ShowcaseTestimonial,
+  ShowcaseMediaItem,
+} from "@/lib/types";
 import { MENTORS } from "./jury";
 import { SPONSORS } from "./sponsors";
 
@@ -44,6 +52,142 @@ export const SHOWCASE_WINNERS: ShowcaseWinner[] = [
       "All assistance you need in one place — AI асистент за студенти по Erasmus: езикови бариери, навигация, транспорт и разбиране на документи.",
     members: [],
     imageUrl: "/photos/winners/3rd-place.jpg",
+  },
+];
+
+// ── Additional prizes (special sponsor awards) ─────────────────────────────
+
+export const SHOWCASE_HONORABLE_MENTIONS: ShowcaseHonorableMention[] = [
+  {
+    category: "Най-млад отбор",
+    teamName: "Synthetics",
+    projectName: "SeaMind",
+    pitch: "Награда за най-младия отбор в хакатона.",
+    members: [],
+    sponsor: "Ocean Investments",
+  },
+  {
+    category: "Специална тема",
+    teamName: "VALOX",
+    projectName: "AssetForge",
+    pitch: "Инструмент за генериране на 3D AI модели.",
+    members: [],
+    sponsor: "Reward Gateway",
+  },
+  {
+    category: "Най-голям ентусиазъм",
+    teamName: "Fast and Furious",
+    projectName: "Start2Drive",
+    pitch: "Награда за енергия и упоритост по време на 48-те часа + комплект настолни игри.",
+    members: [],
+    sponsor: "Checkpoint",
+  },
+  {
+    category: "Storytelling Mastery",
+    teamName: "Хакатонци вайб кодери",
+    projectName: "Евенто пулс",
+    pitch: "Достъп до Storytelling Mastery курса.",
+    members: [],
+    sponsor: "Георги Къдрев",
+  },
+  {
+    category: "Blockchain награда",
+    teamName: "Earth care",
+    projectName: "EcoClaim",
+    pitch: "Blockchain награда и 5 часа консултация за реализация на проекта.",
+    members: [],
+    sponsor: "Logos & ReCheck",
+  },
+  {
+    category: "Специална тема",
+    teamName: "Kernel panic",
+    projectName: "VEINS",
+    pitch: "Диагностика на burnout — специална тема на Reward Gateway.",
+    members: [],
+    sponsor: "Reward Gateway",
+  },
+  {
+    category: "Специална тема",
+    teamName: "Legends",
+    projectName: "LinkGuard Pro",
+    pitch: "Специална тема на Reward Gateway.",
+    members: [],
+    sponsor: "Reward Gateway",
+  },
+];
+
+// ── Testimonials ───────────────────────────────────────────────────────────
+
+export const SHOWCASE_TESTIMONIALS: ShowcaseTestimonial[] = [
+  {
+    quote:
+      "За мен събитието беше изключително вдъхновяващо и динамично преживяване. Още от самото начало атмосферата беше заредена с енергия, мотивация и желание за създаване на нещо стойностно.\n\nРаботата в екип ми помогна не само да приложа знанията си на практика, но и да се науча да комуникирам по-добре, да разпределяме задачите ефективно и да мислим креативно под напрежение.\n\nНай-много ме впечатли колко различни и интересни идеи имаха участниците, както и подкрепата от менторите, които винаги бяха готови да помогнат и да дадат ценни насоки. Това наистина направи преживяването още по-полезно и мотивиращо.",
+    name: "Даная Букева",
+    role: "Участник",
+  },
+  {
+    quote:
+      "Това, което ме впечатли, е че имаше много различни награди и презентацията със специалния гост — защото не само първите три отбора получиха награда, а се оценява трудът на повече отбори.\n\nЧувствам се чудесно след финала, не само защото нашият отбор спечели, но и защото като отбор се сформирахме без да се познаваме и всеки работеше усърдно и си помагахме един на друг.\n\nСъс сигурност ще ми останат трайни спомени за събитието и бих се радвал да участвам пак!",
+    name: "Деян Николаев Събев",
+    role: "Участник",
+  },
+  {
+    quote:
+      "Аз съм графичен дизайнер — истината е, че тази професия в настоящия момент заради навлизането на изкуствения интелект започва да изпада от обявите за работа. Събитието надмина очакванията ми. Запознах се с хора, с които имаме бъдещи планове да развием приложението, чието демо представихме.\n\nУчудващо е как добре се получи екипът и как всеки беше на мястото си.",
+    name: "Силвия Станева",
+    role: "Участник",
+  },
+  {
+    quote:
+      "Събитието беше с много добра организация и продуктивна среда за работа. Много ми хареса, че организаторите се бяха погрижили да имаме обяди и толкова много снаксове и напитки.\n\nИ преди съм бил на хакатони, но хакатон с толкова много ментори никога не бях виждал — и това ме впечатли най-много. Имахме възможност постоянно да задаваме въпроси и да ни помагат.\n\nБеше едно страхотно събитие и преживяване — запознах се с много готини хора и през тези три дни си изкарах наистина супер.",
+    name: "Венелин Мирчев",
+    role: "Участник",
+  },
+  {
+    quote:
+      "От моя гледна точка събитието премина страхотно. Запознах се с много хора с общи и различни интереси, проведохме доста интересни разговори по различни казуси и получих много нужна помощ от менторите и доброволците!\n\nНай-много ме впечатли колко open-minded и дружелюбни бяха хората, приветливи, със чувство за хумор — и колко приятно ме накараха да се почувствам!\n\nЧувствата след финала са смесени — радвам се за постигнатия успех на отбора ми, както и за успеха на другите участници, от които доста станаха мои приятели; но има и лека носталгия, че приключи. 10/10 — would surely do it again!",
+    name: "Кристиян Тодоров",
+    role: "Участник",
+  },
+  {
+    quote:
+      "We are exchange students from Azerbaijan, and last month we saw the poster for this hackathon in the university hallway. We became interested, searched for more information, and decided to register. In our country, similar hackathons are organized quite often, and we enjoy participating in them, so we thought, “Why not join this one as well?”\n\nFrom our perspective, the event was very well organized. There were many mentors available, and their support was very helpful throughout the competition. We also found the seminars and presentations useful and supportive for developing our ideas.\n\nIn the end, we achieved 3rd place, and we are very happy and proud of this result. Overall, RUSE AI HACK '26 was a great experience for us, and we would be glad to participate again in future events.",
+    name: "Shamil Mantashli",
+    role: "Участник · Azerbaijan",
+  },
+  {
+    quote:
+      "Бях ментор и това, което ме накара да помогна, бяха младите и ентусиазирани участници. Това, което ме впечатли, е че дори хора без IT бекграунд успяха да произведат завършена идея!",
+    name: "Ментор",
+    role: "Ментор",
+  },
+  {
+    quote:
+      "Атмосферата беше мотивираща, а организацията — на много високо ниво, което направи цялото изживяване още по-приятно и ползотворно. Работата в екип, кратките срокове и интензивният процес на разработка наистина ме накараха да изляза от зоната си на комфорт и да дам най-доброто от себе си.\n\nНай-силно ме впечатли креативността на участниците и разнообразието от идеи, които бяха представени. Беше вдъхновяващо да видя колко различни подходи могат да се приложат за решаването на реални проблеми чрез технологии и изкуствен интелект.\n\nСлед финала се чувствам изключително удовлетворена и мотивирана. Участието ми даде ценен опит, нови знания и още по-голямо желание да се развивам в тази сфера. Определено бих участвала отново и препоръчвам подобни събития на всеки, който има интерес към технологиите и иновациите.",
+    name: "Виктория Василева",
+    role: "Участник",
+  },
+];
+
+// ── Media coverage ─────────────────────────────────────────────────────────
+
+export const SHOWCASE_MEDIA: ShowcaseMediaItem[] = [
+  {
+    outlet: "Bloomberg",
+    title: "България има шанс да хване AI вълната, но още изостава в дигитализацията",
+    url: "https://www.bloombergtv.bg/a/16-biznes-start/159229-balgariya-ima-shans-da-hvane-ai-valnata-no-oshte-izostava-v-digitalizatsiyata",
+  },
+  {
+    outlet: "Утро Русе",
+    title:
+      "Над 70 ученици, студенти и специалисти от България, Азербайджан и Грузия се срещнаха в Русе",
+    url: "https://utroruse.com/article/1242176/",
+  },
+  {
+    outlet: "БТА",
+    title:
+      "Над 70 ученици, студенти и специалисти от България, Азербайджан и Грузия се събраха на AI хакатона в Русе",
+    url: "https://www.bta.bg/bg/news/lik/1112917-nad-70-uchenitsi-studenti-i-spetsialisti-ot-balgariya-azerbaydzhan-i-gruziya-s",
   },
 ];
 
