@@ -96,6 +96,13 @@ export const SPONSORS: Sponsor[] = [
     tier: "supporter",
     logoScale: 1.5,
   },
+  {
+    name: 'МГ "Баба Тонка"',
+    logo: "/sponsors/mg-baba-tonka.png",
+    href: "http://mg-babatonka.bg/",
+    tier: "supporter",
+    logoScale: 1.5,
+  },
 
   {
     name: "Utro",
